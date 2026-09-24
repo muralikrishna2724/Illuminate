@@ -1,0 +1,156 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: var(--font-instrument-serif), "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --color-void: #050404;
+  --color-night: #0d0b0a;
+  --color-dusk: #171311;
+  --color-ember: #ec9a52;
+  --color-gold: #f5c688;
+  --color-flare: #fff3e0;
+  --color-sand: #e9e1d6;
+  --color-mist: #a39a90;
+  --color-smoke: #6f675f;
+
+  --animate-spin-slow: spin 90s linear infinite;
+  --animate-breathe: breathe 9s ease-in-out infinite;
+  --animate-drift: drift 40s ease-in-out infinite alternate;
+
+  @keyframes breathe {
+    0%,
+    100% {
+      opacity: 0.85;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.025);
+    }
+  }
+  @keyframes drift {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(0, -2%, 0);
+    }
+  }
+}
+
+:root {
+  color-scheme: dark;
+  --line: rgb(255 243 224 / 0.1);
+  --line-strong: rgb(255 243 224 / 0.2);
+}
+
+@layer base {
+html {
+  background: var(--color-void);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--color-void);
+  color: var(--color-sand);
+  font-family: var(--font-sans);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgb(236 154 82 / 0.35);
+  color: var(--color-flare);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+}
+
+@layer components {
+/* Entrance reveal (driven by components/ui/Reveal.tsx). */
+.reveal {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0);
+  transition:
+    opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.reveal[data-visible="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Hairline divider with a warm centre. */
+.divider-glow {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgb(245 198 136 / 0.35), transparent);
+}
+
+/* Form controls */
+.field-input {
+  width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid var(--line-strong);
+  background: rgb(255 243 224 / 0.03);
+  padding: 0.75rem 0.95rem;
+  color: var(--color-flare);
+  font-size: 1rem;
+  line-height: 1.5rem;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s,
+    box-shadow 0.2s;
+}
+.field-input::placeholder {
+  color: var(--color-smoke);
+}
+.field-input:hover {
+  border-color: rgb(255 243 224 / 0.3);
+}
+.field-input:focus {
+  outline: none;
+  border-color: var(--color-gold);
+  background: rgb(255 243 224 / 0.05);
+  box-shadow: 0 0 0 3px rgb(245 198 136 / 0.15);
+}
+.field-input[aria-invalid="true"] {
+  border-color: #f08b7a;
+}
+select.field-input {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1.5 6 6.5l5-5' stroke='%23a39a90' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
+}
+select.field-input option {
+  background: #171311;
+  color: #fff3e0;
+}
+}

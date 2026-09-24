@@ -1,0 +1,225 @@
+// ILLUMINATE — database schema
+//
+// Registrations are split by format:
+//   - TEAM events (Deja Vu Hackathon, IPL Auction)      -> Registration + Team + TeamMember[]
+//   - INDIVIDUAL events (AI Debate, Illuminate Workshop) -> Registration + Participant
+// Every registration has exactly one Payment (payment proof: UTR + screenshot).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum EventFormat {
+  TEAM
+  INDIVIDUAL
+}
+
+enum PaymentStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum PaymentAction {
+  VERIFY
+  REJECT
+}
+
+enum QuizAccessRule {
+  // Quiz link is shown as soon as payment proof has been submitted.
+  AFTER_SUBMISSION
+  // Quiz link is shown only once an admin has VERIFIED the payment.
+  AFTER_VERIFICATION
+}
+
+model AdminUser {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  name         String
+  passwordHash String
+  isActive     Boolean   @default(true)
+  lastLoginAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  sessions          AdminSession[]
+  verifiedPayments  Payment[]           @relation("PaymentVerifiedBy")
+  rejectedPayments  Payment[]           @relation("PaymentRejectedBy")
+  paymentAuditLogs  PaymentAuditLog[]
+  quizConfigUpdates QuizConfiguration[]
+}
+
+model AdminSession {
+  id        String   @id @default(cuid())
+  // HMAC-SHA256 of the opaque session token. The raw token only lives in the httpOnly cookie.
+  tokenHash String   @unique
+  adminId   String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  userAgent String?
+  ipAddress String?
+
+  admin AdminUser @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  @@index([adminId])
+  @@index([expiresAt])
+}
+
+model Event {
+  id               String      @id @default(cuid())
+  // Stable identifier used in URLs and APIs: hackathon | debate | ipl-auction | illuminate
+  slug             String      @unique
+  name             String
+  day              Int
+  date             DateTime    @db.Date
+  format           EventFormat
+  // Number of people covered by one registration (4 for team events, 1 for individual events).
+  teamSize         Int
+  // Fee per person in whole Indian Rupees. The payable amount is always computed server-side.
+  feePerPersonInr  Int
+  registrationOpen Boolean     @default(true)
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  registrations     Registration[]
+  quizConfiguration QuizConfiguration?
+}
+
+model Registration {
+  id               String   @id @default(cuid())
+  // Public, human-friendly registration ID, e.g. ILM-7K3QXZ
+  registrationCode String   @unique
+  eventId          String
+  // Primary contact (team leader for team events, the participant for individual events).
+  contactName      String
+  contactEmail     String
+  contactPhone     String
+  college          String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  event       Event        @relation(fields: [eventId], references: [id], onDelete: Restrict)
+  participant Participant?
+  team        Team?
+  payment     Payment?
+
+  @@index([eventId, createdAt])
+  @@index([createdAt])
+  @@index([contactEmail])
+  @@index([contactPhone])
+}
+
+model Participant {
+  id             String   @id @default(cuid())
+  registrationId String   @unique
+  fullName       String
+  email          String
+  phone          String
+  college        String
+  department     String
+  year           String
+  createdAt      DateTime @default(now())
+
+  registration Registration @relation(fields: [registrationId], references: [id], onDelete: Cascade)
+
+  @@index([email])
+  @@index([phone])
+}
+
+model Team {
+  id             String   @id @default(cuid())
+  registrationId String   @unique
+  name           String
+  college        String
+  leaderName     String
+  leaderEmail    String
+  leaderPhone    String
+  createdAt      DateTime @default(now())
+
+  registration Registration @relation(fields: [registrationId], references: [id], onDelete: Cascade)
+  members      TeamMember[]
+
+  @@index([name])
+}
+
+model TeamMember {
+  id         String @id @default(cuid())
+  teamId     String
+  // 1-based position within the team (1..teamSize)
+  position   Int
+  name       String
+  email      String
+  phone      String
+  department String
+  year       String
+
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@unique([teamId, position])
+  @@index([email])
+  @@index([phone])
+}
+
+model Payment {
+  id                 String        @id @default(cuid())
+  registrationId     String        @unique
+  // Amount computed server-side from the event fee configuration (whole INR).
+  amountInr          Int
+  // Normalised (trimmed, upper-cased, no whitespace) UTR / transaction ID. Globally unique.
+  utr                String        @unique
+  // Object-storage key of the payment screenshot (never a public URL).
+  screenshotPath     String
+  screenshotMimeType String
+  screenshotSize     Int
+  status             PaymentStatus @default(PENDING)
+  verifiedAt         DateTime?
+  verifiedById       String?
+  rejectedAt         DateTime?
+  rejectedById       String?
+  rejectionReason    String?
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+
+  registration Registration      @relation(fields: [registrationId], references: [id], onDelete: Cascade)
+  verifiedBy   AdminUser?        @relation("PaymentVerifiedBy", fields: [verifiedById], references: [id], onDelete: SetNull)
+  rejectedBy   AdminUser?        @relation("PaymentRejectedBy", fields: [rejectedById], references: [id], onDelete: SetNull)
+  auditLogs    PaymentAuditLog[]
+
+  @@index([status, createdAt])
+}
+
+// Append-only history of every verify / reject decision.
+model PaymentAuditLog {
+  id             String         @id @default(cuid())
+  paymentId      String
+  adminId        String?
+  action         PaymentAction
+  previousStatus PaymentStatus
+  newStatus      PaymentStatus
+  reason         String?
+  createdAt      DateTime       @default(now())
+
+  payment Payment    @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  admin   AdminUser? @relation(fields: [adminId], references: [id], onDelete: SetNull)
+
+  @@index([paymentId, createdAt])
+}
+
+model QuizConfiguration {
+  id          String         @id @default(cuid())
+  eventId     String         @unique
+  quizLink    String?
+  enabled     Boolean        @default(false)
+  accessRule  QuizAccessRule @default(AFTER_SUBMISSION)
+  updatedById String?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  event     Event      @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  updatedBy AdminUser? @relation(fields: [updatedById], references: [id], onDelete: SetNull)
+}
