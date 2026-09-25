@@ -13,7 +13,9 @@ import { normalizeRegistrationCode, REGISTRATION_CODE_PATTERN } from "@/lib/regi
 import { loginSchema } from "@/lib/validation/admin";
 import { normalizePhone } from "@/lib/validation/registration";
 
-const INVALID_CREDENTIALS = "Those details don't match. Check your email and your registration ID, phone number or password.";
+// Shown for every failure (participant or organiser) and deliberately
+// mentions only the participant fields.
+const INVALID_CREDENTIALS = "Those details don't match. Check your email and your registration ID or phone number.";
 
 /** 10-digit Indian mobile number (after normalisation), as stored on registrations. */
 const PHONE_PATTERN = /^[6-9]\d{9}$/;

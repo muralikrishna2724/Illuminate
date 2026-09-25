@@ -8,7 +8,7 @@ import { getCurrentAdmin, getCurrentParticipantEmail } from "@/lib/auth/session"
 
 export const metadata: Metadata = {
   title: "Log in",
-  description: "Log in to see your ILLUMINATE registrations, or to manage the event as an organiser.",
+  description: "Log in to see your ILLUMINATE registrations and payment status.",
   robots: { index: false },
 };
 export const dynamic = "force-dynamic";
@@ -23,8 +23,8 @@ export default async function LoginPage() {
         <div className="mx-auto max-w-md">
           <h1 className="font-display text-5xl text-flare sm:text-6xl">Log in</h1>
           <p className="mt-4 text-mist">
-            Registered for an event? Use the email you registered with and your registration ID. Forgot the ID? Use the same email
-            with the phone number you registered with. Organisers use their email and password.
+            Use the email you registered with and your registration ID. Forgot the ID? Use the same email with the phone number
+            you registered with.
           </p>
           <div className="mt-10 rounded-2xl border border-[var(--line-strong)] bg-white/[0.02] p-6 sm:p-8">
             <LoginForm />

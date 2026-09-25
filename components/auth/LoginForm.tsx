@@ -6,7 +6,11 @@ import { TextField } from "@/components/registration/fields";
 import { Button } from "@/components/ui/Button";
 import { authApi } from "@/lib/api/auth";
 
-/** One login for participants (email + registration ID or phone) and organisers (email + password). */
+/**
+ * Participant login (email + registration ID or phone). Organisers use the
+ * same form with their password in the second field; that path is
+ * deliberately not advertised in the UI (see services/auth-service.ts).
+ */
 export function LoginForm() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -58,14 +62,14 @@ export function LoginForm() {
       <div className="relative">
         <TextField
           id="secret"
-          label="Registration ID, phone number or password"
+          label="Registration ID or phone number"
           type={showSecret ? "text" : "password"}
           autoComplete="current-password"
           autoCapitalize="none"
           spellCheck={false}
           value={secret}
           error={fieldErrors.secret}
-          hint="Participants: your registration ID (e.g. ILM-7K3QXZ) or, if you lost it, the phone number you registered with. Organisers: your password."
+          hint="Your registration ID (e.g. ILM-7K3QXZ), or the phone number you registered with."
           onChange={(e) => setSecret(e.target.value)}
           className="[&_input]:pr-16"
         />

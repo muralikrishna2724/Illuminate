@@ -31,7 +31,7 @@ The project includes the public website, registrations with payment-proof upload
 **Login.** The header's **Login** button leads to one form with an email and a "registration ID or password" field:
 - **Participants** enter the email they registered with and one of their registration IDs (`ILM-XXXXXX`). Any email on the registration works: the contact, the participant, the team leader or any team member. They land on `/dashboard`. Participants don't have passwords.
 - **Participants who lost their registration ID** can enter their email and the phone number they registered with instead (`+91` and spaces are fine). Both must belong to the same person on a registration: the leader's email with the leader's phone, or a member's email with that member's phone. An email and phone from two different teammates are rejected.
-- **Organisers** enter their admin email and password and land on `/admin/dashboard`.
+- **Organisers** enter their admin email and their password in the same second field, and land on `/admin/dashboard`. The page deliberately doesn't mention this: its labels, hints and error messages only talk about registration IDs and phone numbers.
 - A wrong combination always gets the same message, so the form doesn't reveal which emails exist. Login attempts are rate-limited.
 
 **Admin** (sign-in required)
