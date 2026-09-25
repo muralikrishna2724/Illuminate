@@ -1,18 +1,19 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Instrument_Serif } from "next/font/google";
+import { Bricolage_Grotesque, Inter } from "next/font/google";
 import "./globals.css";
 
-const display = Instrument_Serif({
+// Display: an expressive, human grotesque (normal width — not condensed) with optical sizing.
+const display = Bricolage_Grotesque({
   subsets: ["latin"],
-  weight: "400",
-  style: ["normal", "italic"],
-  variable: "--font-instrument-serif",
+  axes: ["opsz"],
+  variable: "--font-bricolage",
   display: "swap",
 });
 
-const sans = Geist({
+// Text: highly legible at small sizes (forms, admin tables).
+const sans = Inter({
   subsets: ["latin"],
-  variable: "--font-geist",
+  variable: "--font-inter",
   display: "swap",
 });
 

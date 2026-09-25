@@ -54,8 +54,8 @@ The project includes the public website, registrations with payment-proof upload
 | Layer | Choice |
 | --- | --- |
 | Framework | Next.js 16 (App Router, Route Handlers, `proxy.ts`), React 19, TypeScript (strict) |
-| Styling | Tailwind CSS 4, `next/font` (Instrument Serif + Geist) |
-| Animation | CSS transitions + IntersectionObserver reveals; GSAP (ScrollTrigger, ScrollToPlugin) for the cinematic footer |
+| Styling | Tailwind CSS 4, `next/font` (Bricolage Grotesque for headings + Inter for text) |
+| Animation | WebGL black hole (hero); CSS transitions + IntersectionObserver reveals; GSAP (ScrollTrigger, ScrollToPlugin) for the cinematic footer |
 | Database | PostgreSQL + Prisma 6 (migrations, seed) |
 | Validation | Zod 4. The same schemas run in the browser and on the server |
 | Auth | bcrypt password hashes, DB-backed opaque sessions in an httpOnly cookie |
@@ -73,7 +73,8 @@ components/
   admin/             dashboard, registrations table, detail panel, reject dialog, quiz manager
   home/ layout/ ui/  page sections, header, cinematic footer, primitives
   registration/      registration form, screenshot upload, payment instructions, success view
-  visual/            BlackHole (CSS) + Starfield (canvas)
+  ui/optimized-black-hole*  WebGL black-hole renderer (hero)
+  visual/            BlackHole still-frame accents + Starfield (canvas)
 lib/
   api/               browser API client (typed, no raw fetch in components)
   auth/              password hashing, sessions, guards
@@ -281,7 +282,7 @@ FAQs live in **`lib/faq.ts`**. Add only confirmed information: no invented timin
 
 To close registrations for an event, set `registrationOpen = false` on its `Event` row. The API then refuses new registrations for it.
 
-**Visuals:** the black hole is drawn with CSS (`components/visual/BlackHole.tsx`) and a canvas starfield. To use your own black-hole artwork instead, add it to `public/images/` and set `visualConfig.blackHoleImage` in `lib/site-config.ts`.
+**Visuals:** the homepage hero runs a live WebGL black hole (`components/ui/optimized-black-hole.tsx` plus `components/ui/optimized-black-hole-utils/`). It ray-traces light bending around the hole over a turbulent accretion disk and a star field. To stay light it renders below native resolution, uses fewer steps on phones, lowers its resolution automatically if frames are slow, caps at 30 fps, pauses when off-screen or when the tab is hidden, and draws a single still frame for `prefers-reduced-motion`. Internal pages use still frames from the same renderer (`public/images/black-hole*.jpg`) through `components/visual/BlackHole.tsx`. The same still frame is shown while WebGL loads, or if it isn't available. To change the look, edit the camera in `renderer.ts` (distance, elevation, roll, framing) or the disk in `shader.ts` (radii, texture, tint, exposure), then regenerate the still frames by screenshotting the component.
 
 ---
 

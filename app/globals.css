@@ -1,14 +1,14 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display: var(--font-instrument-serif), "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-  --font-sans: var(--font-geist), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
 
   --color-void: #050404;
   --color-night: #0d0b0a;
   --color-dusk: #171311;
-  --color-ember: #ec9a52;
-  --color-gold: #f5c688;
+  --color-ember: #d9a26c;
+  --color-gold: #e8c89a;
   --color-flare: #fff3e0;
   --color-sand: #e9e1d6;
   --color-mist: #a39a90;
@@ -78,6 +78,13 @@ body {
 }
 
 @layer components {
+/* Display type: slightly tightened, medium weight. Utilities can still override. */
+.font-display {
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  font-optical-sizing: auto;
+}
+
 /* Entrance reveal (driven by components/ui/Reveal.tsx). */
 .reveal {
   opacity: 0;

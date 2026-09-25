@@ -52,12 +52,3 @@ export const MAX_SCREENSHOT_BYTES = 5 * 1024 * 1024;
 export const ACCEPTED_SCREENSHOT_TYPES = ["image/jpeg", "image/png", "image/webp"] as const;
 export const ACCEPTED_SCREENSHOT_EXTENSIONS = [".jpg", ".jpeg", ".png", ".webp"] as const;
 
-/**
- * Visual identity. The black hole is rendered procedurally (CSS + canvas) by
- * default. To use the supplied black-hole reference artwork instead, place it
- * at e.g. `public/images/black-hole.webp` and set `blackHoleImage` to
- * "/images/black-hole.webp".
- */
-export const visualConfig: { blackHoleImage: string | null } = {
-  blackHoleImage: null,
-};

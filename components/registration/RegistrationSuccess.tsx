@@ -38,7 +38,7 @@ export function RegistrationSuccess({
           <div className="sm:col-span-2">
             <dt className="text-sm text-mist">Registration ID</dt>
             <dd className="mt-2 flex flex-wrap items-center gap-3">
-              <span className="select-all font-display text-5xl tracking-wide text-flare">{result.registrationId}</span>
+              <span className="select-all text-4xl font-semibold tracking-wide text-flare tabular-nums sm:text-5xl">{result.registrationId}</span>
               <button
                 type="button"
                 onClick={copy}

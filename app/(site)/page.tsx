@@ -22,7 +22,7 @@ export default function HomePage() {
           <Reveal>
             <Eyebrow>Two days</Eyebrow>
             <h2 id="overview-title" className="mt-3 max-w-3xl font-display text-5xl leading-[1.02] text-flare sm:text-6xl">
-              Three events to open. <em className="text-gold">One workshop</em> at the centre.
+              Three events to open. <span className="text-gold">One workshop</span> at the centre.
             </h2>
           </Reveal>
 
@@ -91,7 +91,7 @@ export default function HomePage() {
             <h2 id="workshop-title" className="mt-4 font-display text-6xl leading-[0.95] text-flare sm:text-8xl">
               Illuminate
             </h2>
-            <p className="mt-2 font-display text-2xl italic text-gold sm:text-3xl">Entrepreneurship Workshop</p>
+            <p className="mt-3 font-display text-2xl font-normal text-gold sm:text-3xl">Entrepreneurship Workshop</p>
             <p className="mt-8 text-lg leading-relaxed text-sand/90">{workshop.description}</p>
           </Reveal>
 

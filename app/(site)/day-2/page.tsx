@@ -42,7 +42,7 @@ export default function DayTwoPage() {
                 <h2 id={`${event.slug}-title`} className="font-display text-6xl leading-[0.95] text-flare sm:text-8xl">
                   Illuminate
                 </h2>
-                <p className="mt-2 font-display text-3xl italic text-gold">Entrepreneurship Workshop</p>
+                <p className="mt-3 font-display text-3xl font-normal text-gold">Entrepreneurship Workshop</p>
                 {event.associatedWith && (
                   <p className="mt-6 text-sand/85">
                     Associated with <span className="text-flare">{event.associatedWith}</span>

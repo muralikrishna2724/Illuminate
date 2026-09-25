@@ -111,8 +111,8 @@ export function CinematicFooter({ contact }: { contact: ContactConfig }) {
         className="pointer-events-none absolute -bottom-[48vw] left-1/2 -z-10 h-[64vw] w-[150vw] -translate-x-1/2 rounded-[50%] sm:-bottom-[46vw]"
         style={{
           background:
-            "radial-gradient(ellipse at 50% 0%, rgb(255 236 205 / 0.22) 0%, rgb(236 154 82 / 0.14) 22%, rgb(120 60 20 / 0.06) 45%, transparent 65%)",
-          boxShadow: "inset 0 1px 0 rgb(255 236 205 / 0.18)",
+            "radial-gradient(ellipse at 50% 0%, rgb(255 244 228 / 0.2) 0%, rgb(230 205 170 / 0.09) 24%, rgb(120 100 80 / 0.04) 45%, transparent 65%)",
+          boxShadow: "inset 0 1px 0 rgb(255 244 228 / 0.22)",
         }}
       />
 
@@ -123,7 +123,7 @@ export function CinematicFooter({ contact }: { contact: ContactConfig }) {
               {EVENT_YEAR_LABEL}
             </p>
             <h2 data-footer-reveal className="mt-4 font-display text-5xl leading-[0.95] text-flare sm:text-7xl">
-              Two days. <em className="text-gold">One</em> pull.
+              Two days. <span className="text-gold">One</span> pull.
             </h2>
             <p data-footer-reveal className="mt-5 max-w-md text-mist">
               Day 1 brings the Deja Vu Hackathon, AI Debate and IPL Auction. Day 2 is Illuminate — the Entrepreneurship Workshop.
@@ -211,9 +211,9 @@ export function CinematicFooter({ contact }: { contact: ContactConfig }) {
       <div aria-hidden="true" className="pointer-events-none relative -mt-6 select-none overflow-hidden">
         <p
           data-footer-giant
-          className="whitespace-nowrap text-center font-display text-[21vw] leading-[0.8] tracking-tight"
+          className="whitespace-nowrap text-center font-display text-[17vw] font-semibold leading-[0.85]"
           style={{
-            backgroundImage: "linear-gradient(180deg, rgb(255 243 224 / 0.16) 0%, rgb(245 198 136 / 0.08) 55%, transparent 100%)",
+            backgroundImage: "linear-gradient(180deg, rgb(255 243 224 / 0.16) 0%, rgb(233 214 186 / 0.07) 55%, transparent 100%)",
             WebkitBackgroundClip: "text",
             backgroundClip: "text",
             color: "transparent",

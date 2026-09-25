@@ -56,7 +56,7 @@ export default async function RegistrationStatusPage({ params }: PageProps<"/reg
               <p className="text-sm text-gold/90">
                 {status.event.name} · Day {status.event.day}
               </p>
-              <h1 className="mt-2 font-display text-5xl tracking-wide text-flare sm:text-6xl">{status.registrationId}</h1>
+              <h1 className="mt-2 text-4xl font-semibold tracking-wide text-flare tabular-nums sm:text-5xl">{status.registrationId}</h1>
               <dl className="mt-8 grid gap-6 sm:grid-cols-3">
                 <div>
                   <dt className="text-sm text-mist">Payment Status</dt>
