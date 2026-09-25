@@ -22,7 +22,14 @@ gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, useGSAP);
  *  - smooth back-to-top via ScrollToPlugin
  * All motion is gated behind `prefers-reduced-motion: no-preference`.
  */
-export function CinematicFooter({ contact }: { contact: ContactConfig }) {
+export function CinematicFooter({
+  contact,
+  account = null,
+}: {
+  contact: ContactConfig;
+  /** Link shown instead of "Login" when someone is signed in. */
+  account?: { href: string; label: string } | null;
+}) {
   const root = useRef<HTMLElement>(null);
   // The footer lives in the shared layout and survives client-side navigation,
   // so its scroll triggers are rebuilt for each page's own height.
@@ -225,7 +232,11 @@ export function CinematicFooter({ contact }: { contact: ContactConfig }) {
             <FooterLink href="/registration">Check registration status</FooterLink>
           </FooterColumn>
           <FooterColumn title="Account">
-            <FooterLink href={LOGIN.href}>{LOGIN.label}</FooterLink>
+            {account ? (
+              <FooterLink href={account.href}>{account.label}</FooterLink>
+            ) : (
+              <FooterLink href={LOGIN.href}>{LOGIN.label}</FooterLink>
+            )}
             <FooterLink href="/register">Register</FooterLink>
           </FooterColumn>
         </div>

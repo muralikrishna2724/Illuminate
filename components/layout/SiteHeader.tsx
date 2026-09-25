@@ -5,8 +5,13 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { LOGIN, MAIN_NAV } from "@/lib/navigation";
 import { buttonClasses } from "@/components/ui/Button";
+import { LogoutButton } from "@/components/auth/LogoutButton";
+import { ProfileMenu } from "@/components/auth/ProfileMenu";
+import { initials } from "@/lib/names";
+import type { Viewer } from "@/types/domain";
 
-export function SiteHeader() {
+/** `viewer` comes from the server layout: when someone is signed in, Login becomes their profile menu. */
+export function SiteHeader({ viewer }: { viewer: Viewer }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -61,13 +66,19 @@ export function SiteHeader() {
               {item.label}
             </Link>
           ))}
-          <Link
-            href={LOGIN.href}
-            aria-current={isActive(LOGIN.href) ? "page" : undefined}
-            className={buttonClasses("secondary", "sm", "ml-3")}
-          >
-            {LOGIN.label}
-          </Link>
+          {viewer ? (
+            <div className="ml-3">
+              <ProfileMenu viewer={viewer} />
+            </div>
+          ) : (
+            <Link
+              href={LOGIN.href}
+              aria-current={isActive(LOGIN.href) ? "page" : undefined}
+              className={buttonClasses("secondary", "sm", "ml-3")}
+            >
+              {LOGIN.label}
+            </Link>
+          )}
           <Link href="/register" className={buttonClasses("primary", "sm", "ml-2")}>
             Register
           </Link>
@@ -111,9 +122,33 @@ export function SiteHeader() {
             <Link href="/register" onClick={() => setOpen(false)} className={buttonClasses("primary", "lg")}>
               Register
             </Link>
-            <Link href={LOGIN.href} onClick={() => setOpen(false)} className={buttonClasses("secondary", "lg")}>
-              {LOGIN.label}
-            </Link>
+            {viewer ? (
+              <div className="rounded-2xl border border-[var(--line-strong)] p-4">
+                <div className="flex items-center gap-3">
+                  <span aria-hidden="true" className="flex h-10 w-10 items-center justify-center rounded-full bg-flare text-sm font-semibold text-void">
+                    {initials(viewer.name)}
+                  </span>
+                  <div className="min-w-0">
+                    <p className="truncate text-flare">{viewer.name}</p>
+                    <p className="truncate text-xs text-mist">{viewer.email}</p>
+                  </div>
+                </div>
+                <div className="mt-4 flex items-center justify-between gap-3">
+                  <Link
+                    href={viewer.role === "admin" ? "/admin/dashboard" : "/dashboard"}
+                    onClick={() => setOpen(false)}
+                    className={buttonClasses("secondary", "sm")}
+                  >
+                    {viewer.role === "admin" ? "Admin dashboard" : "My profile & registrations"}
+                  </Link>
+                  <LogoutButton />
+                </div>
+              </div>
+            ) : (
+              <Link href={LOGIN.href} onClick={() => setOpen(false)} className={buttonClasses("secondary", "lg")}>
+                {LOGIN.label}
+              </Link>
+            )}
           </div>
         </nav>
       )}

@@ -481,6 +481,14 @@ describe("participant login", () => {
     const html = await page.text();
     assert.ok(html.includes(code), "dashboard lists the registration");
 
+    // Signed in: the header shows their name and the page no longer links to Login.
+    const home = await (await fetch(`${BASE}/`, { headers: { Cookie: participantCookie } })).text();
+    assert.ok(home.includes(details.members[2]!.name.split(" ")[0]!), "header shows the participant's name");
+    assert.ok(!home.includes('href="/login"'), "no Login link while signed in");
+    const anonymousHome = await (await fetch(`${BASE}/`)).text();
+    assert.ok(anonymousHome.includes('href="/login"'), "Login link for anonymous visitors");
+    assert.ok(html.includes(details.members[2]!.email), "profile shows the participant's details");
+
     // A participant session never grants admin access.
     const adminRes = await fetch(`${BASE}/api/admin/registrations`, { headers: { Cookie: participantCookie } });
     assert.equal(adminRes.status, 401);

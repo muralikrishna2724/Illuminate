@@ -26,13 +26,14 @@ The project includes the public website, registrations with payment-proof upload
 | `/register/hackathon` · `/register/debate` · `/register/ipl-auction` · `/register/illuminate` | Registration forms (details → payment proof → confirmation) |
 | `/registration` · `/registration/[id]` | Registrants check their payment status and, for Deja Vu, the quiz link |
 | `/login` | One login for everyone (see below) |
-| `/dashboard` | Participant dashboard: every registration linked to their email, with payment status and the Deja Vu quiz |
+| `/dashboard` | Participant profile: their details (name, email, phone, college, department, year) and every registration linked to their email, with payment status and the Deja Vu quiz |
 
 **Login.** The header's **Login** button leads to one form with an email and a "registration ID or password" field:
 - **Participants** enter the email they registered with and one of their registration IDs (`ILM-XXXXXX`). Any email on the registration works: the contact, the participant, the team leader or any team member. They land on `/dashboard`. Participants don't have passwords.
 - **Participants who lost their registration ID** can enter their email and the phone number they registered with instead (`+91` and spaces are fine). Both must belong to the same person on a registration: the leader's email with the leader's phone, or a member's email with that member's phone. An email and phone from two different teammates are rejected.
 - **Organisers** enter their admin email and their password in the same second field, and land on `/admin/dashboard`. The page deliberately doesn't mention this: its labels, hints and error messages only talk about registration IDs and phone numbers.
 - A wrong combination always gets the same message, so the form doesn't reveal which emails exist. Login attempts are rate-limited.
+- While someone is signed in, the header shows a profile button (initials and first name) instead of **Login**. It opens a menu with their name, a link to their profile (or the admin dashboard, for organisers) and **Log out**. Because of this, the public pages are rendered per request; the session is only looked up when a session cookie is present.
 
 **Admin** (sign-in required)
 

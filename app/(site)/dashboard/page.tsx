@@ -7,9 +7,10 @@ import { ButtonLink } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { requireParticipantPage } from "@/lib/auth/guards";
 import { formatInr } from "@/lib/events/catalog";
-import { getParticipantRegistrations } from "@/services/participant-service";
+import { initials } from "@/lib/names";
+import { getParticipantProfile, getParticipantRegistrations } from "@/services/participant-service";
 
-export const metadata: Metadata = { title: "My registrations", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "My profile", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
 
 const STATUS_COPY = {
@@ -22,28 +23,57 @@ const dateFormat = new Intl.DateTimeFormat("en-IN", { dateStyle: "medium", timeS
 
 export default async function ParticipantDashboardPage() {
   const email = await requireParticipantPage();
-  const registrations = await getParticipantRegistrations(email);
+  const [profile, registrations] = await Promise.all([getParticipantProfile(email), getParticipantRegistrations(email)]);
+  const name = profile?.name ?? email;
 
   return (
     <section className="pb-28 pt-36 sm:pt-44">
       <Container size="narrow">
-        <div className="flex flex-wrap items-end justify-between gap-6">
-          <div>
-            <p className="text-sm text-mist">Signed in as {email}</p>
-            <h1 className="mt-2 font-display text-5xl text-flare sm:text-6xl">My registrations</h1>
+        <div className="flex flex-wrap items-center justify-between gap-6">
+          <div className="flex items-center gap-5">
+            <span
+              aria-hidden="true"
+              className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-flare text-xl font-semibold text-void sm:h-20 sm:w-20 sm:text-2xl"
+            >
+              {initials(name)}
+            </span>
+            <div className="min-w-0">
+              <p className="text-sm text-mist">My profile</p>
+              <h1 className="mt-1 break-words font-display text-4xl text-flare sm:text-5xl">{name}</h1>
+            </div>
           </div>
           <LogoutButton className="border border-[var(--line-strong)]" />
         </div>
 
+        {profile && (
+          <section aria-labelledby="details-title" className="mt-10 rounded-2xl border border-[var(--line-strong)] bg-white/[0.02] p-6 sm:p-8">
+            <h2 id="details-title" className="text-sm text-mist">
+              My details
+            </h2>
+            <dl className="mt-5 grid gap-5 text-sm sm:grid-cols-2 lg:grid-cols-3">
+              <Detail label="Name" value={profile.name} />
+              <Detail label="Email" value={profile.email} />
+              <Detail label="Phone" value={profile.phone} />
+              <Detail label="College" value={profile.college} />
+              {profile.department && <Detail label="Department" value={profile.department} />}
+              {profile.year && <Detail label="Year" value={profile.year} />}
+            </dl>
+            <p className="mt-6 text-xs text-smoke">
+              These are the details you registered with. To correct them, please contact the organisers.
+            </p>
+          </section>
+        )}
+
+        <h2 className="mt-14 font-display text-3xl text-flare">My registrations</h2>
         {registrations.length === 0 ? (
-          <div className="mt-12 rounded-2xl border border-[var(--line-strong)] p-8">
+          <div className="mt-6 rounded-2xl border border-[var(--line-strong)] p-8">
             <p className="text-sand">No registrations are linked to this email yet.</p>
             <ButtonLink href="/register" className="mt-6">
               Register for an event
             </ButtonLink>
           </div>
         ) : (
-          <ul className="mt-12 space-y-8">
+          <ul className="mt-6 space-y-8">
             {registrations.map((r) => (
               <li key={r.registrationId} className="space-y-4">
                 <article className="rounded-2xl border border-[var(--line-strong)] bg-white/[0.02] p-6 sm:p-8">
@@ -98,5 +128,14 @@ export default async function ParticipantDashboardPage() {
         </p>
       </Container>
     </section>
+  );
+}
+
+function Detail({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="min-w-0">
+      <dt className="text-mist">{label}</dt>
+      <dd className="mt-1 break-words text-base text-flare">{value}</dd>
+    </div>
   );
 }

@@ -194,3 +194,16 @@ export interface ParticipantRegistration {
   team: { name: string; members: string[] } | null;
   quiz: QuizAccess | null;
 }
+
+/** The signed-in participant's own details, taken from their most recent registration. */
+export interface ParticipantProfile {
+  name: string;
+  email: string;
+  phone: string;
+  college: string;
+  department: string | null;
+  year: string | null;
+}
+
+/** Who is viewing the public site (used by the header to swap Login for a profile menu). */
+export type Viewer = { role: "participant"; name: string; email: string } | { role: "admin"; name: string; email: string } | null;
