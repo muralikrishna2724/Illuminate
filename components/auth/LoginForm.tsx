@@ -6,7 +6,7 @@ import { TextField } from "@/components/registration/fields";
 import { Button } from "@/components/ui/Button";
 import { authApi } from "@/lib/api/auth";
 
-/** One login for participants (email + registration ID) and organisers (email + password). */
+/** One login for participants (email + registration ID or phone) and organisers (email + password). */
 export function LoginForm() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -58,14 +58,14 @@ export function LoginForm() {
       <div className="relative">
         <TextField
           id="secret"
-          label="Registration ID or password"
+          label="Registration ID, phone number or password"
           type={showSecret ? "text" : "password"}
           autoComplete="current-password"
           autoCapitalize="none"
           spellCheck={false}
           value={secret}
           error={fieldErrors.secret}
-          hint="Participants: your registration ID (e.g. ILM-7K3QXZ). Organisers: your password."
+          hint="Participants: your registration ID (e.g. ILM-7K3QXZ) or, if you lost it, the phone number you registered with. Organisers: your password."
           onChange={(e) => setSecret(e.target.value)}
           className="[&_input]:pr-16"
         />
@@ -73,8 +73,8 @@ export function LoginForm() {
           type="button"
           onClick={() => setShowSecret((v) => !v)}
           aria-pressed={showSecret}
-          aria-label={showSecret ? "Hide registration ID or password" : "Show registration ID or password"}
-          className="absolute right-3 top-[2.35rem] rounded-md px-2 py-1 text-xs text-mist hover:text-flare"
+          aria-label={showSecret ? "Hide what you typed" : "Show what you typed"}
+          className="absolute right-3 top-[2.6rem] rounded-md px-2 py-1 text-xs text-mist hover:text-flare"
         >
           {showSecret ? "Hide" : "Show"}
         </button>

@@ -486,6 +486,34 @@ describe("participant login", () => {
     assert.equal(adminRes.status, 401);
   });
 
+  test("forgot the ID: email + phone of the same person logs in", async () => {
+    const details = teamDetails(4);
+    const reg = await register("hackathon", details, uniqueUtr());
+    assert.equal(reg.status, 201);
+    const member = details.members[1]!;
+
+    // Same person's email and phone (phone typed with +91 and spaces) → success.
+    const formatted = `+91 ${member.phone.slice(0, 5)} ${member.phone.slice(5)}`;
+    const ok = await participantLogin(member.email, formatted);
+    assert.equal(ok.status, 200);
+    const body = (await ok.json()) as Json;
+    assert.equal(body.data.role, "participant");
+    const page = await fetch(`${BASE}/dashboard`, { headers: { Cookie: cookieFrom(ok, "ilm_participant_session") } });
+    assert.ok((await page.text()).includes(reg.body.data.registrationId), "dashboard lists the registration");
+
+    // Leader's email works with the leader's phone...
+    const leader = await participantLogin(details.leaderEmail, details.leaderPhone);
+    assert.equal(leader.status, 200);
+
+    // ...but an email and phone from two different people on the same team do not.
+    const mixed = await participantLogin(member.email, details.members[2]!.phone);
+    assert.equal(mixed.status, 401);
+
+    // Wrong phone → rejected.
+    const wrong = await participantLogin(member.email, "9000000001");
+    assert.equal(wrong.status, 401);
+  });
+
   test("wrong email or unknown registration ID is rejected with a generic message", async () => {
     const reg = await register("debate", individualDetails(), uniqueUtr());
     const code = reg.body.data.registrationId as string;
