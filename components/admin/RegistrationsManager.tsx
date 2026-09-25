@@ -104,7 +104,7 @@ export function RegistrationsManager({
     adminApi.listRegistrations({ ...(JSON.parse(q ?? "{}") as RegistrationQuery), page: Number(p), pageSize: 25 }, controller.signal).then((res) => {
       if (controller.signal.aborted) return;
       if (!res.ok && res.error.code === "UNAUTHORIZED") {
-        router.replace("/admin/login");
+        router.replace("/login");
         return;
       }
       setResult((prev) => ({

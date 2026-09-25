@@ -13,4 +13,5 @@ export const EVENT_NAV = EVENT_LIST.map((e) => ({
   label: e.slug === "illuminate" ? "Illuminate Workshop" : e.name,
 }));
 
-export const ADMIN_LOGIN = { href: "/admin/login", label: "Admin Login" } as const;
+/** One login for participants and organisers; it routes each to their own dashboard. */
+export const LOGIN = { href: "/login", label: "Login" } as const;

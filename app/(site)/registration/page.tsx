@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function RegistrationLookupPage() {
   return (
     <>
-      <PageHero eyebrow="Registration" title="Check your status" intensity="faint">
+      <PageHero eyebrow="Registration" title="Check your status">
         <p>Enter the registration ID you received after submitting your payment proof.</p>
       </PageHero>
       <Container size="compact" className="pb-32">

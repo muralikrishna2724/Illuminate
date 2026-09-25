@@ -94,6 +94,13 @@ async function adminJson(path: string, init: RequestInit = {}) {
   return { status: res.status, body: (await res.json()) as Json };
 }
 
+/** Returns "name=value" for the named cookie from a response's Set-Cookie headers. */
+function cookieFrom(res: Response, name: string): string {
+  const header = res.headers.getSetCookie().find((c) => c.startsWith(`${name}=`) && !c.startsWith(`${name}=;`));
+  assert.ok(header, `response sets ${name}`);
+  return header.split(";")[0]!;
+}
+
 const created: Record<string, { registrationId: string; utr: string }> = {};
 let originalQuiz: { quizLink: string | null; enabled: boolean; accessRule: string } | null = null;
 
@@ -117,7 +124,7 @@ describe("security — unauthenticated access", () => {
     for (const path of ["/admin/dashboard", "/admin/hackathon", "/admin/illuminate"]) {
       const res = await fetch(`${BASE}${path}`, { redirect: "manual" });
       assert.ok([302, 303, 307, 308].includes(res.status), `${path} → ${res.status}`);
-      assert.match(res.headers.get("location") ?? "", /\/admin\/login$/);
+      assert.match(res.headers.get("location") ?? "", /\/login$/);
     }
   });
 
@@ -127,12 +134,18 @@ describe("security — unauthenticated access", () => {
   });
 
   test("wrong admin password is rejected", async () => {
-    const res = await fetch(`${BASE}/api/admin/auth/login`, {
+    const res = await fetch(`${BASE}/api/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Origin: BASE, "x-forwarded-for": fakeIp() },
-      body: JSON.stringify({ email: ADMIN_EMAIL, password: "definitely-wrong-password" }),
+      body: JSON.stringify({ email: ADMIN_EMAIL, secret: "definitely-wrong-password" }),
     });
     assert.equal(res.status, 401);
+  });
+
+  test("participant dashboard requires a participant session", async () => {
+    const res = await fetch(`${BASE}/dashboard`, { redirect: "manual" });
+    assert.ok([302, 303, 307, 308].includes(res.status));
+    assert.match(res.headers.get("location") ?? "", /\/login$/);
   });
 });
 
@@ -250,16 +263,19 @@ describe("registrations", () => {
 
 describe("admin workflow", () => {
   before(async () => {
-    const res = await fetch(`${BASE}/api/admin/auth/login`, {
+    const res = await fetch(`${BASE}/api/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Origin: BASE, "x-forwarded-for": fakeIp() },
-      body: JSON.stringify({ email: ADMIN_EMAIL, password: ADMIN_PASSWORD }),
+      body: JSON.stringify({ email: ADMIN_EMAIL, secret: ADMIN_PASSWORD }),
     });
     assert.equal(res.status, 200, "admin login");
-    const setCookie = res.headers.get("set-cookie") ?? "";
+    const body = (await res.json()) as Json;
+    assert.equal(body.data.role, "admin");
+    assert.equal(body.data.redirectTo, "/admin/dashboard");
+    const setCookie = res.headers.getSetCookie().find((c) => c.startsWith("ilm_admin_session=")) ?? "";
     assert.match(setCookie, /HttpOnly/i);
     assert.match(setCookie, /SameSite=lax/i);
-    cookie = setCookie.split(";")[0]!;
+    cookie = cookieFrom(res, "ilm_admin_session");
 
     const quiz = await adminJson("/api/admin/quiz");
     originalQuiz = { quizLink: quiz.body.data.quizLink, enabled: quiz.body.data.enabled, accessRule: quiz.body.data.accessRule };
@@ -269,7 +285,7 @@ describe("admin workflow", () => {
     if (originalQuiz) {
       await adminJson("/api/admin/quiz", { method: "PUT", body: JSON.stringify({ ...originalQuiz, quizLink: originalQuiz.quizLink ?? "" }) });
     }
-    await admin("/api/admin/auth/logout", { method: "POST", body: "{}" });
+    await admin("/api/auth/logout", { method: "POST", body: "{}" });
     const res = await fetch(`${BASE}/api/admin/registrations`, { headers: { Cookie: cookie } });
     assert.equal(res.status, 401, "session invalid after logout");
   });
@@ -434,5 +450,51 @@ describe("admin workflow", () => {
     assert.equal(s.totalRegistrations, s.pendingPayments + s.verifiedPayments + s.rejectedPayments);
     assert.equal(s.totalRegistrations, s.day1Registrations + s.day2Registrations);
     assert.ok(s.verifiedPayments >= 4);
+  });
+});
+
+describe("participant login", () => {
+  async function participantLogin(email: string, secret: string) {
+    return fetch(`${BASE}/api/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Origin: BASE, "x-forwarded-for": fakeIp() },
+      body: JSON.stringify({ email, secret }),
+    });
+  }
+
+  test("a team member logs in with their email + registration ID and sees the registration", async () => {
+    const details = teamDetails(4);
+    const reg = await register("ipl-auction", details, uniqueUtr());
+    assert.equal(reg.status, 201);
+    const code = reg.body.data.registrationId as string;
+    // Any member's email works, not only the leader's; the ID is case-insensitive.
+    const memberEmail = details.members[2]!.email;
+    const res = await participantLogin(memberEmail.toUpperCase(), code.toLowerCase());
+    assert.equal(res.status, 200);
+    const body = (await res.json()) as Json;
+    assert.equal(body.data.role, "participant");
+    assert.equal(body.data.redirectTo, "/dashboard");
+
+    const participantCookie = cookieFrom(res, "ilm_participant_session");
+    const page = await fetch(`${BASE}/dashboard`, { headers: { Cookie: participantCookie } });
+    assert.equal(page.status, 200);
+    const html = await page.text();
+    assert.ok(html.includes(code), "dashboard lists the registration");
+
+    // A participant session never grants admin access.
+    const adminRes = await fetch(`${BASE}/api/admin/registrations`, { headers: { Cookie: participantCookie } });
+    assert.equal(adminRes.status, 401);
+  });
+
+  test("wrong email or unknown registration ID is rejected with a generic message", async () => {
+    const reg = await register("debate", individualDetails(), uniqueUtr());
+    const code = reg.body.data.registrationId as string;
+    const wrongEmail = await participantLogin("someone.else@example.com", code);
+    assert.equal(wrongEmail.status, 401);
+    const unknown = await participantLogin("e2e.individual@example.com", "ILM-ZZZZZZ");
+    assert.equal(unknown.status, 401);
+    const a = ((await wrongEmail.json()) as Json).error.message;
+    const b = ((await unknown.json()) as Json).error.message;
+    assert.equal(a, b);
   });
 });

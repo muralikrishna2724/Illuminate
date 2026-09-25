@@ -70,6 +70,22 @@ model AdminSession {
   @@index([expiresAt])
 }
 
+// Participants sign in with their email + one of their registration IDs (no passwords).
+model ParticipantSession {
+  id        String   @id @default(cuid())
+  // HMAC-SHA256 of the opaque session token (raw token only in the httpOnly cookie).
+  tokenHash String   @unique
+  // Lower-cased email; the dashboard shows every registration linked to it.
+  email     String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  userAgent String?
+  ipAddress String?
+
+  @@index([email])
+  @@index([expiresAt])
+}
+
 model Event {
   id               String      @id @default(cuid())
   // Stable identifier used in URLs and APIs: hackathon | debate | ipl-auction | illuminate

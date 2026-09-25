@@ -4,7 +4,6 @@ import { QuizPanel } from "@/components/registration/QuizPanel";
 import { StatusBadge } from "@/components/registration/StatusBadge";
 import { StatusLookupForm } from "@/components/registration/StatusLookupForm";
 import { Container } from "@/components/ui/Container";
-import { BlackHole } from "@/components/visual/BlackHole";
 import { formatInr } from "@/lib/events/catalog";
 import { AppError } from "@/lib/http/errors";
 import { getPublicRegistrationStatus } from "@/services/registration-service";
@@ -34,9 +33,6 @@ export default async function RegistrationStatusPage({ params }: PageProps<"/reg
 
   return (
     <section className="relative isolate pb-28 pt-32 sm:pt-40">
-      <div aria-hidden="true" className="pointer-events-none absolute right-[-30%] top-0 -z-10 w-[90vw] max-w-[560px] sm:right-[-8%] sm:w-[45vw]">
-        <BlackHole intensity="faint" />
-      </div>
       <Container size="tight">
         <Link href="/registration" className="text-sm text-mist hover:text-flare">
           ← Look up another ID

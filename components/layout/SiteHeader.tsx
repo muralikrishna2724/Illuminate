@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ADMIN_LOGIN, MAIN_NAV } from "@/lib/navigation";
+import { LOGIN, MAIN_NAV } from "@/lib/navigation";
 import { buttonClasses } from "@/components/ui/Button";
 
 export function SiteHeader() {
@@ -61,10 +61,14 @@ export function SiteHeader() {
               {item.label}
             </Link>
           ))}
-          <Link href={ADMIN_LOGIN.href} className="ml-2 rounded-full px-3 py-2 text-xs text-smoke transition-colors hover:text-mist">
-            {ADMIN_LOGIN.label}
+          <Link
+            href={LOGIN.href}
+            aria-current={isActive(LOGIN.href) ? "page" : undefined}
+            className={buttonClasses("secondary", "sm", "ml-3")}
+          >
+            {LOGIN.label}
           </Link>
-          <Link href="/register" className={buttonClasses("primary", "sm", "ml-3")}>
+          <Link href="/register" className={buttonClasses("primary", "sm", "ml-2")}>
             Register
           </Link>
         </nav>
@@ -107,8 +111,8 @@ export function SiteHeader() {
             <Link href="/register" onClick={() => setOpen(false)} className={buttonClasses("primary", "lg")}>
               Register
             </Link>
-            <Link href={ADMIN_LOGIN.href} onClick={() => setOpen(false)} className="text-center text-sm text-smoke">
-              {ADMIN_LOGIN.label}
+            <Link href={LOGIN.href} onClick={() => setOpen(false)} className={buttonClasses("secondary", "lg")}>
+              {LOGIN.label}
             </Link>
           </div>
         </nav>

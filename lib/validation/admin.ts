@@ -3,7 +3,8 @@ import { EVENT_SLUGS, PAYMENT_STATUSES, QUIZ_ACCESS_RULES } from "@/types/domain
 
 export const loginSchema = z.object({
   email: z.string().trim().toLowerCase().pipe(z.email("Please enter a valid email address.")),
-  password: z.string().min(1, "Please enter your password.").max(200),
+  /** An admin password, or a participant's registration ID (ILM-XXXXXX). */
+  secret: z.string().min(1, "Please complete this field.").max(200),
 });
 
 export const rejectPaymentSchema = z.object({

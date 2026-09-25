@@ -19,7 +19,7 @@ const DAYS: Array<{ day: number; date: string; href: string; events: EventConten
 export default function SchedulePage() {
   return (
     <>
-      <PageHero eyebrow="October 8–9" title="Schedule" intensity="faint">
+      <PageHero eyebrow="October 8–9" title="Schedule">
         <p>Session timings will be announced by the organisers.</p>
       </PageHero>
       <Container className="pb-28">

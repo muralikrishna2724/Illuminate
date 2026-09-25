@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { ButtonLink } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
-import { BlackHole } from "@/components/visual/BlackHole";
 import { Starfield } from "@/components/visual/Starfield";
 import { DAY_2_EVENTS, formatInr, registrationAmountInr } from "@/lib/events/catalog";
 
@@ -18,9 +17,6 @@ export default function DayTwoPage() {
       <section className="relative isolate overflow-hidden pb-16 pt-36 sm:pb-24 sm:pt-44">
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
           <Starfield density={0.6} />
-          <div className="absolute right-[-45%] top-1/2 w-[120vw] max-w-[900px] -translate-y-1/2 sm:right-[-12%] sm:w-[70vw]">
-            <BlackHole intensity="subtle" />
-          </div>
           <div className="absolute inset-0 bg-gradient-to-r from-void via-void/75 to-void/20" />
           <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-void" />
         </div>

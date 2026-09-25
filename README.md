@@ -25,12 +25,19 @@ The project includes the public website, registrations with payment-proof upload
 | `/register` | Step 1: choose an event |
 | `/register/hackathon` · `/register/debate` · `/register/ipl-auction` · `/register/illuminate` | Registration forms (details → payment proof → confirmation) |
 | `/registration` · `/registration/[id]` | Registrants check their payment status and, for Deja Vu, the quiz link |
+| `/login` | One login for everyone (see below) |
+| `/dashboard` | Participant dashboard: every registration linked to their email, with payment status and the Deja Vu quiz |
+
+**Login.** The header's **Login** button leads to one form with an email and a "registration ID or password" field:
+- **Participants** enter the email they registered with and one of their registration IDs (`ILM-XXXXXX`). Any email on the registration works: the contact, the participant, the team leader or any team member. They land on `/dashboard`. Participants don't have passwords.
+- **Organisers** enter their admin email and password and land on `/admin/dashboard`.
+- A wrong combination always gets the same message, so the form doesn't reveal which emails exist. Login attempts are rate-limited.
 
 **Admin** (sign-in required)
 
 | Route | Purpose |
 | --- | --- |
-| `/admin/login` | Admin sign-in |
+| `/login` | Shared sign-in (`/admin/login` redirects here) |
 | `/admin/dashboard` | Live counts and a queue of payments to review, with **VERIFY** / **REJECT** on each row |
 | `/admin/hackathon` | Deja Vu registrations and quiz-link management |
 | `/admin/debate` · `/admin/ipl-auction` · `/admin/illuminate` | Per-event registrations |
@@ -67,7 +74,7 @@ The project includes the public website, registrations with payment-proof upload
 ```
 app/
   (site)/            public pages (layout: header + cinematic footer)
-  admin/             /admin/login + (protected)/ pages (server-side session check)
+  admin/             (protected)/ admin pages (server-side session check)
   api/               route handlers (public + /api/admin/*)
 components/
   admin/             dashboard, registrations table, detail panel, reject dialog, quiz manager
@@ -195,9 +202,11 @@ npm run admin:create -- --email head@your-college.edu --name "Event Head"
 ADMIN_PASSWORD='…' npm run admin:create -- --email … --name …
 ```
 
-- The password must have at least 12 characters, including upper-case and lower-case letters and a number. It is stored as a bcrypt hash (cost 12).
+- The password must have at least 8 characters, including upper-case and lower-case letters and a number. It is stored as a bcrypt hash (cost 12).
 - Running the command again for the same email resets that admin's password and signs them out everywhere.
 - To disable an admin, set `isActive = false` on their `AdminUser` row. Their sessions stop working immediately.
+- Passwords can't be looked up; they're stored only as hashes. If an admin forgets theirs, reset it with the command above.
+- Admins sign in at `/login`, the same page participants use.
 
 ---
 

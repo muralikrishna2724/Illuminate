@@ -181,3 +181,16 @@ export interface RegistrationCreated {
   paymentStatus: PaymentStatus;
   quiz: QuizAccess | null;
 }
+
+/** A registration as shown on the participant's own dashboard. */
+export interface ParticipantRegistration {
+  registrationId: string;
+  event: Pick<Event, "slug" | "name" | "day" | "date">;
+  amountInr: number;
+  paymentStatus: PaymentStatus;
+  rejectionReason: string | null;
+  submittedAt: string;
+  /** Team events only. */
+  team: { name: string; members: string[] } | null;
+  quiz: QuizAccess | null;
+}

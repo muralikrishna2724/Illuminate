@@ -11,6 +11,8 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // Hide the Next.js dev-tools badge (bottom-left "N"); errors are still shown during development.
+  devIndicators: false,
   reactStrictMode: true,
   async headers() {
     return [

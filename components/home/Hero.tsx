@@ -26,9 +26,6 @@ export function Hero() {
             <ButtonLink href="/day-2" size="lg">
               Explore Illuminate <ArrowIcon />
             </ButtonLink>
-            <ButtonLink href="/day-1" variant="secondary" size="lg" className="bg-black/30 backdrop-blur-sm">
-              Explore Day 1
-            </ButtonLink>
           </div>
         </div>
       </div>

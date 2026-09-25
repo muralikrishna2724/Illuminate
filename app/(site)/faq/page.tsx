@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default function FaqPage() {
   return (
     <>
-      <PageHero eyebrow="Questions" title="FAQ" intensity="faint">
+      <PageHero eyebrow="Questions" title="FAQ">
         <p>
           Answers based on confirmed event information. Already registered?{" "}
           <Link href="/registration" className="text-flare underline decoration-gold/50 underline-offset-4 hover:decoration-gold">

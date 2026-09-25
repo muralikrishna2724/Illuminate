@@ -1,4 +1,4 @@
-import type { AdminUser, DashboardStats, EventSlug, Paginated, Payment, PaymentStatus, Quiz, QuizAccessRule, RegistrationDetail, RegistrationSummary } from "@/types/domain";
+import type { DashboardStats, EventSlug, Paginated, Payment, PaymentStatus, Quiz, QuizAccessRule, RegistrationDetail, RegistrationSummary } from "@/types/domain";
 import { apiRequest, apiUrl, NETWORK_ERROR, SERVER_ERROR } from "./client";
 import type { ApiResponse } from "@/lib/http/api-types";
 
@@ -13,12 +13,6 @@ export interface RegistrationQuery {
 }
 
 export const adminApi = {
-  login(email: string, password: string) {
-    return apiRequest<{ admin: AdminUser }>("/api/admin/auth/login", { method: "POST", json: { email, password } });
-  },
-  logout() {
-    return apiRequest<{ signedOut: true }>("/api/admin/auth/logout", { method: "POST", json: {} });
-  },
   stats() {
     return apiRequest<DashboardStats>("/api/admin/stats", { cache: "no-store" });
   },

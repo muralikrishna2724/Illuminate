@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 export default function RegisterIndexPage() {
   return (
     <>
-      <PageHero eyebrow="Step 1 of 3 · Choose an event" title="Register" intensity="faint">
+      <PageHero eyebrow="Step 1 of 3 · Choose an event" title="Register">
         <p>Select the event you want to register for. Each event is registered and paid for separately.</p>
       </PageHero>
       <Container className="pb-28">

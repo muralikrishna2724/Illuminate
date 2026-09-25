@@ -6,7 +6,7 @@ import { Container, Eyebrow } from "@/components/ui/Container";
 import { FaqList } from "@/components/ui/FaqList";
 import { Reveal } from "@/components/ui/Reveal";
 import { BlackHole } from "@/components/visual/BlackHole";
-import { DAY_1_EVENTS, EVENTS, EVENT_LIST, formatInr, registrationAmountInr } from "@/lib/events/catalog";
+import { DAY_1_EVENTS, DAY_2_EVENTS, EVENTS, EVENT_LIST, formatInr, registrationAmountInr } from "@/lib/events/catalog";
 import { FAQS } from "@/lib/faq";
 
 const workshop = EVENTS.illuminate;
@@ -39,9 +39,6 @@ export default function HomePage() {
               </Link>
             </div>
             <div className="relative overflow-hidden bg-void p-8 sm:p-10">
-              <div aria-hidden="true" className="pointer-events-none absolute -right-24 -top-24 w-80 opacity-60">
-                <BlackHole intensity="faint" />
-              </div>
               <p className="relative text-sm text-gold/90">Day 2 · October 9 · Flagship</p>
               <p className="relative mt-6 font-display text-3xl text-flare">{workshop.name}</p>
               <p className="relative mt-3 max-w-sm text-mist">Associated with {workshop.associatedWith}.</p>
@@ -77,6 +74,30 @@ export default function HomePage() {
         </Container>
       </section>
 
+      {/* Day 2 event — mirrors the Day 1 list */}
+      <section aria-labelledby="day2-title" className="pb-8 sm:pb-12">
+        <Container>
+          <Reveal className="flex flex-wrap items-end justify-between gap-6">
+            <div>
+              <Eyebrow>Day 2 · October 9</Eyebrow>
+              <h2 id="day2-title" className="mt-3 font-display text-5xl text-flare sm:text-6xl">
+                Day 2 event
+              </h2>
+            </div>
+            <ButtonLink href="/day-2" variant="secondary">
+              Explore Day 2
+            </ButtonLink>
+          </Reveal>
+          <Reveal delay={100}>
+            <ol className="mt-12">
+              {DAY_2_EVENTS.map((event, i) => (
+                <EventRow key={event.slug} event={event} index={i + 1} href="/day-2" />
+              ))}
+            </ol>
+          </Reveal>
+        </Container>
+      </section>
+
       {/* Illuminate workshop feature */}
       <section aria-labelledby="workshop-title" className="relative isolate overflow-hidden py-28 sm:py-40">
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
@@ -87,7 +108,7 @@ export default function HomePage() {
         </div>
         <Container>
           <Reveal className="max-w-2xl">
-            <Eyebrow>Day 2 · October 9 · The flagship</Eyebrow>
+            <Eyebrow>The flagship</Eyebrow>
             <h2 id="workshop-title" className="mt-4 font-display text-6xl leading-[0.95] text-flare sm:text-8xl">
               Illuminate
             </h2>

@@ -4,7 +4,6 @@ import { connection } from "next/server";
 import Link from "next/link";
 import { RegistrationForm } from "@/components/registration/RegistrationForm";
 import { Container } from "@/components/ui/Container";
-import { BlackHole } from "@/components/visual/BlackHole";
 import { EVENTS, feeLabel } from "@/lib/events/catalog";
 import { getPaymentConfig } from "@/lib/site-config";
 import { EVENT_SLUGS, isEventSlug } from "@/types/domain";
@@ -30,9 +29,6 @@ export default async function RegisterEventPage({ params }: PageProps<"/register
 
   return (
     <section className="relative isolate pb-28 pt-32 sm:pt-40">
-      <div aria-hidden="true" className="pointer-events-none absolute right-[-30%] top-0 -z-10 w-[90vw] max-w-[560px] sm:right-[-8%] sm:w-[45vw]">
-        <BlackHole intensity="faint" />
-      </div>
       <Container size="narrow">
         <Link href="/register" className="text-sm text-mist hover:text-flare">
           ← All events

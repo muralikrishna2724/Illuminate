@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { AdminNav } from "@/components/admin/AdminNav";
-import { LogoutButton } from "@/components/admin/LogoutButton";
+import { LogoutButton } from "@/components/auth/LogoutButton";
 import { requireAdminPage } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";

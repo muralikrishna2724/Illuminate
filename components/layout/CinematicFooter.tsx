@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useRef, type ReactNode } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { useGSAP } from "@gsap/react";
 import { EVENT_YEAR_LABEL } from "@/lib/events/catalog";
-import { ADMIN_LOGIN, EVENT_NAV, MAIN_NAV } from "@/lib/navigation";
+import { EVENT_NAV, LOGIN, MAIN_NAV } from "@/lib/navigation";
 import { PLACEHOLDERS, type ContactConfig } from "@/lib/site-config";
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, useGSAP);
@@ -23,17 +24,23 @@ gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, useGSAP);
  */
 export function CinematicFooter({ contact }: { contact: ContactConfig }) {
   const root = useRef<HTMLElement>(null);
+  // The footer lives in the shared layout and survives client-side navigation,
+  // so its scroll triggers are rebuilt for each page's own height.
+  const pathname = usePathname();
 
   useGSAP(
     () => {
       const mm = gsap.matchMedia();
 
       mm.add("(prefers-reduced-motion: no-preference)", () => {
+        // One-shot entrance (not scrubbed), so the footer always ends fully visible
+        // even on short pages that can't scroll far past it.
         gsap.from("[data-footer-panel]", {
-          yPercent: 12,
-          opacity: 0.2,
-          ease: "none",
-          scrollTrigger: { trigger: root.current, start: "top bottom", end: "top 35%", scrub: 0.8 },
+          y: 48,
+          opacity: 0,
+          duration: 1.1,
+          ease: "power3.out",
+          scrollTrigger: { trigger: root.current, start: "top 92%", once: true },
         });
 
         gsap.fromTo(
@@ -60,7 +67,7 @@ export function CinematicFooter({ contact }: { contact: ContactConfig }) {
           duration: 0.9,
           ease: "power3.out",
           stagger: 0.07,
-          scrollTrigger: { trigger: root.current, start: "top 70%", once: true },
+          scrollTrigger: { trigger: root.current, start: "top 85%", once: true },
         });
       });
 
@@ -87,19 +94,57 @@ export function CinematicFooter({ contact }: { contact: ContactConfig }) {
         return () => cleanups.forEach((fn) => fn());
       });
 
-      return () => mm.revert();
+      // Re-measure once late content (fonts, images, reveals) has settled.
+      const refresh = window.setTimeout(() => ScrollTrigger.refresh(), 300);
+
+      return () => {
+        window.clearTimeout(refresh);
+        mm.revert();
+      };
     },
-    { scope: root },
+    { scope: root, dependencies: [pathname], revertOnUpdate: true },
   );
 
   const backToTop = () => {
+    const focusMain = () => document.getElementById("main")?.focus({ preventScroll: true });
+    const html = document.documentElement;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) {
-      window.scrollTo({ top: 0 });
-    } else {
-      gsap.to(window, { scrollTo: { y: 0 }, duration: 1.4, ease: "power3.inOut" });
+      html.style.scrollBehavior = "auto";
+      window.scrollTo(0, 0);
+      html.style.scrollBehavior = "";
+      focusMain();
+      return;
     }
-    document.getElementById("main")?.focus({ preventScroll: true });
+    // CSS `scroll-behavior: smooth` would animate every frame GSAP writes and
+    // make the motion lurch, so it is switched off for the duration of the tween.
+    // Duration scales with distance so long and short pages feel the same speed,
+    // with a gentle symmetric ease.
+    const distance = window.scrollY;
+    const duration = Math.min(2.2, Math.max(0.8, distance / 3200));
+    html.style.scrollBehavior = "auto";
+    gsap.killTweensOf(window);
+
+    // Let the visitor take over: any wheel, touch or key press stops the tween.
+    const cancelEvents = ["wheel", "touchstart", "keydown"] as const;
+    const cleanup = () => {
+      cancelEvents.forEach((type) => window.removeEventListener(type, cancel));
+      html.style.scrollBehavior = "";
+    };
+    function cancel() {
+      tween.kill();
+      cleanup();
+    }
+    const tween = gsap.to(window, {
+      scrollTo: { y: 0, autoKill: false },
+      duration,
+      ease: "sine.inOut",
+      onComplete: () => {
+        cleanup();
+        focusMain();
+      },
+    });
+    cancelEvents.forEach((type) => window.addEventListener(type, cancel, { passive: true, once: true }));
   };
 
   return (
@@ -179,12 +224,9 @@ export function CinematicFooter({ contact }: { contact: ContactConfig }) {
             </li>
             <FooterLink href="/registration">Check registration status</FooterLink>
           </FooterColumn>
-          <FooterColumn title="Admin">
-            <li data-footer-reveal>
-              <Link href={ADMIN_LOGIN.href} className="text-smoke transition-colors hover:text-mist">
-                {ADMIN_LOGIN.label}
-              </Link>
-            </li>
+          <FooterColumn title="Account">
+            <FooterLink href={LOGIN.href}>{LOGIN.label}</FooterLink>
+            <FooterLink href="/register">Register</FooterLink>
           </FooterColumn>
         </div>
 
