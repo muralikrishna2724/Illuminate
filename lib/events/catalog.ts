@@ -28,7 +28,10 @@ export interface EventContent {
   highlights: Array<{ title: string; items: string[] }>;
   /** Confirmed notes shown as plain statements. */
   notes: string[];
-  associatedWith?: string;
+  /** The organisation behind the event, e.g. "E-Cell IIT Bombay". */
+  initiativeBy?: string;
+  /** The event's own official tagline, when it has one. */
+  motto?: string;
   registerPath: string;
   hasQualificationQuiz: boolean;
 }
@@ -110,8 +113,10 @@ export const EVENTS: Record<EventSlug, EventContent> = {
     teamSize: 1,
     feePerPersonInr: 799,
     tagline: "The flagship of ILLUMINATE — an entrepreneurship workshop on Day 2.",
+    // Description, benefits and notes are taken from E-Cell IIT Bombay's
+    // illuminate 2026 brochure.
     description:
-      "Illuminate is the entrepreneurship workshop at the heart of ILLUMINATE, associated with IIT Bombay. It covers the Business Model Canvas, financial planning, pitching, and startup development.",
+      "Illuminate, an initiative by E-Cell IIT Bombay, aims to spark entrepreneurial spirit and build business acumen in students across India through workshops on business models, finance, and core startup principles. This one-day workshop covers the Business Model Canvas, financial planning, pitching, and startup development.",
     highlights: [
       {
         title: "What you'll learn",
@@ -119,11 +124,20 @@ export const EVENTS: Record<EventSlug, EventContent> = {
       },
       {
         title: "What you receive",
-        items: ["Entrepreneurship Certificate", "Goodies"],
+        items: [
+          "Training from seasoned entrepreneurs and professionals",
+          "A startup kit with a Business Model Canvas",
+          "A Certificate of Participation, certified by E-Cell IIT Bombay",
+        ],
       },
     ],
-    notes: ["Individual registration."],
-    associatedWith: "IIT Bombay",
+    notes: [
+      "Individual registration.",
+      "A one-day workshop on October 9.",
+      "Certificates are issued after the workshop.",
+    ],
+    initiativeBy: "E-Cell IIT Bombay",
+    motto: "Empowering the next generation of Changemakers",
     registerPath: "/register/illuminate",
     hasQualificationQuiz: false,
   },

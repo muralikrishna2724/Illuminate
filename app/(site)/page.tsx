@@ -41,7 +41,7 @@ export default function HomePage() {
             <div className="relative overflow-hidden bg-void p-8 sm:p-10">
               <p className="relative text-sm text-gold/90">Day 2 · October 9 · Flagship</p>
               <p className="relative mt-6 font-display text-3xl text-flare">{workshop.name}</p>
-              <p className="relative mt-3 max-w-sm text-mist">Associated with {workshop.associatedWith}.</p>
+              <p className="relative mt-3 max-w-sm text-mist">An initiative by {workshop.initiativeBy}.</p>
               <Link href="/day-2" className="relative mt-10 inline-flex items-center gap-2 text-sm text-sand hover:text-flare">
                 See Day 2 <ArrowIcon />
               </Link>
@@ -113,6 +113,7 @@ export default function HomePage() {
               Illuminate
             </h2>
             <p className="mt-3 font-display text-2xl font-normal text-gold sm:text-3xl">Entrepreneurship Workshop</p>
+            {workshop.motto && <p className="mt-3 text-mist">{workshop.motto}</p>}
             <p className="mt-8 text-lg leading-relaxed text-sand/90">{workshop.description}</p>
           </Reveal>
 

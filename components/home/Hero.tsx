@@ -19,8 +19,8 @@ export function Hero() {
             Illuminate
           </h1>
           <p className="mt-7 max-w-lg text-lg leading-relaxed text-sand/90 sm:text-xl">
-            At its centre is <span className="text-flare">Illuminate — the Entrepreneurship Workshop</span>, associated with IIT
-            Bombay, on Day 2. Day 1 opens with the Deja Vu Hackathon, AI Debate and IPL Auction.
+            At its centre is <span className="text-flare">Illuminate — the Entrepreneurship Workshop</span>, an initiative by
+            E-Cell IIT Bombay, on Day 2. Day 1 opens with the Deja Vu Hackathon, AI Debate and IPL Auction.
           </p>
           <div className="mt-9 flex flex-wrap gap-3">
             <ButtonLink href="/day-2" size="lg">

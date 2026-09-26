@@ -5,7 +5,7 @@ The event website and registration platform for **ILLUMINATE**, a 2-day college 
 | Day | Date | Events |
 | --- | --- | --- |
 | Day 1 | October 8 | Deja Vu Hackathon · AI Debate · IPL Auction |
-| Day 2 | October 9 | Illuminate — Entrepreneurship Workshop (the flagship, associated with IIT Bombay) |
+| Day 2 | October 9 | Illuminate — Entrepreneurship Workshop (the flagship, an initiative by E-Cell IIT Bombay) |
 
 The project includes the public website, registrations with payment-proof upload (UTR + screenshot), a PostgreSQL database, secure admin authentication, a dashboard where admins verify or reject payments with one click, Deja Vu quiz-link management and CSV export.
 

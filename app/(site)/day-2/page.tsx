@@ -8,7 +8,7 @@ import { DAY_2_EVENTS, formatInr, registrationAmountInr } from "@/lib/events/cat
 export const metadata: Metadata = {
   title: "Day 2 — October 9 · Illuminate Entrepreneurship Workshop",
   description:
-    "Day 2 of ILLUMINATE: Illuminate — Entrepreneurship Workshop, associated with IIT Bombay. Business Model Canvas, Financial Planning, Pitching, Startup Development. ₹799 per person.",
+    "Day 2 of ILLUMINATE: Illuminate — Entrepreneurship Workshop, an initiative by E-Cell IIT Bombay. Business Model Canvas, Financial Planning, Pitching, Startup Development. ₹799 per person.",
 };
 
 export default function DayTwoPage() {
@@ -39,12 +39,23 @@ export default function DayTwoPage() {
                   Illuminate
                 </h2>
                 <p className="mt-3 font-display text-3xl font-normal text-gold">Entrepreneurship Workshop</p>
-                {event.associatedWith && (
+                {event.initiativeBy && (
                   <p className="mt-6 text-sand/85">
-                    Associated with <span className="text-flare">{event.associatedWith}</span>
+                    An initiative by <span className="text-flare">{event.initiativeBy}</span>
                   </p>
                 )}
+                {event.motto && <p className="mt-2 text-gold/90">{event.motto}</p>}
                 <p className="mt-6 max-w-2xl text-lg leading-relaxed text-sand/85">{event.description}</p>
+                {event.notes.length > 0 && (
+                  <ul className="mt-8 space-y-2 text-mist">
+                    {event.notes.map((note) => (
+                      <li key={note} className="flex gap-3">
+                        <span aria-hidden="true" className="mt-2.5 h-1 w-1 shrink-0 rounded-full bg-gold/70" />
+                        {note}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </Reveal>
 
               <Reveal className="mt-16 grid gap-px overflow-hidden rounded-3xl bg-[var(--line)] lg:grid-cols-[1.4fr_1fr]">

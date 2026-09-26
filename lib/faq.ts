@@ -55,13 +55,19 @@ export const FAQS: FaqItem[] = [
     id: "what-is-workshop",
     question: "What is the Illuminate Workshop?",
     answer:
-      "Illuminate — Entrepreneurship Workshop is the Day 2 event (October 9), associated with IIT Bombay. It covers the Business Model Canvas, Financial Planning, Pitching, and Startup Development. The fee is ₹799 per person.",
+      "Illuminate — Entrepreneurship Workshop is a one-day workshop on Day 2 (October 9), an initiative by E-Cell IIT Bombay. It covers the Business Model Canvas, Financial Planning, Pitching, and Startup Development. The fee is ₹799 per person.",
     featured: true,
   },
   {
     id: "workshop-includes",
     question: "What is included with the workshop?",
-    answer: "Workshop participants receive an Entrepreneurship Certificate and goodies.",
+    answer:
+      "Workshop participants are trained by seasoned entrepreneurs and professionals, and receive a startup kit with a Business Model Canvas and a Certificate of Participation certified by E-Cell IIT Bombay.",
+  },
+  {
+    id: "workshop-certificate",
+    question: "When will I get my workshop certificate?",
+    answer: "Certificates are issued after the workshop.",
   },
   {
     id: "payment-verification",
