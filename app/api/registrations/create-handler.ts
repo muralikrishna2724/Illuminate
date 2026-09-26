@@ -27,8 +27,8 @@ export function createRegistrationHandler(slug: EventSlug) {
       throw new AppError(411, "VALIDATION_ERROR", "The upload could not be processed. Please try again.");
     }
     if (Number(lengthHeader) > MAX_BODY_BYTES) {
-      throw new AppError(413, "PAYLOAD_TOO_LARGE", "The upload is too large. Screenshots must be 5 MB or smaller.", {
-        screenshot: "The screenshot must be 5 MB or smaller.",
+      throw new AppError(413, "PAYLOAD_TOO_LARGE", "The upload is too large. Screenshots must be 4 MB or smaller.", {
+        screenshot: "The screenshot must be 4 MB or smaller.",
       });
     }
     if (!request.headers.get("content-type")?.includes("multipart/form-data")) {

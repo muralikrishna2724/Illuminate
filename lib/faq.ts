@@ -85,6 +85,6 @@ export const FAQS: FaqItem[] = [
   {
     id: "screenshot-format",
     question: "Which screenshot formats are accepted?",
-    answer: "JPG, JPEG, PNG or WEBP images, up to 5 MB.",
+    answer: "JPG, JPEG, PNG or WEBP images, up to 4 MB.",
   },
 ];

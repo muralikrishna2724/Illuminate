@@ -89,7 +89,7 @@ export function apiUpload<T>(path: string, form: FormData, onProgress?: (fractio
       if (xhr.status === 413) {
         return resolve({
           ok: false,
-          error: { code: "PAYLOAD_TOO_LARGE", message: "The upload is too large.", fieldErrors: { screenshot: "The screenshot must be 5 MB or smaller." } },
+          error: { code: "PAYLOAD_TOO_LARGE", message: "The upload is too large.", fieldErrors: { screenshot: "The screenshot must be 4 MB or smaller." } },
         });
       }
       resolve({ ok: false, error: SERVER_ERROR });

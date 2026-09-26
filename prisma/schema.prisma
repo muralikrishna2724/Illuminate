@@ -10,8 +10,11 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  // Used by the running app. On Vercel + Supabase: the TRANSACTION pooler (port 6543, ?pgbouncer=true).
+  url       = env("DATABASE_URL")
+  // Used by `prisma migrate`. On Supabase: the SESSION pooler (port 5432). Locally: same as DATABASE_URL.
+  directUrl = env("DIRECT_URL")
 }
 
 enum EventFormat {

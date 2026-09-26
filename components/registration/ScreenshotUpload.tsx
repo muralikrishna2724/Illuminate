@@ -103,7 +103,7 @@ export function ScreenshotUpload({
             </button>
           </p>
           <p id={`${inputId}-hint`} className="text-xs text-smoke">
-            JPG, JPEG, PNG or WEBP · up to 5 MB
+            JPG, JPEG, PNG or WEBP · up to 4 MB
           </p>
         </div>
       ) : (

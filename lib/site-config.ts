@@ -48,7 +48,8 @@ export function getContactConfig(): ContactConfig {
 }
 
 /** Maximum payment screenshot size, shared by the browser and the server. */
-export const MAX_SCREENSHOT_BYTES = 5 * 1024 * 1024;
+// 4 MB keeps the whole multipart request under Vercel's 4.5 MB serverless body limit.
+export const MAX_SCREENSHOT_BYTES = 4 * 1024 * 1024;
 export const ACCEPTED_SCREENSHOT_TYPES = ["image/jpeg", "image/png", "image/webp"] as const;
 export const ACCEPTED_SCREENSHOT_EXTENSIONS = [".jpg", ".jpeg", ".png", ".webp"] as const;
 

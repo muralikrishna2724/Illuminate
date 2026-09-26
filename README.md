@@ -119,7 +119,8 @@ All variables are documented in [`.env.example`](.env.example). The important on
 
 | Variable | Secret? | Notes |
 | --- | --- | --- |
-| `DATABASE_URL` | **yes** | PostgreSQL connection string |
+| `DATABASE_URL` | **yes** | PostgreSQL connection string used by the app (on Vercel + Supabase: the transaction pooler, port 6543, with `?pgbouncer=true&connection_limit=1`) |
+| `DIRECT_URL` | **yes** | Connection string used by `prisma migrate` (on Supabase: the session pooler, port 5432). Locally, the same as `DATABASE_URL` |
 | `ADMIN_SESSION_SECRET` | **yes** | ≥ 32 random chars (`openssl rand -base64 48`). Key for hashing session tokens |
 | `STORAGE_PROVIDER` | no | `supabase` (production) or `local` (development) |
 | `SUPABASE_URL` | no | Supabase project URL |
@@ -225,7 +226,7 @@ Files are stored at `payment-screenshots/{registrationId}/payment.{jpg|png|webp}
 
 - The bucket is private, and the service-role key never reaches the browser.
 - Admins view screenshots through `GET /api/admin/payments/{paymentId}/screenshot`. The route checks the admin session, then streams the image with `Cache-Control: private, no-store`. There is no public URL.
-- Uploads are checked by their **magic bytes** (JPEG, PNG or WEBP) and must be 5 MB or smaller. The declared MIME type and file name are not trusted.
+- Uploads are checked by their **magic bytes** (JPEG, PNG or WEBP) and must be 4 MB or smaller. The declared MIME type and file name are not trusted.
 - If saving to the database fails after an upload, the uploaded object is deleted so nothing is left orphaned.
 
 **Development:** `STORAGE_PROVIDER="local"` writes files to `./storage/` (git-ignored, outside `public/`, so they are never served statically). The app refuses to use local storage under `next start` unless you set `ALLOW_LOCAL_STORAGE_IN_PRODUCTION="true"`.
@@ -275,7 +276,13 @@ npm run build
 npm start
 ```
 
-**Vercel:** set the environment variables in the project settings and use Supabase Storage. Run `npm run db:deploy && npm run db:seed` once per release, either from CI or locally with the production `DATABASE_URL`.
+**Vercel:**
+1. Import the GitHub repo in Vercel. The framework (Next.js) is detected automatically; keep the default build command (`npm run build`).
+2. Add the environment variables from `.env.example` in *Settings → Environment Variables*. Use `STORAGE_PROVIDER=supabase`, the Supabase **transaction pooler** URL (port 6543, `?pgbouncer=true&connection_limit=1`) for `DATABASE_URL`, the **session pooler** URL (port 5432) for `DIRECT_URL`, a new random `ADMIN_SESSION_SECRET`, and `NEXT_PUBLIC_SITE_URL` set to the live URL.
+3. Run migrations and the seed against the production database from your machine (`npm run db:deploy && npm run db:seed` with the production `DIRECT_URL`/`DATABASE_URL` in `.env`), and create admin accounts with `npm run admin:create`.
+4. In *Settings → Functions*, pick the region closest to your Supabase project (e.g. Mumbai `bom1` for `ap-south-1`).
+5. Vercel limits request bodies to 4.5 MB. Payment screenshots are therefore capped at 4 MB (`MAX_SCREENSHOT_BYTES` in `lib/site-config.ts`); don't raise it on Vercel.
+6. Contact details (`CONTACT_*`) are read at build time, so redeploy after changing them. Payment details (`PAYMENT_*`) apply on the next request.
 
 **Rate limiting** is in-memory and per instance: 10 registrations per 10 minutes and 10 logins per 15 minutes per IP. That is enough for a single server. On serverless or multi-instance hosting, back `lib/http/rate-limit.ts` with a shared store such as Redis/Upstash.
 
