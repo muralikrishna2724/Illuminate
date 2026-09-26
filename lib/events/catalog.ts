@@ -68,8 +68,8 @@ export const EVENTS: Record<EventSlug, EventContent> = {
   },
   debate: {
     slug: "debate",
-    name: "AI Debate",
-    shortName: "AI Debate",
+    name: "Under the Hood of AI",
+    shortName: "Under the Hood of AI",
     day: 1,
     date: "2026-10-08",
     dateLabel: "October 8",
@@ -78,7 +78,7 @@ export const EVENTS: Record<EventSlug, EventContent> = {
     feePerPersonInr: 50,
     tagline: "An individual event on Day 1.",
     description:
-      "AI Debate is an individual event on Day 1 of ILLUMINATE. Further details will be announced by the organisers.",
+      "Under the Hood of AI is an individual event on Day 1 of ILLUMINATE. Further details will be announced by the organisers.",
     highlights: [],
     notes: ["Individual participation."],
     registerPath: "/register/debate",

@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     template: "%s · ILLUMINATE",
   },
   description:
-    "ILLUMINATE is a 2-day college innovation, technology, entrepreneurship and creative event. Day 1: Deja Vu Hackathon, AI Debate, IPL Auction. Day 2: Illuminate — Entrepreneurship Workshop.",
+    "ILLUMINATE is a 2-day college innovation, technology, entrepreneurship and creative event. Day 1: Deja Vu Hackathon, Under the Hood of AI, IPL Auction. Day 2: Illuminate — Entrepreneurship Workshop.",
   openGraph: {
     title: "ILLUMINATE — October 8–9",
     description: "A 2-day innovation & entrepreneurship event, led by the Illuminate Entrepreneurship Workshop on Day 2.",

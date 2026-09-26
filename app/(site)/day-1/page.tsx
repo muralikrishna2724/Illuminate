@@ -6,14 +6,14 @@ import { DAY_1_EVENTS } from "@/lib/events/catalog";
 
 export const metadata: Metadata = {
   title: "Day 1 — October 8",
-  description: "Day 1 of ILLUMINATE: Deja Vu Hackathon, AI Debate and IPL Auction.",
+  description: "Day 1 of ILLUMINATE: Deja Vu Hackathon, Under the Hood of AI and IPL Auction.",
 };
 
 export default function DayOnePage() {
   return (
     <>
       <PageHero eyebrow="October 8" title="Day 1">
-        <p>Three events: the Deja Vu Hackathon, AI Debate and IPL Auction.</p>
+        <p>Three events: the Deja Vu Hackathon, Under the Hood of AI and IPL Auction.</p>
         <nav aria-label="Day 1 events" className="mt-6 flex flex-wrap gap-2 text-base">
           {DAY_1_EVENTS.map((e) => (
             <a

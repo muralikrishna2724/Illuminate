@@ -14,7 +14,7 @@ export const FAQS: FaqItem[] = [
     id: "what-is-illuminate",
     question: "What is ILLUMINATE?",
     answer:
-      "ILLUMINATE is a 2-day college innovation, technology, entrepreneurship and creative event on October 8–9. Day 1 (October 8) has the Deja Vu Hackathon, AI Debate and IPL Auction. Day 2 (October 9) is Illuminate — the Entrepreneurship Workshop.",
+      "ILLUMINATE is a 2-day college innovation, technology, entrepreneurship and creative event on October 8–9. Day 1 (October 8) has the Deja Vu Hackathon, Under the Hood of AI and IPL Auction. Day 2 (October 9) is Illuminate — the Entrepreneurship Workshop.",
     featured: true,
   },
   {
@@ -42,9 +42,9 @@ export const FAQS: FaqItem[] = [
       "Deja Vu has a qualification quiz. The quiz link will appear on your registration confirmation and on your registration status page once the organisers make it available.",
   },
   {
-    id: "fee-debate",
-    question: "What is the AI Debate fee?",
-    answer: "AI Debate is an individual event. The fee is ₹50 per person.",
+    id: "fee-under-the-hood-of-ai",
+    question: "What is the Under the Hood of AI fee?",
+    answer: "Under the Hood of AI is an individual event. The fee is ₹50 per person.",
   },
   {
     id: "team-size-ipl",

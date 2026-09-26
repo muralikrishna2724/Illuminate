@@ -182,7 +182,7 @@ describe("registrations", () => {
     assert.equal(reformatted.status, 409);
   });
 
-  test("TEST 3 — AI Debate: individual, ₹50, PENDING", async () => {
+  test("TEST 3 — Under the Hood of AI: individual, ₹50, PENDING", async () => {
     const utr = uniqueUtr();
     const { status, body } = await register("debate", individualDetails(), utr);
     assert.equal(status, 201, JSON.stringify(body));

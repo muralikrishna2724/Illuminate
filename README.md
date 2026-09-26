@@ -4,7 +4,7 @@ The event website and registration platform for **ILLUMINATE**, a 2-day college 
 
 | Day | Date | Events |
 | --- | --- | --- |
-| Day 1 | October 8 | Deja Vu Hackathon · AI Debate · IPL Auction |
+| Day 1 | October 8 | Deja Vu Hackathon · Under the Hood of AI · IPL Auction |
 | Day 2 | October 9 | Illuminate — Entrepreneurship Workshop (the flagship, an initiative by E-Cell IIT Bombay) |
 
 The project includes the public website, registrations with payment-proof upload (UTR + screenshot), a PostgreSQL database, secure admin authentication, a dashboard where admins verify or reject payments with one click, Deja Vu quiz-link management and CSV export.
@@ -18,7 +18,7 @@ The project includes the public website, registrations with payment-proof upload
 | Route | Purpose |
 | --- | --- |
 | `/` | Homepage: hero, 2-day overview, Day 1 events, Illuminate Workshop feature, navigation, registration CTA, FAQ preview |
-| `/day-1` | Day 1 (October 8): Deja Vu Hackathon, AI Debate, IPL Auction |
+| `/day-1` | Day 1 (October 8): Deja Vu Hackathon, Under the Hood of AI, IPL Auction |
 | `/day-2` | Day 2 (October 9): Illuminate — Entrepreneurship Workshop |
 | `/schedule` | Both days, with no invented timings |
 | `/faq` | FAQs written only from confirmed information |
@@ -261,7 +261,7 @@ E2E_ALLOW_WRITES=true E2E_BASE_URL=http://localhost:3000 \
 E2E_ADMIN_EMAIL=you@example.edu E2E_ADMIN_PASSWORD='…' npm run test:e2e
 ```
 
-The E2E suite covers every acceptance test: Deja Vu, AI Debate, IPL Auction and Illuminate registrations with the correct amounts; duplicate UTRs (including re-formatted ones); invalid files; VERIFY and REJECT; quiz access rules; CSV export; unauthenticated access; forged cookies; cross-origin blocking; and private screenshots.
+The E2E suite covers every acceptance test: Deja Vu, Under the Hood of AI, IPL Auction and Illuminate registrations with the correct amounts; duplicate UTRs (including re-formatted ones); invalid files; VERIFY and REJECT; quiz access rules; CSV export; unauthenticated access; forged cookies; cross-origin blocking; and private screenshots.
 
 ---
 

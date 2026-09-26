@@ -8,7 +8,7 @@ import { EVENT_LIST, feeLabel, formatInr, registrationAmountInr } from "@/lib/ev
 
 export const metadata: Metadata = {
   title: "Register",
-  description: "Register for the Deja Vu Hackathon, AI Debate, IPL Auction or the Illuminate Entrepreneurship Workshop.",
+  description: "Register for the Deja Vu Hackathon, Under the Hood of AI, IPL Auction or the Illuminate Entrepreneurship Workshop.",
 };
 
 export default function RegisterIndexPage() {

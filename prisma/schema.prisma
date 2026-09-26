@@ -2,7 +2,7 @@
 //
 // Registrations are split by format:
 //   - TEAM events (Deja Vu Hackathon, IPL Auction)      -> Registration + Team + TeamMember[]
-//   - INDIVIDUAL events (AI Debate, Illuminate Workshop) -> Registration + Participant
+//   - INDIVIDUAL events (Under the Hood of AI, Illuminate Workshop) -> Registration + Participant
 // Every registration has exactly one Payment (payment proof: UTR + screenshot).
 
 generator client {
