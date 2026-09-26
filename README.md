@@ -128,13 +128,12 @@ All variables are documented in [`.env.example`](.env.example). The important on
 | `SUPABASE_STORAGE_BUCKET` | no | Defaults to `payment-screenshots` |
 | `SUPABASE_ANON_KEY` | no | Not used by the server code. Listed for completeness |
 | `NEXT_PUBLIC_API_BASE_URL` | no | Leave empty; set only if the API runs on another origin |
-| `PAYMENT_UPI_ID`, `PAYMENT_PAYEE_NAME`, `PAYMENT_QR_IMAGE_URL` | no | Official payment details. Placeholders are shown until they're set |
-| `CONTACT_EMAIL`, `CONTACT_PHONE` | no | Shown in the footer. Placeholders are shown until they're set |
+| `PAYMENT_UPI_ID`, `PAYMENT_PAYEE_NAME`, `PAYMENT_QR_IMAGE_URL` | no | Optional overrides for the payment details. By default the organisers' QR (`public/payment/upi-qr.png`) and payee name from `lib/site-config.ts` are used. The UPI ID isn't shown unless you set it |
 | `TRUST_PROXY_HEADERS` | no | `true` behind Vercel/Nginx/Cloudflare; `false` if Node is exposed directly |
 
 Secrets are only read by server modules marked `import "server-only"` (`lib/env.ts`, `lib/storage/*`, `lib/auth/*`). If a client component imports one of them, the build fails.
 
-> Contact details in the footer are baked in at build time, so rebuild after changing them. Payment details on the registration pages are read on every request.
+> **Contact people** for the footer's *Contact us* pop-up are listed in `EVENT_CONTACTS` in `lib/site-config.ts`: 3–4 names and 10-digit phone numbers. Entries that still say `PLACEHOLDER` are shown but can't be dialled. Commit and push to update the live site. Payment details are read on every request.
 
 ---
 
@@ -282,7 +281,7 @@ npm start
 3. Run migrations and the seed against the production database from your machine (`npm run db:deploy && npm run db:seed` with the production `DIRECT_URL`/`DATABASE_URL` in `.env`), and create admin accounts with `npm run admin:create`.
 4. In *Settings → Functions*, pick the region closest to your Supabase project (e.g. Mumbai `bom1` for `ap-south-1`).
 5. Vercel limits request bodies to 4.5 MB. Payment screenshots are therefore capped at 4 MB (`MAX_SCREENSHOT_BYTES` in `lib/site-config.ts`); don't raise it on Vercel.
-6. Contact details (`CONTACT_*`) are read at build time, so redeploy after changing them. Payment details (`PAYMENT_*`) apply on the next request.
+6. Contact people come from `lib/site-config.ts`, so push a commit to change them. Payment overrides (`PAYMENT_*`) apply on the next request after a redeploy.
 
 **Rate limiting** is in-memory and per instance: 10 registrations per 10 minutes and 10 logins per 15 minutes per IP. That is enough for a single server. On serverless or multi-instance hosting, back `lib/http/rate-limit.ts` with a shared store such as Redis/Upstash.
 

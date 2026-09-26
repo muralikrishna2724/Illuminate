@@ -9,7 +9,7 @@ import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { useGSAP } from "@gsap/react";
 import { EVENT_YEAR_LABEL } from "@/lib/events/catalog";
 import { EVENT_NAV, LOGIN, MAIN_NAV } from "@/lib/navigation";
-import { PLACEHOLDERS, type ContactConfig } from "@/lib/site-config";
+import { ContactPopup } from "./ContactPopup";
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, useGSAP);
 
@@ -23,10 +23,8 @@ gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, useGSAP);
  * All motion is gated behind `prefers-reduced-motion: no-preference`.
  */
 export function CinematicFooter({
-  contact,
   account = null,
 }: {
-  contact: ContactConfig;
   /** Link shown instead of "Login" when someone is signed in. */
   account?: { href: string; label: string } | null;
 }) {
@@ -211,23 +209,8 @@ export function CinematicFooter({
             ))}
           </FooterColumn>
           <FooterColumn title="Contact">
-            <li data-footer-reveal className="text-mist">
-              {contact.email ? (
-                <a className="hover:text-flare" href={`mailto:${contact.email}`}>
-                  {contact.email}
-                </a>
-              ) : (
-                <span title="Contact email not yet published">{PLACEHOLDERS.contactEmail}</span>
-              )}
-            </li>
-            <li data-footer-reveal className="text-mist">
-              {contact.phone ? (
-                <a className="hover:text-flare" href={`tel:${contact.phone.replace(/\s/g, "")}`}>
-                  {contact.phone}
-                </a>
-              ) : (
-                <span title="Contact number not yet published">{PLACEHOLDERS.contactPhone}</span>
-              )}
+            <li data-footer-reveal>
+              <ContactPopup />
             </li>
             <FooterLink href="/registration">Check registration status</FooterLink>
           </FooterColumn>
