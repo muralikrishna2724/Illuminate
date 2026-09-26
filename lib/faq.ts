@@ -65,6 +65,17 @@ export const FAQS: FaqItem[] = [
       "Workshop participants are trained by seasoned entrepreneurs and professionals, and receive a startup kit with a Business Model Canvas and a Certificate of Participation certified by E-Cell IIT Bombay.",
   },
   {
+    id: "workshop-structure",
+    question: "What happens during the workshop?",
+    answer:
+      "It is a hands-on, one-day workshop of about 5–6 hours, conducted by experts and real entrepreneurs. Sessions cover what entrepreneurship is, team formation, idea generation and problem identification, the Business Model Canvas (with a team activity to fill one out), finance for entrepreneurs, startup development (MVPs and proofs of concept), and a pitching workshop with Q&A. The full session plan is on the Day 2 page.",
+  },
+  {
+    id: "workshop-team",
+    question: "Do I need a team for the workshop?",
+    answer: "No. Registration is individual, and participants are organised into teams during the workshop.",
+  },
+  {
     id: "workshop-certificate",
     question: "When will I get my workshop certificate?",
     answer: "Certificates are issued after the workshop.",

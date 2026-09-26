@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { ButtonLink } from "@/components/ui/Button";
-import { Container } from "@/components/ui/Container";
+import { Container, Eyebrow } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
 import { Starfield } from "@/components/visual/Starfield";
 import { DAY_2_EVENTS, formatInr, registrationAmountInr } from "@/lib/events/catalog";
+import { ABOUT_ECELL, ECELL_WORKSHOP_STATS, WORKSHOP_FORMAT, WORKSHOP_SESSIONS, formatMinutes } from "@/lib/events/workshop";
 
 export const metadata: Metadata = {
   title: "Day 2 — October 9 · Illuminate Entrepreneurship Workshop",
@@ -102,6 +103,74 @@ export default function DayTwoPage() {
           </article>
         );
       })}
+
+      {/* Session plan */}
+      <section aria-labelledby="sessions-title" className="pb-28">
+        <Container>
+          <Reveal className="grid gap-10 border-t border-[var(--line)] pt-16 lg:grid-cols-[1fr_1.6fr]">
+            <div>
+              <Eyebrow>How the day runs</Eyebrow>
+              <h2 id="sessions-title" className="mt-3 font-display text-5xl leading-[1.02] text-flare sm:text-6xl">
+                Workshop structure
+              </h2>
+            </div>
+            <ul className="space-y-3 self-end text-mist">
+              {WORKSHOP_FORMAT.map((line) => (
+                <li key={line} className="flex gap-3">
+                  <span aria-hidden="true" className="mt-2.5 h-1 w-1 shrink-0 rounded-full bg-gold/70" />
+                  {line}
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+
+          <Reveal delay={100}>
+            <ol className="mt-14 divide-y divide-[var(--line)] border-y border-[var(--line)]">
+              {WORKSHOP_SESSIONS.map((session, i) => (
+                <li key={session.topic} className="grid gap-x-8 gap-y-2 py-6 sm:grid-cols-[3rem_1fr_6rem] lg:grid-cols-[3rem_18rem_1fr_6rem]">
+                  <span className="font-display text-xl text-smoke">{String(i + 1).padStart(2, "0")}</span>
+                  <h3 className="font-display text-2xl leading-snug text-flare">{session.topic}</h3>
+                  <p className="text-sand/80 sm:col-start-2 lg:col-start-auto">{session.activity}</p>
+                  <p className="text-sm text-gold/90 sm:col-start-3 sm:row-start-1 sm:text-right lg:col-start-4">
+                    {formatMinutes(session.minutes)}
+                  </p>
+                </li>
+              ))}
+            </ol>
+          </Reveal>
+        </Container>
+      </section>
+
+      {/* About E-Cell IIT Bombay */}
+      <section aria-labelledby="ecell-title" className="pb-28">
+        <Container>
+          <Reveal className="grid gap-12 border-t border-[var(--line)] pt-16 lg:grid-cols-[1fr_1.6fr]">
+            <div>
+              <Eyebrow>Behind the workshop</Eyebrow>
+              <h2 id="ecell-title" className="mt-3 font-display text-5xl leading-[1.02] text-flare sm:text-6xl">
+                About {ABOUT_ECELL.name}
+              </h2>
+            </div>
+            <div className="space-y-5 text-lg leading-relaxed text-sand/85">
+              {ABOUT_ECELL.paragraphs.map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+            </div>
+          </Reveal>
+
+          <Reveal delay={100}>
+            <p className="mt-16 text-sm text-mist">Previous year highlights of the illuminate workshops</p>
+            <dl className="mt-4 grid gap-px overflow-hidden rounded-3xl bg-[var(--line)] sm:grid-cols-3">
+              {ECELL_WORKSHOP_STATS.map((stat) => (
+                <div key={stat.label} className="bg-void p-8 sm:p-10">
+                  <dt className="text-sm text-mist">{stat.label}</dt>
+                  <dd className="mt-2 font-display text-5xl text-flare sm:text-6xl">{stat.value}</dd>
+                </div>
+              ))}
+            </dl>
+          </Reveal>
+        </Container>
+      </section>
     </>
   );
 }

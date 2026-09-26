@@ -132,7 +132,7 @@ export const EVENTS: Record<EventSlug, EventContent> = {
       },
     ],
     notes: [
-      "Individual registration.",
+      "Individual registration — participants are organised into teams during the workshop.",
       "A one-day workshop on October 9.",
       "Certificates are issued after the workshop.",
     ],
