@@ -41,7 +41,7 @@ export function PaymentActions({
           type="button"
           disabled={busy !== null}
           onClick={onVerify}
-          className="rounded-full border border-emerald-300/40 px-3 py-1 text-emerald-200 hover:bg-emerald-300/10 disabled:opacity-50"
+          className="rounded-full border border-emerald-300/40 px-3 py-1 text-ok hover:bg-emerald-300/10 disabled:opacity-50"
         >
           {busy === "verify" ? "Verifying…" : "Mark VERIFIED"}
         </button>
@@ -50,7 +50,7 @@ export function PaymentActions({
           type="button"
           disabled={busy !== null}
           onClick={onReject}
-          className="rounded-full border border-red-300/40 px-3 py-1 text-red-200 hover:bg-red-400/10 disabled:opacity-50"
+          className="rounded-full border border-red-300/40 px-3 py-1 text-bad hover:bg-red-400/10 disabled:opacity-50"
         >
           {busy === "reject" ? "Rejecting…" : "Mark REJECTED"}
         </button>

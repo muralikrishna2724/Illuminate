@@ -21,8 +21,8 @@ export default function RegisterIndexPage() {
       <Container className="pb-28">
         <Reveal as="ul" className="grid gap-px overflow-hidden rounded-3xl bg-[var(--line)] md:grid-cols-2">
           {EVENT_LIST.map((event) => (
-            <li key={event.slug} className={event.day === 2 ? "bg-gradient-to-br from-pine/55 via-pine-deep/35 to-night" : "bg-night"}>
-              <Link href={event.registerPath} className="group flex h-full flex-col justify-between gap-10 p-8 transition-colors hover:bg-pine/25 sm:p-10">
+            <li key={event.slug} className={event.day === 2 ? "bg-gradient-to-br from-powder/70 via-night to-night" : "bg-night"}>
+              <Link href={event.registerPath} className="group flex h-full flex-col justify-between gap-10 p-8 transition-colors hover:bg-powder/40 sm:p-10">
                 <div>
                   <p className={`text-sm ${event.day === 2 ? "text-gold/90" : "text-mist"}`}>
                     Day {event.day} · {event.dateLabel}

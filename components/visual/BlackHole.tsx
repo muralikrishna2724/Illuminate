@@ -13,7 +13,7 @@ const OPACITY: Record<Intensity, string> = {
  * WebGL renderer (public/images/black-hole.jpg). Only the homepage hero runs
  * the live renderer, so internal pages stay light.
  *
- * The still is rendered on the page's own violet, and a radial mask fades
+ * The still is rendered on Carbon Black to match the dark bands, and a radial mask fades
  * the square edges. Decorative only.
  */
 export function BlackHole({ intensity = "subtle", className = "" }: { intensity?: Intensity; className?: string }) {

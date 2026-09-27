@@ -26,7 +26,7 @@ export default async function LoginPage() {
             Use the email you registered with and your registration ID. Forgot the ID? Use the same email with the phone number
             you registered with.
           </p>
-          <div className="mt-10 rounded-2xl border border-[var(--line-strong)] bg-white/[0.02] p-6 sm:p-8">
+          <div className="mt-10 rounded-2xl border border-[var(--line-strong)] bg-night p-6 sm:p-8">
             <LoginForm />
           </div>
           <p className="mt-8 text-sm text-mist">

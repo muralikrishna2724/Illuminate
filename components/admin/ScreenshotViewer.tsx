@@ -32,7 +32,7 @@ export function ScreenshotViewer({ src, registrationId }: { src: string; registr
       </div>
       <div className={`mt-3 overflow-auto rounded-xl border border-[var(--line)] bg-black ${zoomed ? "max-h-[75vh]" : ""}`}>
         {failed ? (
-          <p className="p-6 text-sm text-[#f4a193]">The screenshot could not be loaded. Try opening it in a new tab.</p>
+          <p className="p-6 text-sm text-bad">The screenshot could not be loaded. Try opening it in a new tab.</p>
         ) : (
           // eslint-disable-next-line @next/next/no-img-element -- private, cookie-authenticated image; must not go through the public image optimiser
           <img

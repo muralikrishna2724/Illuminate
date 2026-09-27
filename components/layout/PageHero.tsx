@@ -12,11 +12,10 @@ export function PageHero({
   children?: ReactNode;
 }) {
   return (
-    <section className="relative isolate overflow-hidden pb-16 pt-36 sm:pb-24 sm:pt-44">
+    <section className="theme-dark relative isolate overflow-hidden bg-void pb-16 pt-36 sm:pb-24 sm:pt-44">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
         <Starfield density={0.5} />
-        <div className="absolute inset-0 bg-gradient-to-r from-void via-void/80 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-void" />
+        <div className="absolute inset-0 bg-gradient-to-r from-void via-void/80 to-baltic/40" />
       </div>
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
         {eyebrow && <p className="text-sm text-gold/90 sm:text-base">{eyebrow}</p>}

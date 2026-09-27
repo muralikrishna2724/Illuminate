@@ -38,8 +38,8 @@ export function SiteHeader({ viewer }: { viewer: Viewer }) {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-[background-color,backdrop-filter,border-color] duration-500 ${
-        scrolled || open ? "border-b border-[var(--line)] bg-void/80 backdrop-blur-md" : "border-b border-transparent"
+      className={`theme-dark fixed inset-x-0 top-0 z-50 transition-[background-color,backdrop-filter,border-color] duration-500 ${
+        scrolled || open ? "border-b border-[var(--line)] bg-void/90 backdrop-blur-md" : "border-b border-transparent bg-void"
       }`}
     >
       <a

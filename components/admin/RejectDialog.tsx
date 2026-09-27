@@ -70,7 +70,7 @@ export function RejectDialog({
             placeholder="e.g. UTR not found in payment records"
           />
           {error && (
-            <p role="alert" className="mt-3 text-sm text-[#f4a193]">
+            <p role="alert" className="mt-3 text-sm text-bad">
               {error}
             </p>
           )}

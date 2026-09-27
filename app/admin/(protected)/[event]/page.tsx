@@ -43,15 +43,15 @@ export default async function AdminEventPage({ params }: PageProps<"/admin/[even
             </div>
             <div>
               <dt className="text-xs text-mist">Pending</dt>
-              <dd className="text-xl text-amber-200">{counts.pending}</dd>
+              <dd className="text-xl text-warn">{counts.pending}</dd>
             </div>
             <div>
               <dt className="text-xs text-mist">Verified</dt>
-              <dd className="text-xl text-emerald-200">{counts.verified}</dd>
+              <dd className="text-xl text-ok">{counts.verified}</dd>
             </div>
             <div>
               <dt className="text-xs text-mist">Rejected</dt>
-              <dd className="text-xl text-red-200">{counts.rejected}</dd>
+              <dd className="text-xl text-bad">{counts.rejected}</dd>
             </div>
           </dl>
         )}

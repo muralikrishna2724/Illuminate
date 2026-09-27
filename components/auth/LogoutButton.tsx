@@ -18,7 +18,7 @@ export function LogoutButton({ className = "" }: { className?: string }) {
         router.replace("/login");
         router.refresh();
       }}
-      className={`inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm text-mist hover:bg-white/5 hover:text-flare disabled:opacity-50 ${className}`}
+      className={`inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm text-mist hover:bg-dusk hover:text-flare disabled:opacity-50 ${className}`}
     >
       {loading && <Spinner className="h-3.5 w-3.5" />}
       Log out

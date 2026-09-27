@@ -28,7 +28,7 @@ export function RegistrationSuccess({
 
   return (
     <div className="space-y-8">
-      <div role="status" className="rounded-3xl border border-[var(--line-strong)] bg-white/[0.02] p-6 sm:p-10">
+      <div role="status" className="rounded-3xl border border-[var(--line-strong)] bg-night p-6 sm:p-10">
         <p className="text-sm text-gold/90">{result.eventName}</p>
         <h2 ref={headingRef} tabIndex={-1} className="mt-2 scroll-mt-28 font-display text-5xl text-flare outline-none sm:text-6xl">
           Registration Successful

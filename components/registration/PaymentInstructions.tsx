@@ -24,7 +24,7 @@ export function PaymentInstructions({
   );
 
   return (
-    <div className="rounded-2xl border border-[var(--line-strong)] bg-white/[0.02] p-6 sm:p-8">
+    <div className="rounded-2xl border border-[var(--line-strong)] bg-night p-6 sm:p-8">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="text-sm text-mist">Registration amount</p>

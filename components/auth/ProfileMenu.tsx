@@ -73,7 +73,7 @@ export function ProfileMenu({ viewer }: { viewer: NonNullable<Viewer> }) {
             role="menuitem"
             href={homeHref}
             onClick={() => setOpen(false)}
-            className="block px-4 py-3 text-sm text-sand hover:bg-white/5 hover:text-flare"
+            className="block px-4 py-3 text-sm text-sand hover:bg-dusk hover:text-flare"
           >
             {homeLabel}
           </Link>
@@ -82,7 +82,7 @@ export function ProfileMenu({ viewer }: { viewer: NonNullable<Viewer> }) {
             type="button"
             onClick={logout}
             disabled={loggingOut}
-            className="flex w-full items-center gap-2 border-t border-[var(--line)] px-4 py-3 text-left text-sm text-mist hover:bg-white/5 hover:text-flare disabled:opacity-50"
+            className="flex w-full items-center gap-2 border-t border-[var(--line)] px-4 py-3 text-left text-sm text-mist hover:bg-dusk hover:text-flare disabled:opacity-50"
           >
             {loggingOut && <Spinner className="h-3.5 w-3.5" />}
             Log out

@@ -59,7 +59,7 @@ export function RegistrationDetailPanel({
               {detail?.registrationId ?? "Loading…"}
             </h2>
           </div>
-          <button type="button" onClick={onClose} className="rounded-full p-2 text-mist hover:bg-white/5 hover:text-flare" aria-label="Close details">
+          <button type="button" onClick={onClose} className="rounded-full p-2 text-mist hover:bg-dusk hover:text-flare" aria-label="Close details">
             <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" aria-hidden="true">
               <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
             </svg>
@@ -73,7 +73,7 @@ export function RegistrationDetailPanel({
             </p>
           )}
           {error && (
-            <p role="alert" className="text-[#f4a193]">
+            <p role="alert" className="text-bad">
               {error}
             </p>
           )}

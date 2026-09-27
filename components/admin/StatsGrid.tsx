@@ -7,9 +7,9 @@ export function StatsGrid({ stats }: { stats: DashboardStats }) {
     { label: "Total registrations", value: stats.totalRegistrations },
     { label: "Day 1 registrations", value: stats.day1Registrations },
     { label: "Day 2 registrations", value: stats.day2Registrations },
-    { label: "Pending payments", value: stats.pendingPayments, tone: "text-amber-200" },
-    { label: "Verified payments", value: stats.verifiedPayments, tone: "text-emerald-200" },
-    { label: "Rejected payments", value: stats.rejectedPayments, tone: "text-red-200" },
+    { label: "Pending payments", value: stats.pendingPayments, tone: "text-warn" },
+    { label: "Verified payments", value: stats.verifiedPayments, tone: "text-ok" },
+    { label: "Rejected payments", value: stats.rejectedPayments, tone: "text-bad" },
   ];
   return (
     <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl bg-[var(--line)] sm:grid-cols-3 xl:grid-cols-6">
@@ -46,9 +46,9 @@ export function EventBreakdown({ stats }: { stats: DashboardStats }) {
                 </Link>
               </th>
               <td className="px-4 py-3 text-right text-flare">{e.total}</td>
-              <td className="px-4 py-3 text-right text-amber-200">{e.pending}</td>
-              <td className="px-4 py-3 text-right text-emerald-200">{e.verified}</td>
-              <td className="px-4 py-3 text-right text-red-200">{e.rejected}</td>
+              <td className="px-4 py-3 text-right text-warn">{e.pending}</td>
+              <td className="px-4 py-3 text-right text-ok">{e.verified}</td>
+              <td className="px-4 py-3 text-right text-bad">{e.rejected}</td>
             </tr>
           ))}
         </tbody>

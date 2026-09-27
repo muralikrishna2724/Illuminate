@@ -64,7 +64,7 @@ export function Starfield({ density = 1, className = "" }: { density?: number; c
       for (const s of stars) {
         const twinkle = reduceMotion ? 1 : 0.65 + 0.35 * Math.sin(s.phase + (t / 1000) * s.speed);
         ctx.globalAlpha = s.base * twinkle;
-        ctx.fillStyle = s.warm ? "#c7ef00" : "#f4f3e2";
+        ctx.fillStyle = s.warm ? "#bbcde5" : "#ffffff";
         ctx.beginPath();
         ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
         ctx.fill();

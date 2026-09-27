@@ -58,7 +58,7 @@ export function ContactPopup({
             type="button"
             onClick={() => setOpen(false)}
             aria-label="Close"
-            className="rounded-full p-1.5 text-mist hover:bg-white/5 hover:text-flare"
+            className="rounded-full p-1.5 text-mist hover:bg-dusk hover:text-flare"
           >
             <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" aria-hidden="true">
               <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />

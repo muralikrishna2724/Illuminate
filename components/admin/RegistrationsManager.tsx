@@ -311,12 +311,12 @@ export function RegistrationsManager({
         {announcement}
       </p>
       {actionError && (
-        <p role="alert" className="rounded-xl border border-[#f08b7a]/50 bg-[#f08b7a]/10 px-4 py-3 text-sm text-[#f7b3a7]">
+        <p role="alert" className="rounded-xl border border-bad/50 bg-bad/10 px-4 py-3 text-sm text-bad">
           {actionError}
         </p>
       )}
       {error && (
-        <p role="alert" className="rounded-xl border border-[#f08b7a]/50 bg-[#f08b7a]/10 px-4 py-3 text-sm text-[#f7b3a7]">
+        <p role="alert" className="rounded-xl border border-bad/50 bg-bad/10 px-4 py-3 text-sm text-bad">
           {error}
         </p>
       )}
@@ -339,7 +339,7 @@ export function RegistrationsManager({
           </thead>
           <tbody>
             {data?.items.map((row) => (
-              <tr key={row.registrationId} className="border-b border-[var(--line)] align-middle last:border-0 hover:bg-white/[0.02]">
+              <tr key={row.registrationId} className="border-b border-[var(--line)] align-middle last:border-0 hover:bg-dusk/60">
                 <td className="px-4 py-3">
                   <button type="button" onClick={() => openDetail(row.registrationId)} className="whitespace-nowrap font-mono text-flare underline-offset-4 hover:underline">
                     {row.registrationId}

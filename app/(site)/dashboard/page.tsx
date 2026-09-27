@@ -46,7 +46,7 @@ export default async function ParticipantDashboardPage() {
         </div>
 
         {profile && (
-          <section aria-labelledby="details-title" className="mt-10 rounded-2xl border border-[var(--line-strong)] bg-white/[0.02] p-6 sm:p-8">
+          <section aria-labelledby="details-title" className="mt-10 rounded-2xl border border-[var(--line-strong)] bg-night p-6 sm:p-8">
             <h2 id="details-title" className="text-sm text-mist">
               My details
             </h2>
@@ -76,7 +76,7 @@ export default async function ParticipantDashboardPage() {
           <ul className="mt-6 space-y-8">
             {registrations.map((r) => (
               <li key={r.registrationId} className="space-y-4">
-                <article className="rounded-2xl border border-[var(--line-strong)] bg-white/[0.02] p-6 sm:p-8">
+                <article className="rounded-2xl border border-[var(--line-strong)] bg-night p-6 sm:p-8">
                   <div className="flex flex-wrap items-start justify-between gap-4">
                     <div>
                       <p className="text-sm text-gold">

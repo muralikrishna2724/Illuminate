@@ -36,13 +36,14 @@ const hex = (value: string): [number, number, number] => [
   parseInt(value.slice(5, 7), 16) / 255,
 ];
 
-// Site palette: Dry Sage, Lime Yellow, Pine Blue on Midnight Violet.
+// Site palette: Powder Blue inner edge, a lifted Baltic Blue disk fading to
+// Baltic Blue, on Carbon Black.
 const DEFAULT_COLORS: BlackHoleColors = {
-  hot: hex("#f2f5d2"),
-  mid: hex("#d6ff1f"),
-  outer: hex("#3c787e"),
-  sky: hex("#241623"),
-  shadow: hex("#0f080f"),
+  hot: hex("#dbe7f5"),
+  mid: hex("#2f7fcc"),
+  outer: hex("#1c5d99"),
+  sky: hex("#222222"),
+  shadow: hex("#0b0c0d"),
 };
 
 export interface BlackHoleRenderer {

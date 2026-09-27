@@ -4,19 +4,25 @@
   --font-display: var(--font-bricolage), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
 
-  /* Palette: Midnight Violet #241623 · Dry Sage #D0CD94 · Pine Blue #3C787E · Lime Yellow #C7EF00 */
-  --color-void: #241623; /* Midnight Violet: page background */
-  --color-night: #2d1c2c; /* raised violet surface */
-  --color-dusk: #3a2638; /* hover / active violet surface */
-  --color-pine: #3c787e; /* Pine Blue */
-  --color-pine-deep: #1f4a50;
-  --color-sage: #d0cd94; /* Dry Sage */
-  --color-lime: #c7ef00; /* Lime Yellow */
-  --color-gold: #c7ef00; /* accent (lime) */
-  --color-flare: #f4f3e2; /* headings: sage-tinted white */
-  --color-sand: #e2e0bf; /* body text */
-  --color-mist: #b3b08c; /* secondary text */
-  --color-smoke: #8b8870; /* tertiary text */
+  /* Palette — primary: White #FFFFFF, Baltic Blue #1C5D99.
+     Complementary: Carbon Black #222222, Pacific Blue #639FAB, Powder Blue #BBCDE5.
+     These are the light-theme values; `.theme-dark` below re-points them for dark bands. */
+  --color-void: #ffffff; /* page background */
+  --color-night: #f1f5fb; /* raised surface (powder tint) */
+  --color-dusk: #e2eaf5; /* hover / active surface */
+  --color-flare: #222222; /* headings: Carbon Black */
+  --color-sand: #2f353b; /* body text */
+  --color-mist: #505b66; /* secondary text */
+  --color-smoke: #6f7b87; /* tertiary text */
+  --color-gold: #1c5d99; /* accent: Baltic Blue */
+  --color-baltic: #1c5d99;
+  --color-baltic-deep: #154a7b;
+  --color-pacific: #639fab;
+  --color-powder: #bbcde5;
+  --color-carbon: #222222;
+  --color-ok: #0f7a4a;
+  --color-warn: #8f5b00;
+  --color-bad: #b42318;
 
   --animate-spin-slow: spin 90s linear infinite;
   --animate-breathe: breathe 9s ease-in-out infinite;
@@ -44,9 +50,29 @@
 }
 
 :root {
+  color-scheme: light;
+  --line: rgb(28 93 153 / 0.14);
+  --line-strong: rgb(28 93 153 / 0.28);
+}
+
+/* Dark bands (header, hero, page heroes, workshop feature, footer, admin):
+   the same tokens, re-pointed at Carbon Black with blue light. */
+.theme-dark {
   color-scheme: dark;
-  --line: rgb(208 205 148 / 0.14);
-  --line-strong: rgb(208 205 148 / 0.28);
+  color: var(--color-sand);
+  --color-void: #222222;
+  --color-night: #2a2e33;
+  --color-dusk: #343a41;
+  --color-flare: #ffffff;
+  --color-sand: #e4ecf6;
+  --color-mist: #bbcde5;
+  --color-smoke: #8fa2b8;
+  --color-gold: #8cc3ce; /* Pacific Blue, lifted for contrast on Carbon Black */
+  --color-ok: #a7f3d0;
+  --color-warn: #fde68a;
+  --color-bad: #fecaca;
+  --line: rgb(187 205 229 / 0.14);
+  --line-strong: rgb(187 205 229 / 0.28);
 }
 
 @layer base {
@@ -56,11 +82,10 @@ html {
 }
 
 body {
-  /* Soft pine and lime light over the violet so large areas never read as flat. */
+  /* Faint powder-blue light so the white never reads as flat. */
   background:
-    radial-gradient(90rem 50rem at 110% -10%, rgb(60 120 126 / 0.28), transparent 60%),
-    radial-gradient(70rem 40rem at -20% 40%, rgb(60 120 126 / 0.16), transparent 60%),
-    radial-gradient(60rem 36rem at 50% 115%, rgb(199 239 0 / 0.06), transparent 65%),
+    radial-gradient(80rem 40rem at 110% 20%, rgb(187 205 229 / 0.35), transparent 60%),
+    radial-gradient(70rem 40rem at -20% 70%, rgb(99 159 171 / 0.12), transparent 60%),
     var(--color-void);
   background-attachment: fixed;
   color: var(--color-sand);
@@ -70,7 +95,7 @@ body {
 }
 
 ::selection {
-  background: rgb(199 239 0 / 0.35);
+  background: rgb(28 93 153 / 0.25);
   color: var(--color-flare);
 }
 
@@ -80,9 +105,9 @@ body {
   border-radius: 6px;
 }
 
-/* Lime is too light to see on the Dry Sage band. */
-.bg-sage :focus-visible {
-  outline-color: var(--color-void);
+/* Baltic Blue disappears on the Baltic Blue band. */
+.bg-baltic :focus-visible {
+  outline-color: #ffffff;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -131,7 +156,7 @@ body {
 /* Hairline divider with a warm centre. */
 .divider-glow {
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgb(199 239 0 / 0.45), rgb(60 120 126 / 0.5), transparent);
+  background: linear-gradient(90deg, transparent, rgb(28 93 153 / 0.45), rgb(99 159 171 / 0.5), transparent);
 }
 
 /* Form controls */
@@ -139,7 +164,7 @@ body {
   width: 100%;
   border-radius: 0.75rem;
   border: 1px solid var(--line-strong);
-  background: rgb(208 205 148 / 0.05);
+  background: color-mix(in oklab, var(--color-night) 70%, transparent);
   padding: 0.75rem 0.95rem;
   color: var(--color-flare);
   font-size: 1rem;
@@ -153,26 +178,26 @@ body {
   color: var(--color-smoke);
 }
 .field-input:hover {
-  border-color: rgb(208 205 148 / 0.4);
+  border-color: color-mix(in oklab, var(--color-gold) 45%, transparent);
 }
 .field-input:focus {
   outline: none;
   border-color: var(--color-gold);
-  background: rgb(208 205 148 / 0.08);
-  box-shadow: 0 0 0 3px rgb(199 239 0 / 0.18);
+  background: var(--color-void);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-gold) 20%, transparent);
 }
 .field-input[aria-invalid="true"] {
-  border-color: #f08b7a;
+  border-color: var(--color-bad);
 }
 select.field-input {
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1.5 6 6.5l5-5' stroke='%23b3b08c' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1.5 6 6.5l5-5' stroke='%236f7b87' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 1rem center;
   padding-right: 2.5rem;
 }
 select.field-input option {
-  background: #2d1c2c;
-  color: #f4f3e2;
+  background: var(--color-void);
+  color: var(--color-flare);
 }
 }

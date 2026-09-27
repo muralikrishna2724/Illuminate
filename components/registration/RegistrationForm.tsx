@@ -184,7 +184,7 @@ export function RegistrationForm({ event, payment }: { event: EventContent; paym
         </h2>
 
         {formError && (
-          <div role="alert" className="mt-6 rounded-xl border border-[#f08b7a]/50 bg-[#f08b7a]/10 px-4 py-3 text-sm text-[#f7b3a7]">
+          <div role="alert" className="mt-6 rounded-xl border border-bad/50 bg-bad/10 px-4 py-3 text-sm text-bad">
             {formError}
           </div>
         )}
@@ -217,7 +217,7 @@ export function RegistrationForm({ event, payment }: { event: EventContent; paym
                 <h3 className="text-lg text-flare">Members ({TEAM_SIZE} required)</h3>
                 <p className="text-sm text-mist">The team leader is one of the {TEAM_SIZE} members.</p>
               </div>
-              {errors.members && <p role="alert" className="mt-2 text-sm text-[#f4a193]">{errors.members}</p>}
+              {errors.members && <p role="alert" className="mt-2 text-sm text-bad">{errors.members}</p>}
               <div className="mt-6 space-y-8">
                 {team.members.map((member, i) => (
                   <fieldset key={i} className="rounded-2xl border border-[var(--line)] p-5 sm:p-6">

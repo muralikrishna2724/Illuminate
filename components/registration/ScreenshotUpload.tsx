@@ -90,7 +90,7 @@ export function ScreenshotUpload({
             if (!disabled) pick(e.dataTransfer.files?.[0]);
           }}
           className={`flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed px-6 py-10 text-center transition-colors ${
-            error ? "border-[#f08b7a]" : dragging ? "border-gold bg-gold/5" : "border-[var(--line-strong)]"
+            error ? "border-bad" : dragging ? "border-gold bg-gold/5" : "border-[var(--line-strong)]"
           }`}
         >
           <svg viewBox="0 0 24 24" className="h-8 w-8 text-mist" fill="none" aria-hidden="true">
@@ -107,7 +107,7 @@ export function ScreenshotUpload({
           </p>
         </div>
       ) : (
-        <div className={`overflow-hidden rounded-2xl border ${error ? "border-[#f08b7a]" : "border-[var(--line-strong)]"}`}>
+        <div className={`overflow-hidden rounded-2xl border ${error ? "border-bad" : "border-[var(--line-strong)]"}`}>
           <div className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center">
             {previewUrl && (
               // eslint-disable-next-line @next/next/no-img-element -- local blob: preview, not optimisable
@@ -152,7 +152,7 @@ export function ScreenshotUpload({
                 <span>{Math.round(progress * 100)}%</span>
               </div>
               <div
-                className="mt-2 h-1 overflow-hidden rounded-full bg-white/10"
+                className="mt-2 h-1 overflow-hidden rounded-full bg-dusk"
                 role="progressbar"
                 aria-label="Screenshot upload progress"
                 aria-valuemin={0}
@@ -167,7 +167,7 @@ export function ScreenshotUpload({
       )}
 
       {error && (
-        <p id={`${inputId}-error`} role="alert" className="mt-1.5 text-sm text-[#f4a193]">
+        <p id={`${inputId}-error`} role="alert" className="mt-1.5 text-sm text-bad">
           {error}
         </p>
       )}

@@ -10,8 +10,8 @@ export default async function ProtectedAdminLayout({ children }: { children: Rea
   const admin = await requireAdminPage();
 
   return (
-    <>
-      <header className="sticky top-0 z-40 border-b border-[var(--line)] bg-[#080707]/90 backdrop-blur">
+    <div className="theme-dark min-h-dvh bg-void">
+      <header className="sticky top-0 z-40 border-b border-[var(--line)] bg-void/90 backdrop-blur">
         <div className="mx-auto flex max-w-[90rem] flex-col gap-3 px-4 py-3 sm:px-6 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex items-center justify-between gap-4">
             <Link href="/admin/dashboard" className="flex items-baseline gap-2">
@@ -35,6 +35,6 @@ export default async function ProtectedAdminLayout({ children }: { children: Rea
       <main id="main" className="mx-auto max-w-[90rem] px-4 pb-24 pt-8 sm:px-6">
         {children}
       </main>
-    </>
+    </div>
   );
 }

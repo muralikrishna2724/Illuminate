@@ -1,9 +1,9 @@
 import type { PaymentStatus } from "@/types/domain";
 
 const STYLES: Record<PaymentStatus, string> = {
-  PENDING: "border-amber-300/40 bg-amber-300/10 text-amber-200",
-  VERIFIED: "border-emerald-300/40 bg-emerald-300/10 text-emerald-200",
-  REJECTED: "border-red-300/40 bg-red-400/10 text-red-200",
+  PENDING: "border-amber-300/40 bg-amber-300/10 text-warn",
+  VERIFIED: "border-emerald-300/40 bg-emerald-300/10 text-ok",
+  REJECTED: "border-red-300/40 bg-red-400/10 text-bad",
 };
 
 export function StatusBadge({ status, className = "" }: { status: PaymentStatus; className?: string }) {

@@ -15,11 +15,10 @@ export const metadata: Metadata = {
 export default function DayTwoPage() {
   return (
     <>
-      <section className="relative isolate overflow-hidden pb-16 pt-36 sm:pb-24 sm:pt-44">
+      <section className="theme-dark relative isolate overflow-hidden bg-void pb-16 pt-36 sm:pb-24 sm:pt-44">
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
           <Starfield density={0.6} />
-          <div className="absolute inset-0 bg-gradient-to-r from-void via-void/75 to-void/20" />
-          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-void" />
+          <div className="absolute inset-0 bg-gradient-to-r from-void via-void/75 to-baltic/40" />
         </div>
         <Container>
           <p className="text-sm text-gold/90 sm:text-base">October 9</p>
@@ -73,10 +72,10 @@ export default function DayTwoPage() {
                     </ol>
                   </div>
                 )}
-                <div className="flex flex-col justify-between gap-10 bg-gradient-to-br from-pine/45 via-night to-night p-8 sm:p-12">
+                <div className="flex flex-col justify-between gap-10 bg-gradient-to-br from-powder/70 via-night to-night p-8 sm:p-12">
                   {benefits && (
                     <div>
-                      <h3 className="text-xs font-medium tracking-[0.14em] text-lime/90 uppercase">Included in the fee</h3>
+                      <h3 className="text-xs font-medium tracking-[0.14em] text-gold uppercase">Included in the fee</h3>
                       <ul className="mt-6 space-y-3 text-xl text-flare">
                         {benefits.items.map((item) => (
                           <li key={item} className="flex items-baseline gap-3">
@@ -164,7 +163,7 @@ export default function DayTwoPage() {
               {ECELL_WORKSHOP_STATS.map((stat) => (
                 <div key={stat.label} className="bg-night p-8 sm:p-10">
                   <dt className="text-sm text-mist">{stat.label}</dt>
-                  <dd className="mt-2 font-display text-5xl text-lime sm:text-6xl">{stat.value}</dd>
+                  <dd className="mt-2 font-display text-5xl text-gold sm:text-6xl">{stat.value}</dd>
                 </div>
               ))}
             </dl>

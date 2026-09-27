@@ -45,7 +45,7 @@ export function LoginForm() {
   return (
     <form onSubmit={submit} noValidate className="space-y-5">
       {error && (
-        <p role="alert" className="rounded-xl border border-[#f08b7a]/50 bg-[#f08b7a]/10 px-4 py-3 text-sm text-[#f7b3a7]">
+        <p role="alert" className="rounded-xl border border-bad/50 bg-bad/10 px-4 py-3 text-sm text-bad">
           {error}
         </p>
       )}

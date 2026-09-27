@@ -6,7 +6,7 @@ import { Countdown } from "./Countdown";
 
 export function Hero() {
   return (
-    <section aria-labelledby="hero-title" className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-void">
+    <section aria-labelledby="hero-title" className="theme-dark relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-void">
       {/* Decorative layers — never interactive */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
         <HeroBlackHole />
@@ -26,7 +26,7 @@ export function Hero() {
               ))}
             </ul>
           )}
-          <p className="text-sm font-medium text-lime sm:text-base">October 8–9 · 2-Day Innovation &amp; Entrepreneurship Event</p>
+          <p className="text-sm font-medium text-gold sm:text-base">October 8–9 · 2-Day Innovation &amp; Entrepreneurship Event</p>
           <h1 id="hero-title" className="mt-4 font-display text-[17vw] leading-[0.88] text-flare sm:text-[8.5rem] lg:text-[9.5rem]">
             Illuminate
           </h1>

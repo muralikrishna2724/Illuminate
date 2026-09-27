@@ -53,7 +53,7 @@ export function QuizManager({ initial }: { initial: Quiz }) {
           </h2>
           <p className="mt-1 text-sm text-mist">
             Currently{" "}
-            <strong className={saved.enabled ? "text-emerald-200" : "text-amber-200"}>{saved.enabled ? "ENABLED" : "DISABLED"}</strong>
+            <strong className={saved.enabled ? "text-ok" : "text-warn"}>{saved.enabled ? "ENABLED" : "DISABLED"}</strong>
             {saved.updatedAt && (
               <>
                 {" "}
@@ -92,7 +92,7 @@ export function QuizManager({ initial }: { initial: Quiz }) {
             className="field-input"
           />
           {fieldError ? (
-            <p id="quiz-link-error" className="mt-1.5 text-sm text-[#f4a193]">
+            <p id="quiz-link-error" className="mt-1.5 text-sm text-bad">
               {fieldError}
             </p>
           ) : (
@@ -111,12 +111,12 @@ export function QuizManager({ initial }: { initial: Quiz }) {
           </select>
         </div>
         <label className="flex items-center gap-3 text-sm text-sand">
-          <input type="checkbox" checked={enabled} onChange={(e) => setEnabled(e.target.checked)} className="h-4 w-4 accent-[#f5c688]" />
+          <input type="checkbox" checked={enabled} onChange={(e) => setEnabled(e.target.checked)} className="h-4 w-4 accent-gold" />
           Quiz enabled
         </label>
         <div className="flex items-center justify-end gap-3">
           {message && (
-            <p role="status" className="text-sm text-emerald-200">
+            <p role="status" className="text-sm text-ok">
               {message}
             </p>
           )}
@@ -126,7 +126,7 @@ export function QuizManager({ initial }: { initial: Quiz }) {
         </div>
       </form>
       {error && !fieldError && (
-        <p role="alert" className="mt-3 text-sm text-[#f4a193]">
+        <p role="alert" className="mt-3 text-sm text-bad">
           {error}
         </p>
       )}

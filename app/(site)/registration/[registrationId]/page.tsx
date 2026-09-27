@@ -48,7 +48,7 @@ export default async function RegistrationStatusPage({ params }: PageProps<"/reg
           </div>
         ) : (
           <div className="mt-10 space-y-8">
-            <div className="rounded-3xl border border-[var(--line-strong)] bg-white/[0.02] p-6 sm:p-10">
+            <div className="rounded-3xl border border-[var(--line-strong)] bg-night p-6 sm:p-10">
               <p className="text-sm text-gold/90">
                 {status.event.name} · Day {status.event.day}
               </p>

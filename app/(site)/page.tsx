@@ -38,7 +38,7 @@ export default function HomePage() {
                 See Day 1 <ArrowIcon />
               </Link>
             </div>
-            <div className="relative overflow-hidden bg-gradient-to-br from-pine/60 via-pine-deep/40 to-night p-8 sm:p-10">
+            <div className="theme-dark relative overflow-hidden bg-gradient-to-br from-baltic to-baltic-deep p-8 sm:p-10">
               <p className="relative text-sm text-gold/90">Day 2 · October 9 · Flagship</p>
               <p className="relative mt-6 font-display text-3xl text-flare">{workshop.name}</p>
               <p className="relative mt-3 max-w-sm text-mist">An initiative by {workshop.initiativeBy}.</p>
@@ -99,7 +99,7 @@ export default function HomePage() {
       </section>
 
       {/* Illuminate workshop feature */}
-      <section aria-labelledby="workshop-title" className="relative isolate overflow-hidden py-28 sm:py-40">
+      <section aria-labelledby="workshop-title" className="theme-dark relative isolate overflow-hidden bg-void py-28 sm:py-40">
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
           <div className="absolute left-1/2 top-1/2 w-[140vw] max-w-[900px] -translate-x-1/2 -translate-y-1/2 md:left-[72%] md:w-[70vw]">
             <BlackHole intensity="subtle" />
@@ -161,7 +161,7 @@ export default function HomePage() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="group flex flex-col justify-between gap-10 bg-night p-7 transition-colors hover:bg-pine/35"
+                  className="group flex flex-col justify-between gap-10 bg-night p-7 transition-colors hover:bg-dusk"
                 >
                   <span className="font-display text-4xl text-flare">{item.label}</span>
                   <span className="flex items-center justify-between text-sm text-mist">
@@ -175,33 +175,33 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* Registration CTA — a Dry Sage band */}
-      <section aria-labelledby="register-title" className="bg-sage py-24 text-void sm:py-32">
+      {/* Registration CTA — a Baltic Blue band */}
+      <section aria-labelledby="register-title" className="theme-dark bg-baltic py-24 sm:py-32">
         <Container className="grid gap-14 lg:grid-cols-[1fr_1.1fr]">
           <Reveal>
-            <p className="text-sm font-medium text-pine-deep">Registration</p>
-            <h2 id="register-title" className="mt-3 font-display text-5xl leading-[1.02] text-void sm:text-6xl">
+            <p className="text-sm font-medium text-powder">Registration</p>
+            <h2 id="register-title" className="mt-3 font-display text-5xl leading-[1.02] text-flare sm:text-6xl">
               Pick an event. Pay. Submit your proof.
             </h2>
-            <p className="mt-6 max-w-md text-void/75">
+            <p className="mt-6 max-w-md text-sand">
               Fees are calculated for you. After paying, you submit your UTR / transaction ID and a payment screenshot, and receive a
               registration ID. The organisers verify each payment manually.
             </p>
           </Reveal>
           <Reveal delay={120}>
-            <ul className="divide-y divide-void/15 border-y border-void/15">
+            <ul className="divide-y divide-white/20 border-y border-white/20">
               {EVENT_LIST.map((event) => (
                 <li key={event.slug}>
                   <Link href={event.registerPath} className="group flex items-center justify-between gap-6 py-5">
                     <span>
-                      <span className="block text-lg font-medium text-void">{event.name}</span>
-                      <span className="text-sm text-void/65">
+                      <span className="block text-lg font-medium text-flare">{event.name}</span>
+                      <span className="text-sm text-sand">
                         Day {event.day} · {event.format === "TEAM" ? `team of ${event.teamSize}` : "individual"}
                       </span>
                     </span>
-                    <span className="flex items-center gap-3 whitespace-nowrap font-medium text-void">
+                    <span className="flex items-center gap-3 whitespace-nowrap font-medium text-flare">
                       {formatInr(registrationAmountInr(event))}
-                      <ArrowIcon className="h-4 w-4 text-pine-deep transition-transform duration-300 group-hover:translate-x-1" />
+                      <ArrowIcon className="h-4 w-4 text-powder transition-transform duration-300 group-hover:translate-x-1" />
                     </span>
                   </Link>
                 </li>
