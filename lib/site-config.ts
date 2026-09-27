@@ -57,17 +57,39 @@ export interface EventContact {
 }
 
 /**
- * People listed in the footer's "Contact us" pop-up.
- * Replace the placeholders with real names and 10-digit numbers (3–4 people).
- * Entries still containing "PLACEHOLDER" are shown as placeholders and are
- * not dialable.
+ * Organisers listed in the footer and the "Contact us" pop-up (from the
+ * event poster). Add more as { name, phone } with a 10-digit number.
+ * Entries containing "PLACEHOLDER" are hidden from the footer and are not
+ * dialable.
  */
 export const EVENT_CONTACTS: EventContact[] = [
-  { name: "CONTACT_NAME_1_PLACEHOLDER", phone: "CONTACT_PHONE_1_PLACEHOLDER" },
-  { name: "CONTACT_NAME_2_PLACEHOLDER", phone: "CONTACT_PHONE_2_PLACEHOLDER" },
-  { name: "CONTACT_NAME_3_PLACEHOLDER", phone: "CONTACT_PHONE_3_PLACEHOLDER" },
-  { name: "CONTACT_NAME_4_PLACEHOLDER", phone: "CONTACT_PHONE_4_PLACEHOLDER" },
+  { name: "CH Sathya Pardha Saradhi", phone: "9903031062" },
+  { name: "G Tejaswini", phone: "8074324396" },
 ];
+
+/** Organisers' email and Instagram (from the event poster). */
+export const CONTACT_EMAIL = "ecellcvrce@gmail.com";
+export const INSTAGRAM = { handle: "@ecell_cvrce", url: "https://www.instagram.com/ecell_cvrce/" } as const;
+
+/** Host institution and venue (from the event poster). */
+export const HOST = {
+  name: "CVR College of Engineering",
+  accreditation: "A UGC Autonomous Institution, NAAC 'A' Grade",
+  town: "Ibrahimpatnam",
+  shortLocation: "Ibrahimpatnam, Telangana",
+  address: "Vastunagar, Mangalpalli (V), Ibrahimpatnam (M), Rangareddy (D), Telangana 501510",
+} as const;
+
+/** Organisations ILLUMINATE is held in collaboration with (from the event poster). */
+export const COLLABORATORS: string[] = [
+  "IIT Bombay",
+  "E-Cell IIT Bombay — National Entrepreneurship Challenge 2026",
+  "IEEE ComSoc (IEEE Communications Society)",
+  "Sudhan Shetty Innovation Club",
+];
+
+export const TAGLINE = ["Learn", "Build", "Innovate"] as const;
+export const SIGN_OFF = "Big ideas start with you.";
 
 export function isPlaceholder(value: string): boolean {
   return value.includes("PLACEHOLDER");

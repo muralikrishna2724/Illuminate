@@ -1,11 +1,11 @@
 # ILLUMINATE
 
-The event website and registration platform for **ILLUMINATE**, a 2-day college innovation, technology, entrepreneurship and creative event on **October 8–9**.
+The event website and registration platform for **ILLUMINATE**, a 2-day college innovation, technology, entrepreneurship and creative event on **October 9–10**.
 
 | Day | Date | Events |
 | --- | --- | --- |
-| Day 1 | October 8 | Deja Vu Hackathon · Under the Hood of AI · IPL Auction |
-| Day 2 | October 9 | Illuminate — Entrepreneurship Workshop (the flagship, an initiative by E-Cell IIT Bombay) |
+| Day 1 | October 9 | Deja Vu Hackathon · Under the Hood of AI · IPL Auction |
+| Day 2 | October 10 | Illuminate — Entrepreneurship Workshop (the flagship, an initiative by E-Cell IIT Bombay) |
 
 The project includes the public website, registrations with payment-proof upload (UTR + screenshot), a PostgreSQL database, secure admin authentication, a dashboard where admins verify or reject payments with one click, Deja Vu quiz-link management and CSV export.
 
@@ -18,8 +18,8 @@ The project includes the public website, registrations with payment-proof upload
 | Route | Purpose |
 | --- | --- |
 | `/` | Homepage: hero, 2-day overview, Day 1 events, Illuminate Workshop feature, navigation, registration CTA, FAQ preview |
-| `/day-1` | Day 1 (October 8): Deja Vu Hackathon, Under the Hood of AI, IPL Auction |
-| `/day-2` | Day 2 (October 9): Illuminate — Entrepreneurship Workshop |
+| `/day-1` | Day 1 (October 9): Deja Vu Hackathon, Under the Hood of AI, IPL Auction |
+| `/day-2` | Day 2 (October 10): Illuminate — Entrepreneurship Workshop |
 | `/schedule` | Both days, with no invented timings |
 | `/faq` | FAQs written only from confirmed information |
 | `/register` | Step 1: choose an event |

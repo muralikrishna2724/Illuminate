@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import { ButtonLink } from "@/components/ui/Button";
 import { Container, Eyebrow } from "@/components/ui/Container";
+import { ExclusiveBenefits } from "@/components/ui/ExclusiveBenefits";
 import { Reveal } from "@/components/ui/Reveal";
 import { Starfield } from "@/components/visual/Starfield";
 import { DAY_2_EVENTS, formatInr, registrationAmountInr } from "@/lib/events/catalog";
 import { ABOUT_ECELL, ECELL_WORKSHOP_STATS, WORKSHOP_FORMAT, WORKSHOP_SESSIONS, formatMinutes } from "@/lib/events/workshop";
 
 export const metadata: Metadata = {
-  title: "Day 2 — October 9 · Illuminate Entrepreneurship Workshop",
+  title: "Day 2 — October 10 · Illuminate Entrepreneurship Workshop",
   description:
     "Day 2 of ILLUMINATE: Illuminate — Entrepreneurship Workshop, an initiative by E-Cell IIT Bombay. Business Model Canvas, Financial Planning, Pitching, Startup Development. ₹799 per person.",
 };
@@ -21,7 +22,7 @@ export default function DayTwoPage() {
           <div className="absolute inset-0 bg-gradient-to-r from-void via-void/75 to-baltic/40" />
         </div>
         <Container>
-          <p className="text-sm text-gold/90 sm:text-base">October 9</p>
+          <p className="text-sm text-gold/90 sm:text-base">October 10</p>
           <h1 className="mt-3 font-display text-6xl leading-[0.92] text-flare sm:text-8xl">Day 2</h1>
           <p className="mt-6 max-w-xl text-lg text-sand/85">One event, the flagship of ILLUMINATE.</p>
         </Container>
@@ -97,6 +98,10 @@ export default function DayTwoPage() {
                     </ButtonLink>
                   </div>
                 </div>
+              </Reveal>
+
+              <Reveal className="mt-8">
+                <ExclusiveBenefits />
               </Reveal>
             </Container>
           </article>

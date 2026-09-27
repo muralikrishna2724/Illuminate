@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { EVENT_CONTACTS, formatPhone, isPlaceholder, telHref } from "@/lib/site-config";
+import { CONTACT_EMAIL, EVENT_CONTACTS, INSTAGRAM, formatPhone, isPlaceholder, telHref } from "@/lib/site-config";
 
 /** "Contact us" button that opens a small dialog listing the organisers' names and phone numbers. */
 export function ContactPopup({
@@ -88,6 +88,16 @@ export function ContactPopup({
             );
           })}
         </ul>
+        <div className="space-y-2 border-t border-[var(--line)] px-5 py-4 text-sm">
+          <a href={`mailto:${CONTACT_EMAIL}`} className="flex items-center justify-between gap-4 text-sand hover:text-flare">
+            <span className="text-mist">Email</span>
+            <span className="truncate">{CONTACT_EMAIL}</span>
+          </a>
+          <a href={INSTAGRAM.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between gap-4 text-sand hover:text-flare">
+            <span className="text-mist">Instagram</span>
+            <span>{INSTAGRAM.handle}</span>
+          </a>
+        </div>
       </dialog>
     </>
   );

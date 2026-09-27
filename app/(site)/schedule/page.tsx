@@ -5,22 +5,25 @@ import { ArrowIcon } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
 import { DAY_1_EVENTS, DAY_2_EVENTS, type EventContent } from "@/lib/events/catalog";
+import { HOST } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "Schedule",
-  description: "ILLUMINATE schedule: October 8 (Day 1) and October 9 (Day 2).",
+  description: "ILLUMINATE schedule: October 9 (Day 1) and October 10 (Day 2).",
 };
 
 const DAYS: Array<{ day: number; date: string; href: string; events: EventContent[] }> = [
-  { day: 1, date: "October 8", href: "/day-1", events: DAY_1_EVENTS },
-  { day: 2, date: "October 9", href: "/day-2", events: DAY_2_EVENTS },
+  { day: 1, date: "October 9", href: "/day-1", events: DAY_1_EVENTS },
+  { day: 2, date: "October 10", href: "/day-2", events: DAY_2_EVENTS },
 ];
 
 export default function SchedulePage() {
   return (
     <>
-      <PageHero eyebrow="October 8–9" title="Schedule">
-        <p>Session timings will be announced by the organisers.</p>
+      <PageHero eyebrow="October 9–10" title="Schedule">
+        <p>
+          {HOST.name}, {HOST.shortLocation}. Session timings will be announced by the organisers.
+        </p>
       </PageHero>
       <Container className="pb-28">
         <ol className="relative space-y-20 border-l border-[var(--line-strong)] pl-8 sm:pl-14">

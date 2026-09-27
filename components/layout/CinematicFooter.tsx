@@ -9,7 +9,7 @@ import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { useGSAP } from "@gsap/react";
 import { EVENT_YEAR_LABEL } from "@/lib/events/catalog";
 import { EVENT_NAV, LOGIN, MAIN_NAV } from "@/lib/navigation";
-import { EVENT_CONTACTS, formatPhone, isPlaceholder, telHref } from "@/lib/site-config";
+import { CONTACT_EMAIL, EVENT_CONTACTS, HOST, INSTAGRAM, SIGN_OFF, formatPhone, isPlaceholder, telHref } from "@/lib/site-config";
 import { ContactPopup } from "./ContactPopup";
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, useGSAP);
@@ -171,13 +171,16 @@ export function CinematicFooter({
         <div className="flex flex-col items-start justify-between gap-10 md:flex-row md:items-end">
           <div className="max-w-xl">
             <p data-footer-reveal className="text-sm text-gold/90">
-              {EVENT_YEAR_LABEL}
+              {EVENT_YEAR_LABEL}, 2026 · {HOST.name}, {HOST.town}
             </p>
             <h2 data-footer-reveal className="mt-4 font-display text-5xl leading-[0.95] text-flare sm:text-7xl">
               Two days. <span className="text-gold">One</span> pull.
             </h2>
             <p data-footer-reveal className="mt-5 max-w-md text-mist">
               Day 1 brings the Deja Vu Hackathon, Under the Hood of AI and IPL Auction. Day 2 is Illuminate — the Entrepreneurship Workshop.
+            </p>
+            <p data-footer-reveal className="mt-4 font-display text-xl text-gold italic">
+              {SIGN_OFF}
             </p>
           </div>
           <div data-footer-reveal className="flex flex-wrap gap-3">
@@ -213,7 +216,7 @@ export function CinematicFooter({
             ))}
           </FooterColumn>
           <FooterColumn title="Contact">
-            {/* Placeholder contacts stay in the Contact us pop-up until real ones are added. */}
+            {/* Placeholder contacts are never listed here. */}
             {EVENT_CONTACTS.filter((person) => !isPlaceholder(person.name) && !isPlaceholder(person.phone)).map((person) => (
               <li key={person.phone} data-footer-reveal>
                 <a href={telHref(person.phone)} className="group block text-sand/80 transition-colors hover:text-flare">
@@ -222,6 +225,16 @@ export function CinematicFooter({
                 </a>
               </li>
             ))}
+            <li data-footer-reveal>
+              <a href={`mailto:${CONTACT_EMAIL}`} className="break-all text-sand/80 transition-colors hover:text-flare">
+                {CONTACT_EMAIL}
+              </a>
+            </li>
+            <li data-footer-reveal>
+              <a href={INSTAGRAM.url} target="_blank" rel="noopener noreferrer" className="text-sand/80 transition-colors hover:text-flare">
+                Instagram {INSTAGRAM.handle}
+              </a>
+            </li>
             <FooterLink href="/registration">Check registration status</FooterLink>
           </FooterColumn>
           <FooterColumn title="Account">

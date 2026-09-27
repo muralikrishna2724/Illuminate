@@ -84,3 +84,17 @@ export const ECELL_WORKSHOP_STATS: Array<{ value: string; label: string }> = [
 export function formatMinutes(minutes: number): string {
   return minutes >= 60 && minutes % 60 === 0 ? `${minutes / 60} hr` : `${minutes} min`;
 }
+
+/**
+ * Limited-time benefits for Illuminate registrations, from the event poster.
+ * The poster's E-Summit line is cut off at the start, so it is worded as
+ * printed; confirm the exact offer before making it more specific.
+ */
+export const EXCLUSIVE_BENEFITS = {
+  headline: "Exclusive benefits worth ₹50,000",
+  note: "Available for a limited time only.",
+  items: [
+    "Free entry passes to IIT Bombay for the first 50 registrations of the Illuminate workshop",
+    "Benefits on E-Summit passes and accommodation",
+  ],
+} as const;

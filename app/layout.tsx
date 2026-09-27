@@ -22,13 +22,13 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "ILLUMINATE — 2-Day Innovation & Entrepreneurship Event · October 8–9",
+    default: "ILLUMINATE — 2-Day Innovation & Entrepreneurship Event · October 9–10",
     template: "%s · ILLUMINATE",
   },
   description:
     "ILLUMINATE is a 2-day college innovation, technology, entrepreneurship and creative event. Day 1: Deja Vu Hackathon, Under the Hood of AI, IPL Auction. Day 2: Illuminate — Entrepreneurship Workshop.",
   openGraph: {
-    title: "ILLUMINATE — October 8–9",
+    title: "ILLUMINATE — October 9–10",
     description: "A 2-day innovation & entrepreneurship event, led by the Illuminate Entrepreneurship Workshop on Day 2.",
     type: "website",
   },

@@ -1,7 +1,8 @@
 import Image from "next/image";
 import { HeroBlackHole } from "@/components/visual/BlackHole";
 import { ArrowIcon, ButtonLink } from "@/components/ui/Button";
-import { ORGANISER_LOGOS } from "@/lib/site-config";
+import { EVENT_YEAR_LABEL } from "@/lib/events/catalog";
+import { HOST, ORGANISER_LOGOS, TAGLINE } from "@/lib/site-config";
 import { Countdown } from "./Countdown";
 
 export function Hero() {
@@ -26,14 +27,37 @@ export function Hero() {
               ))}
             </ul>
           )}
-          <p className="text-sm font-medium text-gold sm:text-base">October 8–9 · 2-Day Innovation &amp; Entrepreneurship Event</p>
+          <p className="text-sm font-medium text-gold sm:text-base">Hosted by {HOST.name}</p>
           <h1 id="hero-title" className="mt-4 font-display text-[17vw] leading-[0.88] text-flare sm:text-[8.5rem] lg:text-[9.5rem]">
             Illuminate
           </h1>
+          <p className="mt-5 text-sm font-medium tracking-[0.35em] text-powder uppercase sm:text-base">
+            <span className="sr-only">{TAGLINE.join(", ")}</span>
+            <span aria-hidden="true">
+              {TAGLINE.map((word, i) => (
+                <span key={word}>
+                  {i > 0 && <span className="mx-3 text-gold">/</span>}
+                  {word}
+                </span>
+              ))}
+            </span>
+          </p>
           <p className="mt-7 max-w-lg text-lg leading-relaxed text-sand/90 sm:text-xl">
             At its centre is <span className="text-flare">Illuminate — the Entrepreneurship Workshop</span>, an initiative by
             E-Cell IIT Bombay, on Day 2. Day 1 opens with the Deja Vu Hackathon, Under the Hood of AI and IPL Auction.
           </p>
+          <dl className="mt-8 grid max-w-lg grid-cols-2 gap-6 border-t border-[var(--line)] pt-5 text-sm">
+            <div>
+              <dt className="text-xs tracking-[0.16em] text-mist uppercase">Dates</dt>
+              <dd className="mt-1 text-flare">{EVENT_YEAR_LABEL}, 2026</dd>
+            </div>
+            <div>
+              <dt className="text-xs tracking-[0.16em] text-mist uppercase">Venue</dt>
+              <dd className="mt-1 text-flare">
+                {HOST.name}, {HOST.town}
+              </dd>
+            </div>
+          </dl>
           <div className="mt-9 flex flex-wrap gap-3">
             <ButtonLink href="/day-2" size="lg">
               Explore Illuminate <ArrowIcon />

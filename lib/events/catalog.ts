@@ -36,7 +36,7 @@ export interface EventContent {
   hasQualificationQuiz: boolean;
 }
 
-export const EVENT_YEAR_LABEL = "October 8–9";
+export const EVENT_YEAR_LABEL = "October 9–10";
 
 export const EVENTS: Record<EventSlug, EventContent> = {
   hackathon: {
@@ -44,8 +44,8 @@ export const EVENTS: Record<EventSlug, EventContent> = {
     name: "Deja Vu Hackathon",
     shortName: "Deja Vu",
     day: 1,
-    date: "2026-10-08",
-    dateLabel: "October 8",
+    date: "2026-10-09",
+    dateLabel: "October 9",
     format: "TEAM",
     teamSize: 4,
     feePerPersonInr: 50,
@@ -71,8 +71,8 @@ export const EVENTS: Record<EventSlug, EventContent> = {
     name: "Under the Hood of AI",
     shortName: "Under the Hood of AI",
     day: 1,
-    date: "2026-10-08",
-    dateLabel: "October 8",
+    date: "2026-10-09",
+    dateLabel: "October 9",
     format: "INDIVIDUAL",
     teamSize: 1,
     feePerPersonInr: 50,
@@ -89,8 +89,8 @@ export const EVENTS: Record<EventSlug, EventContent> = {
     name: "IPL Auction",
     shortName: "IPL Auction",
     day: 1,
-    date: "2026-10-08",
-    dateLabel: "October 8",
+    date: "2026-10-09",
+    dateLabel: "October 9",
     format: "TEAM",
     teamSize: 4,
     feePerPersonInr: 50,
@@ -107,8 +107,8 @@ export const EVENTS: Record<EventSlug, EventContent> = {
     name: "Illuminate — Entrepreneurship Workshop",
     shortName: "Illuminate Workshop",
     day: 2,
-    date: "2026-10-09",
-    dateLabel: "October 9",
+    date: "2026-10-10",
+    dateLabel: "October 10",
     format: "INDIVIDUAL",
     teamSize: 1,
     feePerPersonInr: 799,
@@ -133,7 +133,7 @@ export const EVENTS: Record<EventSlug, EventContent> = {
     ],
     notes: [
       "Individual registration — participants are organised into teams during the workshop.",
-      "A one-day workshop on October 9.",
+      "A one-day workshop on October 10.",
       "Certificates are issued after the workshop.",
     ],
     initiativeBy: "E-Cell IIT Bombay",

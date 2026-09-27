@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { EventRow } from "@/components/home/EventRow";
 import { Hero } from "@/components/home/Hero";
+import { HostStrip } from "@/components/home/HostStrip";
 import { ArrowIcon, ButtonLink } from "@/components/ui/Button";
 import { Container, Eyebrow } from "@/components/ui/Container";
 import { FaqList } from "@/components/ui/FaqList";
+import { ExclusiveBenefits } from "@/components/ui/ExclusiveBenefits";
 import { Reveal } from "@/components/ui/Reveal";
 import { BlackHole } from "@/components/visual/BlackHole";
 import { DAY_1_EVENTS, DAY_2_EVENTS, EVENTS, EVENT_LIST, formatInr, registrationAmountInr } from "@/lib/events/catalog";
@@ -15,6 +17,7 @@ export default function HomePage() {
   return (
     <>
       <Hero />
+      <HostStrip />
 
       {/* 2-day overview */}
       <section aria-labelledby="overview-title" className="py-24 sm:py-32">
@@ -28,7 +31,7 @@ export default function HomePage() {
 
           <Reveal delay={100} className="mt-16 grid gap-px overflow-hidden rounded-3xl bg-[var(--line)] md:grid-cols-2">
             <div className="bg-night p-8 sm:p-10">
-              <p className="text-sm text-mist">Day 1 · October 8</p>
+              <p className="text-sm text-mist">Day 1 · October 9</p>
               <ul className="mt-6 space-y-3 font-display text-3xl text-flare">
                 {DAY_1_EVENTS.map((e) => (
                   <li key={e.slug}>{e.name}</li>
@@ -39,7 +42,7 @@ export default function HomePage() {
               </Link>
             </div>
             <div className="theme-dark relative overflow-hidden bg-gradient-to-br from-baltic to-baltic-deep p-8 sm:p-10">
-              <p className="relative text-sm text-gold/90">Day 2 · October 9 · Flagship</p>
+              <p className="relative text-sm text-gold/90">Day 2 · October 10 · Flagship</p>
               <p className="relative mt-6 font-display text-3xl text-flare">{workshop.name}</p>
               <p className="relative mt-3 max-w-sm text-mist">An initiative by {workshop.initiativeBy}.</p>
               <Link href="/day-2" className="relative mt-10 inline-flex items-center gap-2 text-sm text-sand hover:text-flare">
@@ -55,7 +58,7 @@ export default function HomePage() {
         <Container>
           <Reveal className="flex flex-wrap items-end justify-between gap-6">
             <div>
-              <Eyebrow>Day 1 · October 8</Eyebrow>
+              <Eyebrow>Day 1 · October 9</Eyebrow>
               <h2 id="day1-title" className="mt-3 font-display text-5xl text-flare sm:text-6xl">
                 Day 1 events
               </h2>
@@ -79,7 +82,7 @@ export default function HomePage() {
         <Container>
           <Reveal className="flex flex-wrap items-end justify-between gap-6">
             <div>
-              <Eyebrow>Day 2 · October 9</Eyebrow>
+              <Eyebrow>Day 2 · October 10</Eyebrow>
               <h2 id="day2-title" className="mt-3 font-display text-5xl text-flare sm:text-6xl">
                 Day 2 event
               </h2>
@@ -133,7 +136,11 @@ export default function HomePage() {
             ))}
           </div>
 
-          <Reveal delay={200} className="mt-14 flex flex-wrap items-center gap-6">
+          <Reveal delay={160} className="mt-14 max-w-3xl">
+            <ExclusiveBenefits />
+          </Reveal>
+
+          <Reveal delay={200} className="mt-10 flex flex-wrap items-center gap-6">
             <ButtonLink href="/register/illuminate" size="lg">
               Register for Illuminate · {formatInr(registrationAmountInr(workshop))}
             </ButtonLink>
@@ -153,8 +160,8 @@ export default function HomePage() {
             </h2>
             <nav aria-label="Event sections" className="grid gap-px overflow-hidden rounded-3xl bg-[var(--line)] sm:grid-cols-2 lg:grid-cols-4">
               {[
-                { href: "/day-1", label: "Day 1", sub: "October 8 · three events" },
-                { href: "/day-2", label: "Day 2", sub: "October 9 · Illuminate Workshop" },
+                { href: "/day-1", label: "Day 1", sub: "October 9 · three events" },
+                { href: "/day-2", label: "Day 2", sub: "October 10 · Illuminate Workshop" },
                 { href: "/schedule", label: "Schedule", sub: "Both days at a glance" },
                 { href: "/faq", label: "FAQ", sub: "Fees, teams, payments" },
               ].map((item) => (
