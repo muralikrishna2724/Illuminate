@@ -33,7 +33,11 @@ uniform vec3 uCamPos;
 uniform vec3 uCamRight;
 uniform vec3 uCamUp;
 uniform vec3 uCamForward;
-uniform vec3 uTint;
+uniform vec3 uTint;        // mid-disk colour
+uniform vec3 uOuter;       // outer-disk / haze colour
+uniform vec3 uHot;         // inner-edge colour
+uniform vec3 uSky;         // background behind the stars (display RGB)
+uniform vec3 uShadow;      // colour inside the hole's shadow (display RGB)
 uniform float uExposure;
 
 float hash13(vec3 p3) {
@@ -128,8 +132,9 @@ vec4 diskSample(vec3 p, vec3 rayDir) {
   float intensity = profile * boost * (0.25 + 1.9 * density) * uExposure;
   float alpha = clamp((0.35 + density) * profile * 1.8, 0.0, 0.92);
 
-  // Hotter (whiter) near the inner edge, slightly warmer further out.
-  vec3 color = mix(uTint, vec3(1.0), clamp(boost * profile * 0.8, 0.0, 1.0));
+  // Hot near the inner edge, fading through the mid tint to the outer colour.
+  vec3 base = mix(uTint, uOuter, smoothstep(0.04, 0.45, x));
+  vec3 color = mix(base, uHot, clamp(boost * profile * 0.8, 0.0, 1.0));
   return vec4(color * intensity * alpha, alpha);
 }
 
@@ -178,13 +183,17 @@ void main() {
     pos = next;
   }
 
-  if (escaped || (!captured && alpha < 0.985)) {
-    color += (1.0 - alpha) * starField(normalize(mix(dir0, normalize(vel), 0.3))) * (escaped ? 1.0 : 0.0);
+  float sky = escaped ? 1.0 - alpha : 0.0;
+  if (escaped) {
+    color += (1.0 - alpha) * starField(normalize(mix(dir0, normalize(vel), 0.3)));
   }
-  color += glow * uTint * (1.0 - alpha * 0.5) * uExposure;
+  color += glow * uOuter * (1.0 - alpha * 0.5) * uExposure;
 
-  // Filmic tone map.
+  // Filmic tone map, then lay the page's background colour behind escaped
+  // rays so the shadow of the hole reads darker than the sky around it.
   color = vec3(1.0) - exp(-color * 1.25);
+  color += sky * uSky * (vec3(1.0) - color);
+  if (captured) color += (1.0 - alpha) * uShadow;
   gl_FragColor = vec4(color, 1.0);
 }
 `;

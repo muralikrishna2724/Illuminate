@@ -4,6 +4,7 @@ import { connection } from "next/server";
 import Link from "next/link";
 import { RegistrationForm } from "@/components/registration/RegistrationForm";
 import { Container } from "@/components/ui/Container";
+import { FeeIncludes } from "@/components/ui/FeeIncludes";
 import { EVENTS, feeLabel } from "@/lib/events/catalog";
 import { getPaymentConfig } from "@/lib/site-config";
 import { EVENT_SLUGS, isEventSlug } from "@/types/domain";
@@ -40,6 +41,7 @@ export default async function RegisterEventPage({ params }: PageProps<"/register
         <p className="mt-4 text-mist">
           {event.format === "TEAM" ? `Team of exactly ${event.teamSize}` : "Individual registration"} · {feeLabel(event)}
         </p>
+        <FeeIncludes event={event} className="mt-6" />
         <div className="mt-12">
           <RegistrationForm event={event} payment={getPaymentConfig()} />
         </div>

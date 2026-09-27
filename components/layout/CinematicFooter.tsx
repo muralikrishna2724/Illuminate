@@ -9,6 +9,7 @@ import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { useGSAP } from "@gsap/react";
 import { EVENT_YEAR_LABEL } from "@/lib/events/catalog";
 import { EVENT_NAV, LOGIN, MAIN_NAV } from "@/lib/navigation";
+import { EVENT_CONTACTS, formatPhone, isPlaceholder, telHref } from "@/lib/site-config";
 import { ContactPopup } from "./ContactPopup";
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, useGSAP);
@@ -153,7 +154,7 @@ export function CinematicFooter({
   };
 
   return (
-    <footer ref={root} className="relative isolate overflow-hidden border-t border-[var(--line)] bg-void">
+    <footer ref={root} className="relative isolate overflow-hidden border-t border-[var(--line)] bg-gradient-to-b from-void to-[#1a0f19]">
       {/* Horizon glow — the footer's own small accretion light */}
       <div
         aria-hidden="true"
@@ -161,8 +162,8 @@ export function CinematicFooter({
         className="pointer-events-none absolute -bottom-[48vw] left-1/2 -z-10 h-[64vw] w-[150vw] -translate-x-1/2 rounded-[50%] sm:-bottom-[46vw]"
         style={{
           background:
-            "radial-gradient(ellipse at 50% 0%, rgb(255 244 228 / 0.2) 0%, rgb(230 205 170 / 0.09) 24%, rgb(120 100 80 / 0.04) 45%, transparent 65%)",
-          boxShadow: "inset 0 1px 0 rgb(255 244 228 / 0.22)",
+            "radial-gradient(ellipse at 50% 0%, rgb(199 239 0 / 0.22) 0%, rgb(60 120 126 / 0.28) 22%, rgb(60 120 126 / 0.1) 45%, transparent 65%)",
+          boxShadow: "inset 0 1px 0 rgb(199 239 0 / 0.35)",
         }}
       />
 
@@ -183,10 +184,13 @@ export function CinematicFooter({
             <Magnetic>
               <Link
                 href="/register"
-                className="inline-flex h-14 items-center rounded-full bg-flare px-8 text-base font-medium text-void transition-colors hover:bg-gold"
+                className="inline-flex h-14 items-center rounded-full bg-lime px-8 text-base font-medium text-void transition-colors hover:bg-flare"
               >
                 Register now
               </Link>
+            </Magnetic>
+            <Magnetic>
+              <ContactPopup buttonClassName="inline-flex h-14 items-center gap-2 rounded-full border border-[var(--line-strong)] px-7 text-base text-flare transition-colors hover:border-lime/60" />
             </Magnetic>
           </div>
         </div>
@@ -209,9 +213,15 @@ export function CinematicFooter({
             ))}
           </FooterColumn>
           <FooterColumn title="Contact">
-            <li data-footer-reveal>
-              <ContactPopup />
-            </li>
+            {/* Placeholder contacts stay in the Contact us pop-up until real ones are added. */}
+            {EVENT_CONTACTS.filter((person) => !isPlaceholder(person.name) && !isPlaceholder(person.phone)).map((person) => (
+              <li key={person.phone} data-footer-reveal>
+                <a href={telHref(person.phone)} className="group block text-sand/80 transition-colors hover:text-flare">
+                  <span className="block">{person.name}</span>
+                  <span className="text-xs text-mist group-hover:text-lime">{formatPhone(person.phone)}</span>
+                </a>
+              </li>
+            ))}
             <FooterLink href="/registration">Check registration status</FooterLink>
           </FooterColumn>
           <FooterColumn title="Account">
@@ -249,7 +259,7 @@ export function CinematicFooter({
           data-footer-giant
           className="whitespace-nowrap text-center font-display text-[17vw] font-semibold leading-[0.85]"
           style={{
-            backgroundImage: "linear-gradient(180deg, rgb(255 243 224 / 0.16) 0%, rgb(233 214 186 / 0.07) 55%, transparent 100%)",
+            backgroundImage: "linear-gradient(180deg, rgb(208 205 148 / 0.22) 0%, rgb(60 120 126 / 0.14) 55%, transparent 100%)",
             WebkitBackgroundClip: "text",
             backgroundClip: "text",
             color: "transparent",

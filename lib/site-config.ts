@@ -73,9 +73,36 @@ export function isPlaceholder(value: string): boolean {
   return value.includes("PLACEHOLDER");
 }
 
+/** "9876543210" → "+91 98765 43210"; anything else is returned as given. */
+export function formatPhone(phone: string): string {
+  const digits = phone.replace(/\D/g, "");
+  return digits.length === 10 ? `+91 ${digits.slice(0, 5)} ${digits.slice(5)}` : phone;
+}
+
+/** `tel:` link for an Indian mobile number. */
+export function telHref(phone: string): string {
+  return `tel:+91${phone.replace(/\D/g, "").slice(-10)}`;
+}
+
 /** Maximum payment screenshot size, shared by the browser and the server. */
 // 4 MB keeps the whole multipart request under Vercel's 4.5 MB serverless body limit.
 export const MAX_SCREENSHOT_BYTES = 4 * 1024 * 1024;
 export const ACCEPTED_SCREENSHOT_TYPES = ["image/jpeg", "image/png", "image/webp"] as const;
 export const ACCEPTED_SCREENSHOT_EXTENSIONS = [".jpg", ".jpeg", ".png", ".webp"] as const;
 
+
+export interface OrganiserLogo {
+  /** Path under /public, e.g. "/logos/college.png". */
+  src: string;
+  /** The organisation's name, used as the image's alt text. */
+  name: string;
+  width: number;
+  height: number;
+}
+
+/**
+ * College / organiser logos shown in the homepage hero, left to right.
+ * Add an entry only once the organisers have provided the file and have
+ * permission to use the logo. Nothing is shown while this list is empty.
+ */
+export const ORGANISER_LOGOS: OrganiserLogo[] = [];

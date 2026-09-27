@@ -39,7 +39,7 @@ export function Example({
   }, [framing, quality]);
 
   return (
-    <div aria-hidden="true" className={`pointer-events-none relative h-full w-full overflow-hidden bg-black ${className}`}>
+    <div aria-hidden="true" className={`pointer-events-none relative h-full w-full overflow-hidden bg-void ${className}`}>
       {fallback && !isReady && <div className="absolute inset-0">{fallback}</div>}
       <canvas
         ref={canvasRef}

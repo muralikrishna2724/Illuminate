@@ -27,7 +27,7 @@ export default function HomePage() {
           </Reveal>
 
           <Reveal delay={100} className="mt-16 grid gap-px overflow-hidden rounded-3xl bg-[var(--line)] md:grid-cols-2">
-            <div className="bg-void p-8 sm:p-10">
+            <div className="bg-night p-8 sm:p-10">
               <p className="text-sm text-mist">Day 1 · October 8</p>
               <ul className="mt-6 space-y-3 font-display text-3xl text-flare">
                 {DAY_1_EVENTS.map((e) => (
@@ -38,7 +38,7 @@ export default function HomePage() {
                 See Day 1 <ArrowIcon />
               </Link>
             </div>
-            <div className="relative overflow-hidden bg-void p-8 sm:p-10">
+            <div className="relative overflow-hidden bg-gradient-to-br from-pine/60 via-pine-deep/40 to-night p-8 sm:p-10">
               <p className="relative text-sm text-gold/90">Day 2 · October 9 · Flagship</p>
               <p className="relative mt-6 font-display text-3xl text-flare">{workshop.name}</p>
               <p className="relative mt-3 max-w-sm text-mist">An initiative by {workshop.initiativeBy}.</p>
@@ -161,7 +161,7 @@ export default function HomePage() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="group flex flex-col justify-between gap-10 bg-void p-7 transition-colors hover:bg-dusk"
+                  className="group flex flex-col justify-between gap-10 bg-night p-7 transition-colors hover:bg-pine/35"
                 >
                   <span className="font-display text-4xl text-flare">{item.label}</span>
                   <span className="flex items-center justify-between text-sm text-mist">
@@ -175,33 +175,33 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* Registration CTA */}
-      <section aria-labelledby="register-title" className="py-24 sm:py-32">
+      {/* Registration CTA — a Dry Sage band */}
+      <section aria-labelledby="register-title" className="bg-sage py-24 text-void sm:py-32">
         <Container className="grid gap-14 lg:grid-cols-[1fr_1.1fr]">
           <Reveal>
-            <Eyebrow>Registration</Eyebrow>
-            <h2 id="register-title" className="mt-3 font-display text-5xl leading-[1.02] text-flare sm:text-6xl">
+            <p className="text-sm font-medium text-pine-deep">Registration</p>
+            <h2 id="register-title" className="mt-3 font-display text-5xl leading-[1.02] text-void sm:text-6xl">
               Pick an event. Pay. Submit your proof.
             </h2>
-            <p className="mt-6 max-w-md text-mist">
+            <p className="mt-6 max-w-md text-void/75">
               Fees are calculated for you. After paying, you submit your UTR / transaction ID and a payment screenshot, and receive a
               registration ID. The organisers verify each payment manually.
             </p>
           </Reveal>
           <Reveal delay={120}>
-            <ul className="divide-y divide-[var(--line)] border-y border-[var(--line)]">
+            <ul className="divide-y divide-void/15 border-y border-void/15">
               {EVENT_LIST.map((event) => (
                 <li key={event.slug}>
                   <Link href={event.registerPath} className="group flex items-center justify-between gap-6 py-5">
                     <span>
-                      <span className="block text-lg text-flare">{event.name}</span>
-                      <span className="text-sm text-mist">
+                      <span className="block text-lg font-medium text-void">{event.name}</span>
+                      <span className="text-sm text-void/65">
                         Day {event.day} · {event.format === "TEAM" ? `team of ${event.teamSize}` : "individual"}
                       </span>
                     </span>
-                    <span className="flex items-center gap-3 whitespace-nowrap text-sand">
+                    <span className="flex items-center gap-3 whitespace-nowrap font-medium text-void">
                       {formatInr(registrationAmountInr(event))}
-                      <ArrowIcon className="h-4 w-4 text-mist transition-transform duration-300 group-hover:translate-x-1 group-hover:text-flare" />
+                      <ArrowIcon className="h-4 w-4 text-pine-deep transition-transform duration-300 group-hover:translate-x-1" />
                     </span>
                   </Link>
                 </li>

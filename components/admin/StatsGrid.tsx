@@ -14,7 +14,7 @@ export function StatsGrid({ stats }: { stats: DashboardStats }) {
   return (
     <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl bg-[var(--line)] sm:grid-cols-3 xl:grid-cols-6">
       {items.map((item) => (
-        <div key={item.label} className="bg-[#0d0b0a] p-5">
+        <div key={item.label} className="bg-night p-5">
           <dt className="text-xs text-mist">{item.label}</dt>
           <dd className={`mt-2 text-3xl font-semibold tabular-nums ${item.tone ?? "text-flare"}`}>{item.value}</dd>
         </div>

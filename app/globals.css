@@ -4,15 +4,19 @@
   --font-display: var(--font-bricolage), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
 
-  --color-void: #050404;
-  --color-night: #0d0b0a;
-  --color-dusk: #171311;
-  --color-ember: #d9a26c;
-  --color-gold: #e8c89a;
-  --color-flare: #fff3e0;
-  --color-sand: #e9e1d6;
-  --color-mist: #a39a90;
-  --color-smoke: #6f675f;
+  /* Palette: Midnight Violet #241623 · Dry Sage #D0CD94 · Pine Blue #3C787E · Lime Yellow #C7EF00 */
+  --color-void: #241623; /* Midnight Violet: page background */
+  --color-night: #2d1c2c; /* raised violet surface */
+  --color-dusk: #3a2638; /* hover / active violet surface */
+  --color-pine: #3c787e; /* Pine Blue */
+  --color-pine-deep: #1f4a50;
+  --color-sage: #d0cd94; /* Dry Sage */
+  --color-lime: #c7ef00; /* Lime Yellow */
+  --color-gold: #c7ef00; /* accent (lime) */
+  --color-flare: #f4f3e2; /* headings: sage-tinted white */
+  --color-sand: #e2e0bf; /* body text */
+  --color-mist: #b3b08c; /* secondary text */
+  --color-smoke: #8b8870; /* tertiary text */
 
   --animate-spin-slow: spin 90s linear infinite;
   --animate-breathe: breathe 9s ease-in-out infinite;
@@ -41,8 +45,8 @@
 
 :root {
   color-scheme: dark;
-  --line: rgb(255 243 224 / 0.1);
-  --line-strong: rgb(255 243 224 / 0.2);
+  --line: rgb(208 205 148 / 0.14);
+  --line-strong: rgb(208 205 148 / 0.28);
 }
 
 @layer base {
@@ -52,7 +56,13 @@ html {
 }
 
 body {
-  background: var(--color-void);
+  /* Soft pine and lime light over the violet so large areas never read as flat. */
+  background:
+    radial-gradient(90rem 50rem at 110% -10%, rgb(60 120 126 / 0.28), transparent 60%),
+    radial-gradient(70rem 40rem at -20% 40%, rgb(60 120 126 / 0.16), transparent 60%),
+    radial-gradient(60rem 36rem at 50% 115%, rgb(199 239 0 / 0.06), transparent 65%),
+    var(--color-void);
+  background-attachment: fixed;
   color: var(--color-sand);
   font-family: var(--font-sans);
   text-rendering: optimizeLegibility;
@@ -60,7 +70,7 @@ body {
 }
 
 ::selection {
-  background: rgb(236 154 82 / 0.35);
+  background: rgb(199 239 0 / 0.35);
   color: var(--color-flare);
 }
 
@@ -68,6 +78,11 @@ body {
   outline: 2px solid var(--color-gold);
   outline-offset: 3px;
   border-radius: 6px;
+}
+
+/* Lime is too light to see on the Dry Sage band. */
+.bg-sage :focus-visible {
+  outline-color: var(--color-void);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -116,7 +131,7 @@ body {
 /* Hairline divider with a warm centre. */
 .divider-glow {
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgb(245 198 136 / 0.35), transparent);
+  background: linear-gradient(90deg, transparent, rgb(199 239 0 / 0.45), rgb(60 120 126 / 0.5), transparent);
 }
 
 /* Form controls */
@@ -124,7 +139,7 @@ body {
   width: 100%;
   border-radius: 0.75rem;
   border: 1px solid var(--line-strong);
-  background: rgb(255 243 224 / 0.03);
+  background: rgb(208 205 148 / 0.05);
   padding: 0.75rem 0.95rem;
   color: var(--color-flare);
   font-size: 1rem;
@@ -138,26 +153,26 @@ body {
   color: var(--color-smoke);
 }
 .field-input:hover {
-  border-color: rgb(255 243 224 / 0.3);
+  border-color: rgb(208 205 148 / 0.4);
 }
 .field-input:focus {
   outline: none;
   border-color: var(--color-gold);
-  background: rgb(255 243 224 / 0.05);
-  box-shadow: 0 0 0 3px rgb(245 198 136 / 0.15);
+  background: rgb(208 205 148 / 0.08);
+  box-shadow: 0 0 0 3px rgb(199 239 0 / 0.18);
 }
 .field-input[aria-invalid="true"] {
   border-color: #f08b7a;
 }
 select.field-input {
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1.5 6 6.5l5-5' stroke='%23a39a90' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1.5 6 6.5l5-5' stroke='%23b3b08c' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 1rem center;
   padding-right: 2.5rem;
 }
 select.field-input option {
-  background: #171311;
-  color: #fff3e0;
+  background: #2d1c2c;
+  color: #f4f3e2;
 }
 }

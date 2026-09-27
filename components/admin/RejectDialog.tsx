@@ -47,7 +47,7 @@ export function RejectDialog({
         e.preventDefault();
         if (!loading) onCancel();
       }}
-      className="m-auto w-[calc(100%-2rem)] max-w-md rounded-2xl border border-[var(--line-strong)] bg-[#110e0c] p-0 text-sand backdrop:bg-black/70 backdrop:backdrop-blur-sm"
+      className="m-auto w-[calc(100%-2rem)] max-w-md rounded-2xl border border-[var(--line-strong)] bg-night p-0 text-sand backdrop:bg-void/80 backdrop:backdrop-blur-sm"
     >
       {target && (
         <form onSubmit={submit} className="p-6">

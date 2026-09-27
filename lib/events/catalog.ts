@@ -156,6 +156,11 @@ export function formatInr(amount: number): string {
   return `₹${amount.toLocaleString("en-IN")}`;
 }
 
+/** What the fee covers, when the organisers have confirmed it (empty otherwise). */
+export function feeIncludes(event: EventContent): string[] {
+  return event.highlights.find((h) => h.title === "What you receive")?.items ?? [];
+}
+
 export function feeLabel(event: EventContent): string {
   if (event.format === "TEAM") {
     return `${formatInr(event.feePerPersonInr)} per person · ${formatInr(registrationAmountInr(event))} per team`;

@@ -9,13 +9,41 @@ export interface RendererOptions {
   framing?: BlackHoleFraming;
   /** "auto" picks "low" on small or low-core devices. */
   quality?: BlackHoleQuality;
-  /** Disk tint (linear RGB, 0–1). Defaults to a warm white. */
-  tint?: [number, number, number];
+  /** Disk colours (RGB, 0–1). Default to the site palette. */
+  colors?: Partial<BlackHoleColors>;
   /** Draw a single frame and stop. Defaults to `prefers-reduced-motion: reduce`. */
   staticFrame?: boolean;
   /** Frame-rate cap for the animated disk. */
   maxFps?: number;
 }
+
+export interface BlackHoleColors {
+  /** Inner edge of the disk, where it runs hottest. */
+  hot: [number, number, number];
+  /** Body of the disk. */
+  mid: [number, number, number];
+  /** Outer disk and the haze around it. */
+  outer: [number, number, number];
+  /** Background behind the stars. */
+  sky: [number, number, number];
+  /** Inside the hole's shadow. */
+  shadow: [number, number, number];
+}
+
+const hex = (value: string): [number, number, number] => [
+  parseInt(value.slice(1, 3), 16) / 255,
+  parseInt(value.slice(3, 5), 16) / 255,
+  parseInt(value.slice(5, 7), 16) / 255,
+];
+
+// Site palette: Dry Sage, Lime Yellow, Pine Blue on Midnight Violet.
+const DEFAULT_COLORS: BlackHoleColors = {
+  hot: hex("#f2f5d2"),
+  mid: hex("#d6ff1f"),
+  outer: hex("#3c787e"),
+  sky: hex("#241623"),
+  shadow: hex("#0f080f"),
+};
 
 export interface BlackHoleRenderer {
   /** Resolves `true` after the first frame is on screen, `false` if WebGL is unavailable. */
@@ -116,7 +144,7 @@ function compile(gl: WebGLRenderingContext, type: number, source: string): WebGL
 export function createRenderer(options: RendererOptions): BlackHoleRenderer {
   const { canvas } = options;
   const framing = options.framing ?? "center";
-  const tint = options.tint ?? [1.0, 0.9, 0.78];
+  const colors: BlackHoleColors = { ...DEFAULT_COLORS, ...options.colors };
   const maxFps = options.maxFps ?? 30;
 
   let resolveReady: (ok: boolean) => void = () => undefined;
@@ -179,10 +207,18 @@ export function createRenderer(options: RendererOptions): BlackHoleRenderer {
     camUp: gl.getUniformLocation(program, "uCamUp"),
     camForward: gl.getUniformLocation(program, "uCamForward"),
     tint: gl.getUniformLocation(program, "uTint"),
+    outer: gl.getUniformLocation(program, "uOuter"),
+    hot: gl.getUniformLocation(program, "uHot"),
+    sky: gl.getUniformLocation(program, "uSky"),
+    shadow: gl.getUniformLocation(program, "uShadow"),
     exposure: gl.getUniformLocation(program, "uExposure"),
   };
-  gl.uniform3f(u.tint, tint[0], tint[1], tint[2]);
-  gl.uniform1f(u.exposure, 1.7);
+  gl.uniform3fv(u.tint, colors.mid);
+  gl.uniform3fv(u.outer, colors.outer);
+  gl.uniform3fv(u.hot, colors.hot);
+  gl.uniform3fv(u.sky, colors.sky);
+  gl.uniform3fv(u.shadow, colors.shadow);
+  gl.uniform1f(u.exposure, 2.2);
 
   let adaptive = 1;
   let disposed = false;

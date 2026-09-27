@@ -61,7 +61,7 @@ export default function DayTwoPage() {
 
               <Reveal className="mt-16 grid gap-px overflow-hidden rounded-3xl bg-[var(--line)] lg:grid-cols-[1.4fr_1fr]">
                 {topics && (
-                  <div className="bg-void p-8 sm:p-12">
+                  <div className="bg-night p-8 sm:p-12">
                     <h3 className="text-sm text-mist">{topics.title}</h3>
                     <ol className="mt-6 space-y-5">
                       {topics.items.map((item, i) => (
@@ -73,10 +73,10 @@ export default function DayTwoPage() {
                     </ol>
                   </div>
                 )}
-                <div className="flex flex-col justify-between gap-10 bg-void p-8 sm:p-12">
+                <div className="flex flex-col justify-between gap-10 bg-gradient-to-br from-pine/45 via-night to-night p-8 sm:p-12">
                   {benefits && (
                     <div>
-                      <h3 className="text-sm text-mist">{benefits.title}</h3>
+                      <h3 className="text-xs font-medium tracking-[0.14em] text-lime/90 uppercase">Included in the fee</h3>
                       <ul className="mt-6 space-y-3 text-xl text-flare">
                         {benefits.items.map((item) => (
                           <li key={item} className="flex items-baseline gap-3">
@@ -162,9 +162,9 @@ export default function DayTwoPage() {
             <p className="mt-16 text-sm text-mist">Previous year highlights of the illuminate workshops</p>
             <dl className="mt-4 grid gap-px overflow-hidden rounded-3xl bg-[var(--line)] sm:grid-cols-3">
               {ECELL_WORKSHOP_STATS.map((stat) => (
-                <div key={stat.label} className="bg-void p-8 sm:p-10">
+                <div key={stat.label} className="bg-night p-8 sm:p-10">
                   <dt className="text-sm text-mist">{stat.label}</dt>
-                  <dd className="mt-2 font-display text-5xl text-flare sm:text-6xl">{stat.value}</dd>
+                  <dd className="mt-2 font-display text-5xl text-lime sm:text-6xl">{stat.value}</dd>
                 </div>
               ))}
             </dl>

@@ -1,5 +1,6 @@
 import { ButtonLink } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
+import { FeeIncludes } from "@/components/ui/FeeIncludes";
 import { feeLabel, formatInr, registrationAmountInr, type EventContent } from "@/lib/events/catalog";
 
 /** Full event block used on the Day 1 page. */
@@ -56,6 +57,7 @@ export function EventDetail({ event, index }: { event: EventContent; index: numb
               <dt className="text-mist">Fee</dt>
               <dd className="mt-1 text-flare">{feeLabel(event)}</dd>
             </div>
+            <FeeIncludes event={event} />
           </dl>
           <ButtonLink href={event.registerPath} className="mt-8 w-full">
             Register · {formatInr(registrationAmountInr(event))}

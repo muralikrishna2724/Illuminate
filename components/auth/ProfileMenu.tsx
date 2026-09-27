@@ -63,7 +63,7 @@ export function ProfileMenu({ viewer }: { viewer: NonNullable<Viewer> }) {
         <div
           id={menuId}
           role="menu"
-          className="absolute right-0 mt-2 w-64 overflow-hidden rounded-2xl border border-[var(--line-strong)] bg-[#0d0b0a] shadow-2xl shadow-black/60"
+          className="absolute right-0 mt-2 w-64 overflow-hidden rounded-2xl border border-[var(--line-strong)] bg-night shadow-2xl shadow-black/60"
         >
           <div className="border-b border-[var(--line)] px-4 py-3">
             <p className="truncate text-sm text-flare">{viewer.name}</p>

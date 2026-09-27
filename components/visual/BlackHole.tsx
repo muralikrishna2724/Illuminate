@@ -13,14 +13,14 @@ const OPACITY: Record<Intensity, string> = {
  * WebGL renderer (public/images/black-hole.jpg). Only the homepage hero runs
  * the live renderer, so internal pages stay light.
  *
- * `mix-blend-screen` makes the black background disappear into the page and a
- * radial mask fades the square edges. Decorative only.
+ * The still is rendered on the page's own violet, and a radial mask fades
+ * the square edges. Decorative only.
  */
 export function BlackHole({ intensity = "subtle", className = "" }: { intensity?: Intensity; className?: string }) {
   return (
     <div
       aria-hidden="true"
-      className={`pointer-events-none relative aspect-square select-none mix-blend-screen ${OPACITY[intensity]} ${className}`}
+      className={`pointer-events-none relative aspect-square select-none ${OPACITY[intensity]} ${className}`}
       style={{
         WebkitMaskImage: "radial-gradient(closest-side, #000 55%, transparent 100%)",
         maskImage: "radial-gradient(closest-side, #000 55%, transparent 100%)",

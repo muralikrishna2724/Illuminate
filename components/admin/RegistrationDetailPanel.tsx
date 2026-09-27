@@ -49,7 +49,7 @@ export function RegistrationDetailPanel({
       onClick={(e) => {
         if (e.target === ref.current) onClose();
       }}
-      className="ml-auto mr-0 h-dvh max-h-dvh w-full max-w-2xl border-l border-[var(--line-strong)] bg-[#0d0b0a] p-0 text-sand backdrop:bg-black/60"
+      className="ml-auto mr-0 h-dvh max-h-dvh w-full max-w-2xl border-l border-[var(--line-strong)] bg-night p-0 text-sand backdrop:bg-void/70"
     >
       <div className="flex h-full flex-col">
         <div className="flex items-start justify-between gap-4 border-b border-[var(--line)] px-5 py-4 sm:px-6">

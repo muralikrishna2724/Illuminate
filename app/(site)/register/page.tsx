@@ -4,6 +4,7 @@ import { PageHero } from "@/components/layout/PageHero";
 import { ArrowIcon } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
+import { FeeIncludes } from "@/components/ui/FeeIncludes";
 import { EVENT_LIST, feeLabel, formatInr, registrationAmountInr } from "@/lib/events/catalog";
 
 export const metadata: Metadata = {
@@ -20,8 +21,8 @@ export default function RegisterIndexPage() {
       <Container className="pb-28">
         <Reveal as="ul" className="grid gap-px overflow-hidden rounded-3xl bg-[var(--line)] md:grid-cols-2">
           {EVENT_LIST.map((event) => (
-            <li key={event.slug} className="bg-void">
-              <Link href={event.registerPath} className="group flex h-full flex-col justify-between gap-10 p-8 transition-colors hover:bg-dusk sm:p-10">
+            <li key={event.slug} className={event.day === 2 ? "bg-gradient-to-br from-pine/55 via-pine-deep/35 to-night" : "bg-night"}>
+              <Link href={event.registerPath} className="group flex h-full flex-col justify-between gap-10 p-8 transition-colors hover:bg-pine/25 sm:p-10">
                 <div>
                   <p className={`text-sm ${event.day === 2 ? "text-gold/90" : "text-mist"}`}>
                     Day {event.day} · {event.dateLabel}
@@ -31,6 +32,7 @@ export default function RegisterIndexPage() {
                   <p className="mt-3 text-mist">
                     {event.format === "TEAM" ? `Team of exactly ${event.teamSize}` : "Individual"} · {feeLabel(event)}
                   </p>
+                  <FeeIncludes event={event} className="mt-6" />
                 </div>
                 <span className="inline-flex items-center gap-2 text-flare">
                   Register · {formatInr(registrationAmountInr(event))}

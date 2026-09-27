@@ -1,15 +1,16 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { EVENT_CONTACTS, isPlaceholder } from "@/lib/site-config";
-
-function formatPhone(phone: string): string {
-  const digits = phone.replace(/\D/g, "");
-  return digits.length === 10 ? `+91 ${digits.slice(0, 5)} ${digits.slice(5)}` : phone;
-}
+import { EVENT_CONTACTS, formatPhone, isPlaceholder, telHref } from "@/lib/site-config";
 
 /** "Contact us" button that opens a small dialog listing the organisers' names and phone numbers. */
-export function ContactPopup({ className = "" }: { className?: string }) {
+export function ContactPopup({
+  className = "",
+  buttonClassName = "inline-flex items-center gap-2 text-sand/80 transition-colors hover:text-flare",
+}: {
+  className?: string;
+  buttonClassName?: string;
+}) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [open, setOpen] = useState(false);
 
@@ -26,7 +27,7 @@ export function ContactPopup({ className = "" }: { className?: string }) {
         type="button"
         onClick={() => setOpen(true)}
         aria-haspopup="dialog"
-        className={`inline-flex items-center gap-2 text-sand/80 transition-colors hover:text-flare ${className}`}
+        className={`${buttonClassName} ${className}`}
       >
         <svg viewBox="0 0 16 16" className="h-4 w-4" fill="none" aria-hidden="true">
           <path
@@ -47,7 +48,7 @@ export function ContactPopup({ className = "" }: { className?: string }) {
         onClick={(e) => {
           if (e.target === dialogRef.current) setOpen(false);
         }}
-        className="m-auto w-[calc(100%-2rem)] max-w-sm rounded-2xl border border-[var(--line-strong)] bg-[#0d0b0a] p-0 text-sand shadow-2xl shadow-black/60 backdrop:bg-black/60 backdrop:backdrop-blur-sm"
+        className="m-auto w-[calc(100%-2rem)] max-w-sm rounded-2xl border border-[var(--line-strong)] bg-night p-0 text-sand shadow-2xl shadow-black/60 backdrop:bg-void/70 backdrop:backdrop-blur-sm"
       >
         <div className="flex items-center justify-between border-b border-[var(--line)] px-5 py-4">
           <h2 id="contact-title" className="font-display text-2xl text-flare">
@@ -76,7 +77,7 @@ export function ContactPopup({ className = "" }: { className?: string }) {
                 </div>
                 {dialable && (
                   <a
-                    href={`tel:+91${person.phone.replace(/\D/g, "").slice(-10)}`}
+                    href={telHref(person.phone)}
                     className="inline-flex h-9 shrink-0 items-center rounded-full bg-flare px-4 text-sm font-medium text-void hover:bg-gold"
                     aria-label={`Call ${person.name}`}
                   >
