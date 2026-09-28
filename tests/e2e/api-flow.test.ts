@@ -189,6 +189,7 @@ describe("registrations", () => {
     assert.equal(body.data.amountInr, 50);
     assert.equal(body.data.paymentStatus, "PENDING");
     assert.equal(body.data.quiz, null);
+    assert.equal(body.data.whatsappGroupUrl, "https://chat.whatsapp.com/BAq9wEEfPrD52c6ioCY28C", "registrant gets the event's group");
     created.debate = { registrationId: body.data.registrationId, utr };
   });
 
@@ -248,6 +249,7 @@ describe("registrations", () => {
     const raw = JSON.stringify(body);
     assert.ok(!raw.includes("@example.com"), "no emails");
     assert.ok(!raw.includes(created.illuminate!.utr), "no UTR");
+    assert.ok(!raw.includes("chat.whatsapp.com"), "no WhatsApp group link");
     const missing = await fetch(`${BASE}/api/registrations/ILM-ZZZZZZ`);
     assert.equal(missing.status, 404);
   });

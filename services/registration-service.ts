@@ -1,6 +1,7 @@
 import "server-only";
 import { Prisma, type Event as EventRow } from "@prisma/client";
 import { prisma } from "@/lib/db/prisma";
+import { whatsappGroupFor } from "@/lib/events/whatsapp";
 import { AppError, badRequest, conflict, notFound } from "@/lib/http/errors";
 import { generateRegistrationCode, normalizeRegistrationCode, REGISTRATION_CODE_PATTERN } from "@/lib/registration-id";
 import { getStorage, paymentScreenshotKey } from "@/lib/storage";
@@ -184,6 +185,7 @@ export async function createRegistration(slug: EventSlug, submission: Registrati
         amountInr,
         paymentStatus: created.payment?.status ?? "PENDING",
         quiz,
+        whatsappGroupUrl: whatsappGroupFor(slug, created.payment?.status ?? "PENDING"),
       };
     } catch (error) {
       await storage.remove(key).catch((cleanupError) => {

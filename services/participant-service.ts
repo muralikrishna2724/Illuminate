@@ -1,6 +1,7 @@
 import "server-only";
 import { prisma } from "@/lib/db/prisma";
 import type { EventSlug, ParticipantProfile, ParticipantRegistration } from "@/types/domain";
+import { whatsappGroupFor } from "@/lib/events/whatsapp";
 import { getQuizConfig, QUIZ_EVENT_SLUG, resolveQuizAccess } from "./quiz-service";
 
 /** Every registration that lists this email as contact, participant, team leader or member. */
@@ -46,6 +47,7 @@ export async function getParticipantRegistrations(email: string): Promise<Partic
         submittedAt: r.createdAt.toISOString(),
         team: r.team ? { name: r.team.name, members: r.team.members.map((m) => m.name) } : null,
         quiz: quizConfig && slug === QUIZ_EVENT_SLUG ? resolveQuizAccess(quizConfig, status) : null,
+        whatsappGroupUrl: whatsappGroupFor(slug, status),
       };
     });
 }

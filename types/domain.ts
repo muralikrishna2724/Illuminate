@@ -180,6 +180,8 @@ export interface RegistrationCreated {
   amountInr: number;
   paymentStatus: PaymentStatus;
   quiz: QuizAccess | null;
+  /** The event's WhatsApp group invite (sent only to the registrant). */
+  whatsappGroupUrl: string | null;
 }
 
 /** A registration as shown on the participant's own dashboard. */
@@ -193,6 +195,8 @@ export interface ParticipantRegistration {
   /** Team events only. */
   team: { name: string; members: string[] } | null;
   quiz: QuizAccess | null;
+  /** The event's WhatsApp group invite; null once the payment is rejected. */
+  whatsappGroupUrl: string | null;
 }
 
 /** The signed-in participant's own details, taken from their most recent registration. */

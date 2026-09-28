@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { useState, type RefObject } from "react";
-import { formatInr } from "@/lib/events/catalog";
+import { EVENTS, formatInr } from "@/lib/events/catalog";
 import type { RegistrationCreated } from "@/types/domain";
 import { QuizPanel } from "./QuizPanel";
 import { StatusBadge } from "./StatusBadge";
+import { WhatsAppGroupCard } from "./WhatsAppGroupCard";
 
 export function RegistrationSuccess({
   result,
@@ -79,6 +80,7 @@ export function RegistrationSuccess({
         </div>
       </div>
 
+      {result.whatsappGroupUrl && <WhatsAppGroupCard url={result.whatsappGroupUrl} eventName={EVENTS[result.eventSlug].shortName} />}
       {result.quiz && <QuizPanel quiz={result.quiz} />}
     </div>
   );

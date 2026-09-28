@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { LogoutButton } from "@/components/auth/LogoutButton";
 import { QuizPanel } from "@/components/registration/QuizPanel";
+import { WhatsAppGroupCard } from "@/components/registration/WhatsAppGroupCard";
 import { StatusBadge } from "@/components/registration/StatusBadge";
 import { ButtonLink } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { requireParticipantPage } from "@/lib/auth/guards";
-import { formatInr } from "@/lib/events/catalog";
+import { EVENTS, formatInr } from "@/lib/events/catalog";
 import { initials } from "@/lib/names";
 import { getParticipantProfile, getParticipantRegistrations } from "@/services/participant-service";
 
@@ -113,6 +114,7 @@ export default async function ParticipantDashboardPage() {
                   <p className="mt-6 text-sand">{STATUS_COPY[r.paymentStatus]}</p>
                   {r.rejectionReason && <p className="mt-1 text-mist">Reason: {r.rejectionReason}</p>}
                 </article>
+                {r.whatsappGroupUrl && <WhatsAppGroupCard url={r.whatsappGroupUrl} eventName={EVENTS[r.event.slug].shortName} />}
                 {r.quiz && <QuizPanel quiz={r.quiz} />}
               </li>
             ))}
