@@ -21,7 +21,7 @@ export const FAQS: FaqItem[] = [
     id: "venue",
     question: "Where is ILLUMINATE held?",
     answer:
-      "At CVR College of Engineering (A UGC Autonomous Institution, NAAC 'A' Grade), Vastunagar, Mangalpalli (V), Ibrahimpatnam (M), Rangareddy (D), Telangana 501510. ILLUMINATE is hosted by CVR College of Engineering in collaboration with IIT Bombay, E-Cell IIT Bombay's National Entrepreneurship Challenge 2026, IEEE ComSoc and the Sudhan Shetty Innovation Club.",
+      "At CVR College of Engineering (A UGC Autonomous Institution, NAAC 'A' Grade), Vastunagar, Mangalpalli (V), Ibrahimpatnam (M), Rangareddy (D), Telangana 501510. ILLUMINATE is hosted by CVR College of Engineering in collaboration with IIT Bombay, E-Cell IIT Bombay's National Entrepreneurship Challenge 2026, IEEE ComSoc and CVR-IC.",
     featured: true,
   },
   {

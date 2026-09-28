@@ -63,12 +63,12 @@ export interface EventContact {
  * dialable.
  */
 export const EVENT_CONTACTS: EventContact[] = [
-  { name: "CH Sathya Pardha Saradhi", phone: "9903031062" },
+  { name: "CH Sathya Pardha Saradhi", phone: "9963031062" },
   { name: "G Tejaswini", phone: "8074324396" },
 ];
 
 /** Organisers' email and Instagram (from the event poster). */
-export const CONTACT_EMAIL = "ecellcvrce@gmail.com";
+export const CONTACT_EMAIL = "ecellcvrcoe@gmail.com";
 export const INSTAGRAM = { handle: "@ecell_cvrce", url: "https://www.instagram.com/ecell_cvrce/" } as const;
 
 /** Host institution and venue (from the event poster). */
@@ -85,7 +85,7 @@ export const COLLABORATORS: string[] = [
   "IIT Bombay",
   "E-Cell IIT Bombay — National Entrepreneurship Challenge 2026",
   "IEEE ComSoc (IEEE Communications Society)",
-  "Sudhan Shetty Innovation Club",
+  "CVR-IC",
 ];
 
 export const TAGLINE = ["Learn", "Build", "Innovate"] as const;
