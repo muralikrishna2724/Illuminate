@@ -1,6 +1,7 @@
 import { ButtonLink } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
 import { FeeIncludes } from "@/components/ui/FeeIncludes";
+import { EventSpotlight } from "./EventSpotlight";
 import { feeLabel, formatInr, registrationAmountInr, type EventContent } from "@/lib/events/catalog";
 
 /** Full event block used on the Day 1 page. */
@@ -39,6 +40,8 @@ export function EventDetail({ event, index }: { event: EventContent; index: numb
               ))}
             </ul>
           )}
+
+          {event.spotlight && <EventSpotlight spotlight={event.spotlight} />}
         </div>
 
         <aside className="self-start lg:border-l lg:border-[var(--line)] lg:pl-8">

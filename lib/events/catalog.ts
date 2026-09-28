@@ -28,6 +28,8 @@ export interface EventContent {
   highlights: Array<{ title: string; items: string[] }>;
   /** Confirmed notes shown as plain statements. */
   notes: string[];
+  /** Highlighted closing block on the event's page: a motto plus summary lines. */
+  spotlight?: { motto: string[]; lines: string[] };
   /** The organisation behind the event, e.g. "E-Cell IIT Bombay". */
   initiativeBy?: string;
   /** The event's own official tagline, when it has one. */
@@ -63,6 +65,13 @@ export const EVENTS: Record<EventSlug, EventContent> = {
       "Teams of exactly 4 members.",
       "A qualification quiz is part of Deja Vu. The quiz link is shared after registration once it is made available.",
     ],
+    spotlight: {
+      motto: ["Think", "Pick", "Build", "Impact"],
+      lines: [
+        "A two-stage hackathon where participants begin with a quiz, choose a problem statement, and develop a solution.",
+        "A two-stage hackathon solving real-world challenges.",
+      ],
+    },
     registerPath: "/register/hackathon",
     hasQualificationQuiz: true,
   },
