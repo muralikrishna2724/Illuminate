@@ -78,7 +78,7 @@ export const EVENTS: Record<EventSlug, EventContent> = {
     feePerPersonInr: 50,
     tagline: "An individual event on Day 1.",
     description:
-      "Under the Hood of AI is an individual event on Day 1 of ILLUMINATE. Further details will be announced by the organisers.",
+      "A platform for participants to analyse, discuss, and debate the real-world impact of Artificial Intelligence.",
     highlights: [],
     notes: ["Individual participation."],
     registerPath: "/register/debate",
@@ -96,7 +96,7 @@ export const EVENTS: Record<EventSlug, EventContent> = {
     feePerPersonInr: 50,
     tagline: "A team event for teams of four.",
     description:
-      "IPL Auction is a team event on Day 1 of ILLUMINATE. Further details will be announced by the organisers.",
+      "A competitive IPL-inspired event that puts your cricket knowledge, strategy, and team-building skills to the test.",
     highlights: [],
     notes: ["Teams of exactly 4 members."],
     registerPath: "/register/ipl-auction",
