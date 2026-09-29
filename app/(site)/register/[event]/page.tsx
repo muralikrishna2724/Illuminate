@@ -19,7 +19,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps<"/register/[event]">): Promise<Metadata> {
   const { event } = await params;
   if (!isEventSlug(event)) return {};
-  return { title: `Register — ${EVENTS[event].name}`, description: `Register for ${EVENTS[event].name} at ILLUMINATE. ${feeLabel(EVENTS[event])}.` };
+  return { title: `Register — ${EVENTS[event].name}`, description: `Register for ${EVENTS[event].name} at INNOVENTRA. ${feeLabel(EVENTS[event])}.` };
 }
 
 export default async function RegisterEventPage({ params }: PageProps<"/register/[event]">) {

@@ -31,7 +31,7 @@ type Meta = { userAgent: string | null; ipAddress: string | null };
 
 /**
  * One login form for everyone. The second field is interpreted by its shape:
- *  - a registration ID (ILM-XXXXXX) → participant login, valid when that
+ *  - a registration ID (INV-07) → participant login, valid when that
  *    registration lists the email (contact, participant, team leader or member);
  *  - a 10-digit mobile number → participant login, valid when the email AND
  *    phone belong to the same person on some registration (for people who

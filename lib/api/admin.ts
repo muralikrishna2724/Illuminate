@@ -60,7 +60,7 @@ export const adminApi = {
     }
     const blob = await response.blob();
     const disposition = response.headers.get("content-disposition") ?? "";
-    const filename = /filename="([^"]+)"/.exec(disposition)?.[1] ?? "illuminate-registrations.csv";
+    const filename = /filename="([^"]+)"/.exec(disposition)?.[1] ?? "innoventra-registrations.csv";
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;

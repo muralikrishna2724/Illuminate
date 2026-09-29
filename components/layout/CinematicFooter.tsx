@@ -17,7 +17,7 @@ gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, useGSAP);
 /**
  * Cinematic footer:
  *  - GSAP ScrollTrigger entrance (the footer "rises" out of the dark)
- *  - giant background ILLUMINATE typography with scrubbed parallax
+ *  - giant background INNOVENTRA typography with scrubbed parallax
  *  - staggered content reveal
  *  - magnetic buttons (fine pointers only)
  *  - smooth back-to-top via ScrollToPlugin
@@ -249,7 +249,7 @@ export function CinematicFooter({
 
         <div className="mt-16 flex items-center justify-between gap-6">
           <p data-footer-reveal className="text-xs text-smoke">
-            © {new Date().getFullYear()} ILLUMINATE
+            © {new Date().getFullYear()} INNOVENTRA
           </p>
           <Magnetic>
             <button
@@ -278,7 +278,7 @@ export function CinematicFooter({
             color: "transparent",
           }}
         >
-          Illuminate
+          Innoventra
         </p>
       </div>
     </footer>

@@ -69,7 +69,7 @@ export function LoginForm() {
           spellCheck={false}
           value={secret}
           error={fieldErrors.secret}
-          hint="Your registration ID (e.g. ILM-7K3QXZ), or the phone number you registered with."
+          hint="Your registration ID (e.g. INV-07), or the phone number you registered with."
           onChange={(e) => setSecret(e.target.value)}
           className="[&_input]:pr-16"
         />

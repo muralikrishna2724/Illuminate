@@ -18,7 +18,7 @@ export const GET = route(async (request) => {
     status: 200,
     headers: {
       "Content-Type": "text/csv; charset=utf-8",
-      "Content-Disposition": `attachment; filename="illuminate-registrations-${scope}-${stamp}.csv"`,
+      "Content-Disposition": `attachment; filename="innoventra-registrations-${scope}-${stamp}.csv"`,
       "Cache-Control": "private, no-store",
     },
   });

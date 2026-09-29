@@ -88,7 +88,7 @@ export const HOST = {
   address: "Vastunagar, Mangalpalli (V), Ibrahimpatnam (M), Rangareddy (D), Telangana 501510",
 } as const;
 
-/** The college's own E-Cell, which runs ILLUMINATE. */
+/** The college's own E-Cell, which runs INNOVENTRA. */
 export const ORGANISER = {
   name: "E-Cell, CVR College of Engineering",
   logo: { src: "/logos/ecell-cvr.png", width: 404, height: 480 } satisfies Logo,
@@ -98,20 +98,30 @@ export interface Partner {
   name: string;
   /** Omit until the organisers provide the logo file; the name is shown alone. */
   logo?: Logo;
-  /** Logos drawn on a dark background (e.g. NEC's) get a dark tile. */
+  /** Light-coloured logos (e.g. NEC's) get a dark tile. */
   darkLogo?: boolean;
 }
 
-/** Organisations ILLUMINATE is held in collaboration with (from the event poster). */
+/** Organisations INNOVENTRA is held in collaboration with (from the event poster). */
 export const COLLABORATORS: Partner[] = [
-  { name: "IIT Bombay" },
+  { name: "E-Cell IIT Bombay", logo: { src: "/logos/ecell-iitb-dark.png", width: 418, height: 480 } },
   {
     name: "E-Cell IIT Bombay — National Entrepreneurship Challenge 2026",
-    logo: { src: "/logos/nec-2026.png", width: 720, height: 361 },
+    logo: { src: "/logos/nec-2026-light.png", width: 720, height: 348 },
     darkLogo: true,
   },
-  { name: "IEEE ComSoc (IEEE Communications Society)" },
+  { name: "IEEE ComSoc (IEEE Communications Society)", logo: { src: "/logos/ieee-comsoc-dark.png", width: 408, height: 174 } },
   { name: "CVR NewGen IEDC", logo: { src: "/logos/cvr-newgen-iedc.png", width: 478, height: 480 } },
+];
+
+/**
+ * The "A × B × C" logo lockup at the top of the homepage hero. Light
+ * versions (on transparent backgrounds) for the dark hero.
+ */
+export const HERO_PARTNERS: Array<{ name: string; logo: Logo }> = [
+  { name: "E-Cell IIT Bombay", logo: { src: "/logos/ecell-iitb-light.png", width: 418, height: 480 } },
+  { name: "E-Cell CVR College", logo: { src: "/logos/ecell-cvr-light.png", width: 408, height: 480 } },
+  { name: "NEC, IIT Bombay", logo: { src: "/logos/nec-2026-light.png", width: 720, height: 348 } },
 ];
 
 export const TAGLINE = ["Learn", "Build", "Innovate"] as const;

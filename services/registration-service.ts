@@ -1,9 +1,10 @@
 import "server-only";
+import { randomUUID } from "node:crypto";
 import { Prisma, type Event as EventRow } from "@prisma/client";
 import { prisma } from "@/lib/db/prisma";
 import { whatsappGroupFor } from "@/lib/events/whatsapp";
 import { AppError, badRequest, conflict, notFound } from "@/lib/http/errors";
-import { generateRegistrationCode, normalizeRegistrationCode, REGISTRATION_CODE_PATTERN } from "@/lib/registration-id";
+import { formatRegistrationCode, normalizeRegistrationCode, REGISTRATION_CODE_PATTERN } from "@/lib/registration-id";
 import { getStorage, paymentScreenshotKey } from "@/lib/storage";
 import { validateScreenshotUpload } from "@/lib/validation/file";
 import {
@@ -119,14 +120,29 @@ function buildRegistrationCreate(
   };
 }
 
+// Serialises ID allocation across concurrent registrations (transaction-scoped).
+const REGISTRATION_CODE_LOCK = 7_203_451;
+
+/** The next number after the highest INV-NN in use, taken while holding the lock. */
+async function nextRegistrationNumber(tx: Prisma.TransactionClient): Promise<number> {
+  await tx.$executeRaw`SELECT pg_advisory_xact_lock(${REGISTRATION_CODE_LOCK})`;
+  const rows = await tx.$queryRaw<Array<{ next: number }>>`
+    SELECT (COALESCE(MAX(CAST(SUBSTRING("registrationCode" FROM 5) AS INTEGER)), 0) + 1)::int AS next
+    FROM "Registration"
+    WHERE "registrationCode" ~ '^INV-[0-9]+$'`;
+  return rows[0]?.next ?? 1;
+}
+
 /**
  * Validates and stores a registration with its payment proof.
  *
  * Order of operations:
  *   1. Validate details, UTR and screenshot (all errors reported together).
  *   2. Reject duplicate UTRs early (the unique constraint is the real guard).
- *   3. Upload the screenshot to private object storage.
- *   4. Create Registration + Team/TeamMembers|Participant + Payment in ONE transaction.
+ *   3. Upload the screenshot to private object storage (under a random key).
+ *   4. In ONE transaction, take the next sequential registration ID under a
+ *      lock and create Registration + Team/TeamMembers|Participant + Payment.
+ *      A failed transaction rolls back, so no ID is ever skipped.
  *   5. If the transaction fails, delete the uploaded object so nothing is orphaned.
  */
 export async function createRegistration(slug: EventSlug, submission: RegistrationSubmission): Promise<RegistrationCreated> {
@@ -153,13 +169,13 @@ export async function createRegistration(slug: EventSlug, submission: Registrati
   const storage = getStorage();
 
   for (let attempt = 0; attempt < 5; attempt++) {
-    const code = generateRegistrationCode();
-    const key = paymentScreenshotKey(code, screenshot.extension);
+    const key = paymentScreenshotKey(randomUUID(), screenshot.extension);
 
     await storage.upload(key, screenshot.bytes, screenshot.mimeType);
 
     try {
       const created = await prisma.$transaction(async (tx) => {
+        const code = formatRegistrationCode(await nextRegistrationNumber(tx));
         return tx.registration.create({
           data: buildRegistrationCreate(code, event, details, {
             amountInr,
@@ -194,7 +210,7 @@ export async function createRegistration(slug: EventSlug, submission: Registrati
       if (isUniqueViolation(error, "utr")) {
         throw conflict(DUPLICATE_UTR_MESSAGE, "DUPLICATE_UTR", { utr: DUPLICATE_UTR_MESSAGE });
       }
-      if (isUniqueViolation(error, "registrationCode")) continue; // extremely unlikely; retry with a new code
+      if (isUniqueViolation(error, "registrationCode")) continue; // guarded by the lock; retry just in case
       throw error;
     }
   }

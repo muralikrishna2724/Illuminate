@@ -50,7 +50,7 @@ export function SiteHeader({ viewer }: { viewer: Viewer }) {
       </a>
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-8">
         <Link href="/" className="font-display text-2xl tracking-tight text-flare" onClick={() => setOpen(false)}>
-          Illuminate
+          Innoventra
         </Link>
 
         <nav aria-label="Main" className="hidden items-center gap-1 md:flex">

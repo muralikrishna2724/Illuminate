@@ -1,6 +1,6 @@
-# ILLUMINATE
+# INNOVENTRA
 
-The event website and registration platform for **ILLUMINATE**, a 2-day college innovation, technology, entrepreneurship and creative event on **October 9–10**.
+The event website and registration platform for **INNOVENTRA**, a 2-day college innovation, technology, entrepreneurship and creative event on **October 9–10**.
 
 | Day | Date | Events |
 | --- | --- | --- |
@@ -29,7 +29,7 @@ The project includes the public website, registrations with payment-proof upload
 | `/dashboard` | Participant profile: their details (name, email, phone, college, department, year) and every registration linked to their email, with payment status and the Deja Vu quiz |
 
 **Login.** The header's **Login** button leads to one form with an email and a "registration ID or password" field:
-- **Participants** enter the email they registered with and one of their registration IDs (`ILM-XXXXXX`). Any email on the registration works: the contact, the participant, the team leader or any team member. They land on `/dashboard`. Participants don't have passwords.
+- **Participants** enter the email they registered with and one of their registration IDs (`INV-01`, `INV-02`, …). Any email on the registration works: the contact, the participant, the team leader or any team member. They land on `/dashboard`. Participants don't have passwords.
 - **Participants who lost their registration ID** can enter their email and the phone number they registered with instead (`+91` and spaces are fine). Both must belong to the same person on a registration: the leader's email with the leader's phone, or a member's email with that member's phone. An email and phone from two different teammates are rejected.
 - **Organisers** enter their admin email and their password in the same second field, and land on `/admin/dashboard`. The page deliberately doesn't mention this: its labels, hints and error messages only talk about registration IDs and phone numbers.
 - A wrong combination always gets the same message, so the form doesn't reveal which emails exist. Login attempts are rate-limited.
@@ -53,7 +53,7 @@ The project includes the public website, registrations with payment-proof upload
 5. The registrant enters the UTR / transaction ID and uploads a payment screenshot.
 6. The backend validates everything, including the file's real content and UTR uniqueness.
 7. The registration, team or participant, members and payment are created in **one database transaction**.
-8. The payment status is **PENDING**, and the registrant gets a registration ID like `ILM-7K3QXZ`.
+8. The payment status is **PENDING**, and the registrant gets a sequential registration ID like `INV-07`.
 9. An admin checks the payment manually and clicks **VERIFY** (→ `VERIFIED`) or **REJECT** (→ `REJECTED`, with an optional reason).
 
 ---
@@ -170,7 +170,7 @@ npx prisma studio     # optional: browse the data
 | Model | Purpose / key constraints |
 | --- | --- |
 | `Event` | `slug` unique; `format` TEAM/INDIVIDUAL; `teamSize`; `feePerPersonInr`; `registrationOpen` |
-| `Registration` | `registrationCode` **unique** (`ILM-XXXXXX`); FK → `Event`; contact fields; `createdAt`/`updatedAt` |
+| `Registration` | `registrationCode` **unique** (`INV-01`, `INV-02`, …); FK → `Event`; contact fields; `createdAt`/`updatedAt` |
 | `Team` / `TeamMember` | team events; `TeamMember` unique `(teamId, position)` |
 | `Participant` | individual events (1:1 with registration) |
 | `Payment` | 1:1 with registration; `utr` **unique**; `amountInr`; `screenshotPath` (storage key only, never the image bytes); `status` enum `PENDING/VERIFIED/REJECTED`; `verifiedAt`/`verifiedById`; `rejectedAt`/`rejectedById`/`rejectionReason` |

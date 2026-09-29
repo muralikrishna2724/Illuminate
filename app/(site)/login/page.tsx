@@ -8,7 +8,7 @@ import { getCurrentAdmin, getCurrentParticipantEmail } from "@/lib/auth/session"
 
 export const metadata: Metadata = {
   title: "Log in",
-  description: "Log in to see your ILLUMINATE registrations and payment status.",
+  description: "Log in to see your INNOVENTRA registrations and payment status.",
   robots: { index: false },
 };
 export const dynamic = "force-dynamic";

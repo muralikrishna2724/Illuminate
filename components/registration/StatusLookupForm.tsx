@@ -5,7 +5,7 @@ import { useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/Button";
 import { TextField } from "./fields";
 
-const PATTERN = /^ILM-[23456789ABCDEFGHJKMNPQRSTUVWXYZ]{6}$/;
+const PATTERN = /^INV-\d{2,}$/;
 
 export function StatusLookupForm({ initialValue = "" }: { initialValue?: string }) {
   const router = useRouter();
@@ -15,9 +15,9 @@ export function StatusLookupForm({ initialValue = "" }: { initialValue?: string 
 
   const submit = (e: FormEvent) => {
     e.preventDefault();
-    const code = value.trim().toUpperCase();
+    const code = value.trim().toUpperCase().replace(/\s+/g, "");
     if (!code) return setError("Please complete this field.");
-    if (!PATTERN.test(code)) return setError("Registration IDs look like ILM-7K3QXZ.");
+    if (!PATTERN.test(code)) return setError("Registration IDs look like INV-07.");
     setError(undefined);
     setPending(true);
     router.push(`/registration/${code}`);
@@ -28,7 +28,7 @@ export function StatusLookupForm({ initialValue = "" }: { initialValue?: string 
       <TextField
         id="registrationId"
         label="Registration ID"
-        placeholder="ILM-XXXXXX"
+        placeholder="INV-07"
         autoCapitalize="characters"
         autoComplete="off"
         spellCheck={false}

@@ -48,7 +48,7 @@ function LogoBadge({ src, width, height, alt }: { src: string; width: number; he
 function PartnerTile({ partner }: { partner: Partner }) {
   return (
     <li className="flex flex-col overflow-hidden rounded-2xl border border-[var(--line)] bg-void shadow-sm">
-      <div className={`flex h-36 items-center justify-center p-3 ${partner.darkLogo ? "bg-black" : "bg-white"}`}>
+      <div className={`flex h-36 items-center justify-center p-3 ${partner.darkLogo ? "bg-carbon" : "bg-white"}`}>
         {partner.logo ? (
           <Image
             src={partner.logo.src}

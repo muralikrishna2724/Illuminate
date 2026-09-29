@@ -2,34 +2,53 @@ import Image from "next/image";
 import { HeroBlackHole } from "@/components/visual/BlackHole";
 import { ArrowIcon, ButtonLink } from "@/components/ui/Button";
 import { EVENT_YEAR_LABEL } from "@/lib/events/catalog";
-import { HOST, TAGLINE } from "@/lib/site-config";
+import { HERO_PARTNERS, HOST, TAGLINE } from "@/lib/site-config";
 import { Countdown } from "./Countdown";
 
 export function Hero() {
   return (
     <section aria-labelledby="hero-title" className="theme-dark relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-void">
       {/* Decorative layers — never interactive */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
+      {/* Starts below the partner lockup so the black hole sits under it */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 top-44 -z-10 sm:top-52">
         <HeroBlackHole />
         {/* Keep type readable where the disk sweeps behind it */}
         <div className="absolute inset-0 bg-gradient-to-t from-void from-30% via-void/60 via-50% to-transparent to-70% md:bg-gradient-to-r md:from-void/90 md:from-10% md:via-void/30 md:via-45% md:to-transparent md:to-60%" />
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-void" />
       </div>
 
-      {/* Host college's logo, top right above the black hole */}
-      <div className="absolute inset-x-0 top-24 z-10 hidden md:block">
-        <div className="mx-auto flex max-w-6xl justify-end px-5 sm:px-8">
-          <HostLogo className="h-24 w-24 p-2" />
-        </div>
+      {/* E-Cell IIT Bombay × E-Cell CVR College × NEC */}
+      <div className="mx-auto w-full max-w-6xl px-5 pt-24 sm:px-8 sm:pt-28">
+        <ul aria-label="Presented by" className="flex items-start gap-2.5 sm:gap-5">
+          {HERO_PARTNERS.map((partner, i) => (
+            <li key={partner.name} className="flex items-start gap-2.5 sm:gap-5">
+              {i > 0 && (
+                <span aria-hidden="true" className="flex h-11 items-center text-lg font-light text-powder/70 sm:h-20 sm:text-2xl">
+                  ×
+                </span>
+              )}
+              <span className="flex flex-col items-center">
+                <Image
+                  src={partner.logo.src}
+                  alt={`${partner.name} logo`}
+                  width={partner.logo.width}
+                  height={partner.logo.height}
+                  priority
+                  className="h-11 w-auto sm:h-20"
+                />
+                <span className="mt-2 max-w-[6.5rem] text-center text-[0.6rem] leading-snug font-medium tracking-[0.12em] text-mist uppercase sm:max-w-none sm:text-xs">
+                  {partner.name}
+                </span>
+              </span>
+            </li>
+          ))}
+        </ul>
       </div>
 
-      <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-end px-5 pb-14 pt-28 sm:px-8 md:justify-center md:pb-24">
+      <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-end px-5 pb-14 pt-12 sm:px-8 md:justify-center md:pb-24 md:pt-16">
         <div className="max-w-2xl">
-          {/* On narrow screens the logo joins the content so it never covers text. */}
-          <HostLogo className="mb-6 h-16 w-16 p-1.5 md:hidden" />
-          <p className="text-sm font-medium text-gold sm:text-base">Hosted by {HOST.name}</p>
-          <h1 id="hero-title" className="mt-4 font-display text-[17vw] leading-[0.88] text-flare sm:text-[8.5rem] lg:text-[9.5rem]">
-            Illuminate
+          <h1 id="hero-title" className="font-display text-[17vw] leading-[0.88] text-flare sm:text-[8.5rem] lg:text-[9.5rem]">
+            Innoventra
           </h1>
           <p className="mt-5 text-sm font-medium tracking-[0.35em] text-powder uppercase sm:text-base">
             <span className="sr-only">{TAGLINE.join(", ")}</span>
@@ -67,20 +86,5 @@ export function Hero() {
         </div>
       </div>
     </section>
-  );
-}
-
-function HostLogo({ className = "" }: { className?: string }) {
-  return (
-    <span className={`flex items-center justify-center rounded-full bg-white shadow-lg shadow-black/40 ring-1 ring-white/30 ${className}`}>
-      <Image
-        src={HOST.logo.src}
-        alt={`${HOST.name} logo`}
-        width={HOST.logo.width}
-        height={HOST.logo.height}
-        priority
-        className="h-full w-full object-contain"
-      />
-    </span>
   );
 }

@@ -121,7 +121,7 @@ export const EVENTS: Record<EventSlug, EventContent> = {
     format: "INDIVIDUAL",
     teamSize: 1,
     feePerPersonInr: 799,
-    tagline: "The flagship of ILLUMINATE — an entrepreneurship workshop on Day 2.",
+    tagline: "The flagship of INNOVENTRA — an entrepreneurship workshop on Day 2.",
     // Description, benefits and notes are taken from E-Cell IIT Bombay's
     // illuminate 2026 brochure.
     description:

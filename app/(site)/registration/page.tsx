@@ -5,7 +5,7 @@ import { Container } from "@/components/ui/Container";
 
 export const metadata: Metadata = {
   title: "Check registration status",
-  description: "Check the payment verification status of your ILLUMINATE registration.",
+  description: "Check the payment verification status of your INNOVENTRA registration.",
   robots: { index: false },
 };
 

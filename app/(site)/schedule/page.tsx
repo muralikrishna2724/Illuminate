@@ -9,7 +9,7 @@ import { HOST } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "Schedule",
-  description: "ILLUMINATE schedule: October 9 (Day 1) and October 10 (Day 2).",
+  description: "INNOVENTRA schedule: October 9 (Day 1) and October 10 (Day 2).",
 };
 
 const DAYS: Array<{ day: number; date: string; href: string; events: EventContent[] }> = [

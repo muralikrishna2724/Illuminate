@@ -1,19 +1,18 @@
 import "server-only";
-import { randomInt } from "node:crypto";
 
-// No 0/O, 1/I/L — easy to read aloud and type from a screenshot.
-const ALPHABET = "23456789ABCDEFGHJKMNPQRSTUVWXYZ";
-const LENGTH = 6;
+/**
+ * Registration IDs are sequential: INV-01, INV-02, … INV-99, INV-100, …
+ * The number is taken inside the registration transaction (see
+ * services/registration-service.ts), so a failed attempt never uses one up.
+ */
+export const REGISTRATION_CODE_PREFIX = "INV-";
 
-/** e.g. ILM-7K3QXZ (31^6 ≈ 887M combinations, uniqueness enforced by the database). */
-export function generateRegistrationCode(): string {
-  let out = "";
-  for (let i = 0; i < LENGTH; i++) out += ALPHABET[randomInt(ALPHABET.length)];
-  return `ILM-${out}`;
+export function formatRegistrationCode(n: number): string {
+  return `${REGISTRATION_CODE_PREFIX}${String(n).padStart(2, "0")}`;
 }
 
-export const REGISTRATION_CODE_PATTERN = /^ILM-[23456789ABCDEFGHJKMNPQRSTUVWXYZ]{6}$/;
+export const REGISTRATION_CODE_PATTERN = /^INV-\d{2,}$/;
 
 export function normalizeRegistrationCode(value: string): string {
-  return value.trim().toUpperCase();
+  return value.trim().toUpperCase().replace(/\s+/g, "");
 }

@@ -6,7 +6,7 @@ import { DAY_1_EVENTS } from "@/lib/events/catalog";
 
 export const metadata: Metadata = {
   title: "Day 1 — October 9",
-  description: "Day 1 of ILLUMINATE: Deja Vu Hackathon, Under the Hood of AI and IPL Auction.",
+  description: "Day 1 of INNOVENTRA: Deja Vu Hackathon, Under the Hood of AI and IPL Auction.",
 };
 
 export default function DayOnePage() {

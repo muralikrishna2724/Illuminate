@@ -11,17 +11,17 @@ export interface FaqItem {
 
 export const FAQS: FaqItem[] = [
   {
-    id: "what-is-illuminate",
-    question: "What is ILLUMINATE?",
+    id: "what-is-innoventra",
+    question: "What is INNOVENTRA?",
     answer:
-      "ILLUMINATE is a 2-day college innovation, technology, entrepreneurship and creative event on October 9–10. Day 1 (October 9) has the Deja Vu Hackathon, Under the Hood of AI and IPL Auction. Day 2 (October 10) is Illuminate — the Entrepreneurship Workshop.",
+      "INNOVENTRA is a 2-day college innovation, technology, entrepreneurship and creative event on October 9–10. Day 1 (October 9) has the Deja Vu Hackathon, Under the Hood of AI and IPL Auction. Day 2 (October 10) is Illuminate — the Entrepreneurship Workshop.",
     featured: true,
   },
   {
     id: "venue",
-    question: "Where is ILLUMINATE held?",
+    question: "Where is INNOVENTRA held?",
     answer:
-      "At CVR College of Engineering (A UGC Autonomous Institution, NAAC 'A' Grade), Vastunagar, Mangalpalli (V), Ibrahimpatnam (M), Rangareddy (D), Telangana 501510. ILLUMINATE is hosted by CVR College of Engineering in collaboration with IIT Bombay, E-Cell IIT Bombay's National Entrepreneurship Challenge 2026, IEEE ComSoc and CVR NewGen IEDC.",
+      "At CVR College of Engineering (A UGC Autonomous Institution, NAAC 'A' Grade), Vastunagar, Mangalpalli (V), Ibrahimpatnam (M), Rangareddy (D), Telangana 501510. INNOVENTRA is hosted by CVR College of Engineering in collaboration with E-Cell IIT Bombay, its National Entrepreneurship Challenge 2026, IEEE ComSoc and CVR NewGen IEDC.",
     featured: true,
   },
   {
@@ -104,7 +104,7 @@ export const FAQS: FaqItem[] = [
     id: "check-status",
     question: "How do I check my registration status?",
     answer:
-      "Use the registration ID you received after submitting (it looks like ILM-XXXXXX) on the “Check registration status” page to see whether your payment is pending, verified or rejected.",
+      "Use the registration ID you received after submitting (it looks like INV-07) on the “Check registration status” page to see whether your payment is pending, verified or rejected.",
   },
   {
     id: "duplicate-utr",

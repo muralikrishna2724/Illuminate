@@ -25,7 +25,7 @@ export class StorageError extends Error {
   }
 }
 
-/** payment-screenshots/{registrationId}/payment.{extension} */
-export function paymentScreenshotKey(registrationCode: string, extension: string): string {
-  return `payment-screenshots/${registrationCode}/payment.${extension}`;
+/** payment-screenshots/{uploadId}/payment.{extension} — a random folder, since the registration ID is assigned afterwards. */
+export function paymentScreenshotKey(uploadId: string, extension: string): string {
+  return `payment-screenshots/${uploadId}/payment.${extension}`;
 }

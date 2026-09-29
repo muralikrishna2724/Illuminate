@@ -84,7 +84,7 @@ export function PaymentInstructions({
           {payment.qrImageUrl && (
             <a
               href={payment.qrImageUrl}
-              download="illuminate-upi-qr.png"
+              download="innoventra-upi-qr.png"
               className="inline-flex h-9 items-center gap-2 rounded-full border border-[var(--line-strong)] px-4 text-sm text-sand transition-colors hover:border-gold/60 hover:text-flare"
             >
               <svg viewBox="0 0 16 16" className="h-4 w-4" fill="none" aria-hidden="true">

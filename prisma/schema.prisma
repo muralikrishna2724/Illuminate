@@ -111,7 +111,7 @@ model Event {
 
 model Registration {
   id               String   @id @default(cuid())
-  // Public, human-friendly registration ID, e.g. ILM-7K3QXZ
+  // Public, human-friendly registration ID, sequential: INV-01, INV-02, …
   registrationCode String   @unique
   eventId          String
   // Primary contact (team leader for team events, the participant for individual events).

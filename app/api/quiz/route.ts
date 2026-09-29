@@ -5,7 +5,7 @@ import { getPublicRegistrationStatus } from "@/services/registration-service";
 import { QUIZ_EVENT_SLUG } from "@/services/quiz-service";
 
 /**
- * GET /api/quiz?registrationId=ILM-XXXXXX
+ * GET /api/quiz?registrationId=INV-07
  * Returns the Deja Vu quiz access state for a registration, applying the
  * admin-configured access rule. The quiz link is never returned without a
  * valid Deja Vu registration ID.

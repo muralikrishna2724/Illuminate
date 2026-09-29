@@ -24,7 +24,7 @@ export function Countdown({ className = "" }: { className?: string }) {
     return (
       <p className={`inline-flex items-center gap-3 text-sm font-medium text-gold ${className}`}>
         <span aria-hidden="true" className="h-2 w-2 animate-pulse rounded-full bg-gold" />
-        ILLUMINATE is happening now
+        INNOVENTRA is happening now
       </p>
     );
   }

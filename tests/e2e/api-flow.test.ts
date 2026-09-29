@@ -154,7 +154,7 @@ describe("registrations", () => {
     const utr = uniqueUtr();
     const { status, body } = await register("hackathon", teamDetails(4), utr);
     assert.equal(status, 201, JSON.stringify(body));
-    assert.match(body.data.registrationId, /^ILM-[0-9A-Z]{6}$/);
+    assert.match(body.data.registrationId, /^INV-\d{2,}$/);
     assert.equal(body.data.amountInr, 200);
     assert.equal(body.data.paymentStatus, "PENDING");
     assert.ok(body.data.quiz, "hackathon response includes the quiz section");
@@ -180,6 +180,18 @@ describe("registrations", () => {
     const spaced = utr.toLowerCase().replace(/(.{4})/g, "$1 ");
     const reformatted = await register("debate", individualDetails(), spaced);
     assert.equal(reformatted.status, 409);
+  });
+
+  test("registration IDs are sequential and a rejected attempt uses none up", async () => {
+    const num = (id: string) => Number(id.slice(4));
+    const firstUtr = uniqueUtr();
+    const first = await register("debate", individualDetails(), firstUtr);
+    assert.equal(first.status, 201, JSON.stringify(first.body));
+    const duplicate = await register("debate", individualDetails(), firstUtr);
+    assert.equal(duplicate.status, 409);
+    const second = await register("debate", individualDetails(), uniqueUtr());
+    assert.equal(second.status, 201, JSON.stringify(second.body));
+    assert.equal(num(second.body.data.registrationId), num(first.body.data.registrationId) + 1);
   });
 
   test("TEST 3 — Under the Hood of AI: individual, ₹50, PENDING", async () => {
@@ -250,7 +262,7 @@ describe("registrations", () => {
     assert.ok(!raw.includes("@example.com"), "no emails");
     assert.ok(!raw.includes(created.illuminate!.utr), "no UTR");
     assert.ok(!raw.includes("chat.whatsapp.com"), "no WhatsApp group link");
-    const missing = await fetch(`${BASE}/api/registrations/ILM-ZZZZZZ`);
+    const missing = await fetch(`${BASE}/api/registrations/INV-999999`);
     assert.equal(missing.status, 404);
   });
 
@@ -529,7 +541,7 @@ describe("participant login", () => {
     const code = reg.body.data.registrationId as string;
     const wrongEmail = await participantLogin("someone.else@example.com", code);
     assert.equal(wrongEmail.status, 401);
-    const unknown = await participantLogin("e2e.individual@example.com", "ILM-ZZZZZZ");
+    const unknown = await participantLogin("e2e.individual@example.com", "INV-999999");
     assert.equal(unknown.status, 401);
     const a = ((await wrongEmail.json()) as Json).error.message;
     const b = ((await unknown.json()) as Json).error.message;

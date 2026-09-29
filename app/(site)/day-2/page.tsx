@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Fragment } from "react";
 import { ButtonLink } from "@/components/ui/Button";
 import { Container, Eyebrow } from "@/components/ui/Container";
 import { ExclusiveBenefits } from "@/components/ui/ExclusiveBenefits";
@@ -10,7 +11,7 @@ import { ABOUT_ECELL, ECELL_WORKSHOP_STATS, WORKSHOP_FORMAT, WORKSHOP_SESSIONS, 
 export const metadata: Metadata = {
   title: "Day 2 — October 10 · Illuminate Entrepreneurship Workshop",
   description:
-    "Day 2 of ILLUMINATE: Illuminate — Entrepreneurship Workshop, an initiative by E-Cell IIT Bombay. Business Model Canvas, Financial Planning, Pitching, Startup Development. ₹799 per person.",
+    "Day 2 of INNOVENTRA: Illuminate — Entrepreneurship Workshop, an initiative by E-Cell IIT Bombay. Business Model Canvas, Financial Planning, Pitching, Startup Development. ₹799 per person.",
 };
 
 export default function DayTwoPage() {
@@ -24,7 +25,7 @@ export default function DayTwoPage() {
         <Container>
           <p className="text-sm text-gold/90 sm:text-base">October 10</p>
           <h1 className="mt-3 font-display text-6xl leading-[0.92] text-flare sm:text-8xl">Day 2</h1>
-          <p className="mt-6 max-w-xl text-lg text-sand/85">One event, the flagship of ILLUMINATE.</p>
+          <p className="mt-6 max-w-xl text-lg text-sand/85">One event, the flagship of INNOVENTRA.</p>
         </Container>
       </section>
 
@@ -33,117 +34,136 @@ export default function DayTwoPage() {
         const benefits = event.highlights.find((h) => h.title === "What you receive");
         const amount = registrationAmountInr(event);
         return (
-          <article key={event.slug} id={event.slug} aria-labelledby={`${event.slug}-title`} className="pb-28">
-            <Container>
-              <Reveal className="border-t border-[var(--line)] pt-16">
-                <h2 id={`${event.slug}-title`} className="font-display text-6xl leading-[0.95] text-flare sm:text-8xl">
-                  Illuminate
-                </h2>
-                <p className="mt-3 font-display text-3xl font-normal text-gold">Entrepreneurship Workshop</p>
-                {event.initiativeBy && (
-                  <p className="mt-6 text-sand/85">
-                    An initiative by <span className="text-flare">{event.initiativeBy}</span>
-                  </p>
+          <Fragment key={event.slug}>
+            <article id={event.slug} aria-labelledby={`${event.slug}-title`} className="pb-28">
+              <Container>
+                <Reveal className="border-t border-[var(--line)] pt-16">
+                  <h2 id={`${event.slug}-title`} className="font-display text-6xl leading-[0.95] text-flare sm:text-8xl">
+                    Illuminate
+                  </h2>
+                  <p className="mt-3 font-display text-3xl font-normal text-gold">Entrepreneurship Workshop</p>
+                  {event.initiativeBy && (
+                    <p className="mt-6 text-sand/85">
+                      An initiative by <span className="text-flare">{event.initiativeBy}</span>
+                    </p>
+                  )}
+                  {event.motto && <p className="mt-2 text-gold/90">{event.motto}</p>}
+                  <p className="mt-6 max-w-2xl text-lg leading-relaxed text-sand/85">{event.description}</p>
+                  {event.notes.length > 0 && (
+                    <ul className="mt-8 space-y-2 text-mist">
+                      {event.notes.map((note) => (
+                        <li key={note} className="flex gap-3">
+                          <span aria-hidden="true" className="mt-2.5 h-1 w-1 shrink-0 rounded-full bg-gold/70" />
+                          {note}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </Reveal>
+
+                {topics && (
+                  <Reveal className="mt-16 overflow-hidden rounded-3xl border border-[var(--line)]">
+                    <div className="bg-night p-8 sm:p-12">
+                      <h3 className="text-sm text-mist">{topics.title}</h3>
+                      <ol className="mt-6 space-y-5">
+                        {topics.items.map((item, i) => (
+                          <li key={item} className="flex items-baseline gap-5">
+                            <span className="font-display text-xl text-smoke">{String(i + 1).padStart(2, "0")}</span>
+                            <span className="font-display text-3xl text-flare sm:text-4xl">{item}</span>
+                          </li>
+                        ))}
+                      </ol>
+                    </div>
+                  </Reveal>
                 )}
-                {event.motto && <p className="mt-2 text-gold/90">{event.motto}</p>}
-                <p className="mt-6 max-w-2xl text-lg leading-relaxed text-sand/85">{event.description}</p>
-                {event.notes.length > 0 && (
-                  <ul className="mt-8 space-y-2 text-mist">
-                    {event.notes.map((note) => (
-                      <li key={note} className="flex gap-3">
+              </Container>
+            </article>
+
+            {/* Session plan — read before being asked to pay */}
+            <section aria-labelledby="sessions-title" className="pb-28">
+              <Container>
+                <Reveal className="grid gap-10 border-t border-[var(--line)] pt-16 lg:grid-cols-[1fr_1.6fr]">
+                  <div>
+                    <Eyebrow>How the day runs</Eyebrow>
+                    <h2 id="sessions-title" className="mt-3 font-display text-5xl leading-[1.02] text-flare sm:text-6xl">
+                      Workshop structure
+                    </h2>
+                  </div>
+                  <ul className="space-y-3 self-end text-mist">
+                    {WORKSHOP_FORMAT.map((line) => (
+                      <li key={line} className="flex gap-3">
                         <span aria-hidden="true" className="mt-2.5 h-1 w-1 shrink-0 rounded-full bg-gold/70" />
-                        {note}
+                        {line}
                       </li>
                     ))}
                   </ul>
-                )}
-              </Reveal>
+                </Reveal>
 
-              <Reveal className="mt-16 grid gap-px overflow-hidden rounded-3xl bg-[var(--line)] lg:grid-cols-[1.4fr_1fr]">
-                {topics && (
-                  <div className="bg-night p-8 sm:p-12">
-                    <h3 className="text-sm text-mist">{topics.title}</h3>
-                    <ol className="mt-6 space-y-5">
-                      {topics.items.map((item, i) => (
-                        <li key={item} className="flex items-baseline gap-5">
-                          <span className="font-display text-xl text-smoke">{String(i + 1).padStart(2, "0")}</span>
-                          <span className="font-display text-3xl text-flare sm:text-4xl">{item}</span>
-                        </li>
-                      ))}
-                    </ol>
-                  </div>
-                )}
-                <div className="flex flex-col justify-between gap-10 bg-gradient-to-br from-powder/70 via-night to-night p-8 sm:p-12">
-                  {benefits && (
+                <Reveal delay={100}>
+                  <ol className="mt-14 divide-y divide-[var(--line)] border-y border-[var(--line)]">
+                    {WORKSHOP_SESSIONS.map((session, i) => (
+                      <li
+                        key={session.topic}
+                        className="grid gap-x-8 gap-y-2 py-6 sm:grid-cols-[3rem_1fr_6rem] lg:grid-cols-[3rem_18rem_1fr_6rem]"
+                      >
+                        <span className="font-display text-xl text-smoke">{String(i + 1).padStart(2, "0")}</span>
+                        <h3 className="font-display text-2xl leading-snug text-flare">{session.topic}</h3>
+                        <p className="text-sand/80 sm:col-start-2 lg:col-start-auto">{session.activity}</p>
+                        <p className="text-sm text-gold/90 sm:col-start-3 sm:row-start-1 sm:text-right lg:col-start-4">
+                          {formatMinutes(session.minutes)}
+                        </p>
+                      </li>
+                    ))}
+                  </ol>
+                </Reveal>
+              </Container>
+            </section>
+
+            {/* Fee, register and exclusive benefits come after the structure */}
+            <section aria-labelledby="register-workshop-title" className="pb-28">
+              <Container>
+                <Reveal className="border-t border-[var(--line)] pt-16">
+                  <Eyebrow>Registration</Eyebrow>
+                  <h2 id="register-workshop-title" className="mt-3 font-display text-5xl leading-[1.02] text-flare sm:text-6xl">
+                    Join the workshop
+                  </h2>
+                </Reveal>
+                <Reveal className="mt-10 overflow-hidden rounded-3xl border border-[var(--line)]">
+                  <div className="grid gap-10 bg-gradient-to-br from-powder/70 via-night to-night p-8 sm:p-12 lg:grid-cols-[1.4fr_1fr] lg:items-end">
+                    {benefits && (
+                      <div>
+                        <h3 className="text-xs font-medium tracking-[0.14em] text-gold uppercase">Included in the fee</h3>
+                        <ul className="mt-6 space-y-3 text-xl text-flare">
+                          {benefits.items.map((item) => (
+                            <li key={item} className="flex items-baseline gap-3">
+                              <span aria-hidden="true" className="h-1.5 w-1.5 shrink-0 translate-y-[-3px] rounded-full bg-gold" />
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
                     <div>
-                      <h3 className="text-xs font-medium tracking-[0.14em] text-gold uppercase">Included in the fee</h3>
-                      <ul className="mt-6 space-y-3 text-xl text-flare">
-                        {benefits.items.map((item) => (
-                          <li key={item} className="flex items-baseline gap-3">
-                            <span aria-hidden="true" className="h-1.5 w-1.5 shrink-0 translate-y-[-3px] rounded-full bg-gold" />
-                            {item}
-                          </li>
-                        ))}
-                      </ul>
+                      <p className="text-sm text-mist">Fee</p>
+                      <p className="mt-1 font-display text-5xl text-flare">
+                        {formatInr(event.feePerPersonInr)}
+                        <span className="ml-2 font-sans text-base text-mist">per person</span>
+                      </p>
+                      <ButtonLink href={event.registerPath} size="lg" className="mt-8 w-full">
+                        Register · {formatInr(amount)}
+                      </ButtonLink>
                     </div>
-                  )}
-                  <div>
-                    <p className="text-sm text-mist">Fee</p>
-                    <p className="mt-1 font-display text-5xl text-flare">
-                      {formatInr(event.feePerPersonInr)}
-                      <span className="ml-2 font-sans text-base text-mist">per person</span>
-                    </p>
-                    <ButtonLink href={event.registerPath} size="lg" className="mt-8 w-full">
-                      Register · {formatInr(amount)}
-                    </ButtonLink>
                   </div>
-                </div>
-              </Reveal>
+                </Reveal>
 
-              <Reveal className="mt-8">
-                <ExclusiveBenefits />
-              </Reveal>
-            </Container>
-          </article>
+                <Reveal className="mt-8">
+                  <ExclusiveBenefits />
+                </Reveal>
+              </Container>
+            </section>
+          </Fragment>
         );
       })}
-
-      {/* Session plan */}
-      <section aria-labelledby="sessions-title" className="pb-28">
-        <Container>
-          <Reveal className="grid gap-10 border-t border-[var(--line)] pt-16 lg:grid-cols-[1fr_1.6fr]">
-            <div>
-              <Eyebrow>How the day runs</Eyebrow>
-              <h2 id="sessions-title" className="mt-3 font-display text-5xl leading-[1.02] text-flare sm:text-6xl">
-                Workshop structure
-              </h2>
-            </div>
-            <ul className="space-y-3 self-end text-mist">
-              {WORKSHOP_FORMAT.map((line) => (
-                <li key={line} className="flex gap-3">
-                  <span aria-hidden="true" className="mt-2.5 h-1 w-1 shrink-0 rounded-full bg-gold/70" />
-                  {line}
-                </li>
-              ))}
-            </ul>
-          </Reveal>
-
-          <Reveal delay={100}>
-            <ol className="mt-14 divide-y divide-[var(--line)] border-y border-[var(--line)]">
-              {WORKSHOP_SESSIONS.map((session, i) => (
-                <li key={session.topic} className="grid gap-x-8 gap-y-2 py-6 sm:grid-cols-[3rem_1fr_6rem] lg:grid-cols-[3rem_18rem_1fr_6rem]">
-                  <span className="font-display text-xl text-smoke">{String(i + 1).padStart(2, "0")}</span>
-                  <h3 className="font-display text-2xl leading-snug text-flare">{session.topic}</h3>
-                  <p className="text-sand/80 sm:col-start-2 lg:col-start-auto">{session.activity}</p>
-                  <p className="text-sm text-gold/90 sm:col-start-3 sm:row-start-1 sm:text-right lg:col-start-4">
-                    {formatMinutes(session.minutes)}
-                  </p>
-                </li>
-              ))}
-            </ol>
-          </Reveal>
-        </Container>
-      </section>
 
       {/* About E-Cell IIT Bombay */}
       <section aria-labelledby="ecell-title" className="pb-28">

@@ -15,7 +15,7 @@ export default async function ProtectedAdminLayout({ children }: { children: Rea
         <div className="mx-auto flex max-w-[90rem] flex-col gap-3 px-4 py-3 sm:px-6 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex items-center justify-between gap-4">
             <Link href="/admin/dashboard" className="flex items-baseline gap-2">
-              <span className="font-display text-2xl text-flare">Illuminate</span>
+              <span className="font-display text-2xl text-flare">Innoventra</span>
               <span className="text-xs text-smoke">Admin</span>
             </Link>
             <div className="flex items-center gap-2 lg:hidden">

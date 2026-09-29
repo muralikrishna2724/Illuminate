@@ -7,7 +7,7 @@ import { FAQS } from "@/lib/faq";
 
 export const metadata: Metadata = {
   title: "FAQ",
-  description: "Frequently asked questions about ILLUMINATE events, fees, team sizes and payment verification.",
+  description: "Frequently asked questions about INNOVENTRA events, fees, team sizes and payment verification.",
 };
 
 export default function FaqPage() {
