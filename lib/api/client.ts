@@ -12,11 +12,13 @@ const BASE_URL = (process.env.NEXT_PUBLIC_API_BASE_URL ?? "").replace(/\/$/, "")
 export const NETWORK_ERROR: ApiErrorBody = {
   code: "NETWORK_ERROR",
   message: "We couldn't reach the server. Please check your connection and try again.",
+  clientSide: true,
 };
 
 export const SERVER_ERROR: ApiErrorBody = {
   code: "SERVER_ERROR",
   message: "Something went wrong. Please try again.",
+  clientSide: true,
 };
 
 export function apiUrl(path: string, query?: Record<string, string | number | undefined | null>): string {
@@ -89,7 +91,12 @@ export function apiUpload<T>(path: string, form: FormData, onProgress?: (fractio
       if (xhr.status === 413) {
         return resolve({
           ok: false,
-          error: { code: "PAYLOAD_TOO_LARGE", message: "The upload is too large.", fieldErrors: { screenshot: "The screenshot must be 4 MB or smaller." } },
+          error: {
+            code: "PAYLOAD_TOO_LARGE",
+            message: "The upload is too large.",
+            fieldErrors: { screenshot: "The screenshot must be 4 MB or smaller." },
+            clientSide: true,
+          },
         });
       }
       resolve({ ok: false, error: SERVER_ERROR });

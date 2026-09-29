@@ -114,7 +114,11 @@ export function RegistrationDetailPanel({
                 )}
               </section>
 
-              <ScreenshotViewer src={detail.paymentDetail.screenshot.url} registrationId={detail.registrationId} />
+              <ScreenshotViewer
+                key={detail.paymentDetail.id}
+                src={detail.paymentDetail.screenshot.url}
+                registrationId={detail.registrationId}
+              />
 
               {detail.team && (
                 <section aria-labelledby="team-heading">

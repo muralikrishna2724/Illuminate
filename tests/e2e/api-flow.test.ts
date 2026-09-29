@@ -121,7 +121,7 @@ describe("security — unauthenticated access", () => {
   });
 
   test("admin pages redirect to login", async () => {
-    for (const path of ["/admin/dashboard", "/admin/hackathon", "/admin/illuminate"]) {
+    for (const path of ["/admin/dashboard", "/admin/hackathon", "/admin/illuminate", "/admin/attempts"]) {
       const res = await fetch(`${BASE}${path}`, { redirect: "manual" });
       assert.ok([302, 303, 307, 308].includes(res.status), `${path} → ${res.status}`);
       assert.match(res.headers.get("location") ?? "", /\/login$/);
@@ -464,6 +464,55 @@ describe("admin workflow", () => {
     assert.equal(s.totalRegistrations, s.pendingPayments + s.verifiedPayments + s.rejectedPayments);
     assert.equal(s.totalRegistrations, s.day1Registrations + s.day2Registrations);
     assert.ok(s.verifiedPayments >= 4);
+  });
+  test("failed registrations are logged with contact details and UTR for admins", async () => {
+    // Rejected by the server: a duplicate UTR.
+    const { utr } = created.debate!;
+    const details = { ...individualDetails(), fullName: "Attempt Logger", email: "attempt.logger@example.com" };
+    const dup = await register("debate", details, utr);
+    assert.equal(dup.status, 409);
+
+    // Reported by the browser: blocked on the payment step.
+    const reportUtr = uniqueUtr();
+    const reportBody = {
+      event: "illuminate",
+      reason: "BLOCKED_IN_BROWSER",
+      message: "Blocked by the form's own checks on the payment step.",
+      fieldErrors: { screenshot: "The screenshot must be 4 MB or smaller." },
+      details: { fullName: "Browser Reporter", email: "browser.reporter@example.com", phone: "9876501234" },
+      utr: reportUtr,
+      screenshot: { name: "IMG_1.heic", type: "image/heic", size: 5_000_000 },
+    };
+    const report = await fetch(`${BASE}/api/registrations/attempts`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Origin: BASE, "x-forwarded-for": fakeIp() },
+      body: JSON.stringify(reportBody),
+    });
+    assert.equal(report.status, 201);
+
+    const crossOrigin = await fetch(`${BASE}/api/registrations/attempts`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Origin: "https://evil.example", "x-forwarded-for": fakeIp() },
+      body: JSON.stringify(reportBody),
+    });
+    assert.equal(crossOrigin.status, 403);
+    const invalid = await fetch(`${BASE}/api/registrations/attempts`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Origin: BASE, "x-forwarded-for": fakeIp() },
+      body: JSON.stringify({ ...reportBody, event: "not-an-event" }),
+    });
+    assert.equal(invalid.status, 400);
+
+    const page = await admin("/admin/attempts");
+    assert.equal(page.status, 200);
+    const html = await page.text();
+    assert.ok(html.includes("attempt.logger@example.com") && html.includes(utr), "server-side rejection listed with email and UTR");
+    assert.ok(html.includes("UTR already used"), "reason shown");
+    assert.ok(html.includes("browser.reporter@example.com") && html.includes(reportUtr), "browser report listed");
+    assert.ok(html.includes("Blocked by form checks"), "browser reason shown");
+
+    const anonymous = await fetch(`${BASE}/admin/attempts`, { redirect: "manual" });
+    assert.ok([302, 303, 307, 308].includes(anonymous.status), "admin-only");
   });
 });
 

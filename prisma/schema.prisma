@@ -242,3 +242,34 @@ model QuizConfiguration {
   event     Event      @relation(fields: [eventId], references: [id], onDelete: Cascade)
   updatedBy AdminUser? @relation(fields: [updatedById], references: [id], onDelete: SetNull)
 }
+
+enum AttemptSource {
+  SERVER // rejected by the registration API
+  BROWSER // blocked in the browser, or the request never got a proper answer
+}
+
+/// A registration that did not go through, kept so organisers can match
+/// payments to people who paid but could not finish. Admin-only; no
+/// screenshot is stored.
+model RegistrationAttempt {
+  id             String        @id @default(cuid())
+  createdAt      DateTime      @default(now())
+  eventSlug      String
+  source         AttemptSource
+  reason         String // error code, e.g. DUPLICATE_UTR, VALIDATION_ERROR, NETWORK_ERROR
+  message        String
+  fieldErrors    Json?
+  contactName    String?
+  contactEmail   String?
+  contactPhone   String?
+  utr            String?
+  screenshotName String?
+  screenshotType String?
+  screenshotSize Int?
+  userAgent      String?
+
+  @@index([createdAt])
+  @@index([eventSlug, createdAt])
+  @@index([utr])
+  @@index([contactEmail])
+}

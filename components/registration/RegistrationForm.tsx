@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/Button";
-import { submitRegistration } from "@/lib/api/registrations";
+import { needsAttemptReport, reportFailedAttempt, submitRegistration } from "@/lib/api/registrations";
 import { formatInr, registrationAmountInr, type EventContent } from "@/lib/events/catalog";
 import type { PaymentConfig } from "@/lib/site-config";
 import { SCREENSHOT_REQUIRED_MESSAGE, validateScreenshotClientSide } from "@/lib/validation/file";
@@ -131,6 +131,16 @@ export function RegistrationForm({ event, payment }: { event: EventContent; paym
     if (Object.keys(errs).length || !screenshot) {
       setFormError("Please check the highlighted fields.");
       focusFirstError(errs);
+      // They're on the payment step, so they have likely paid: record it for the organisers.
+      reportFailedAttempt({
+        event: event.slug,
+        reason: "BLOCKED_IN_BROWSER",
+        message: "Blocked by the form's own checks on the payment step.",
+        fieldErrors: errs,
+        details,
+        utr,
+        screenshot,
+      });
       return;
     }
 
@@ -144,6 +154,18 @@ export function RegistrationForm({ event, payment }: { event: EventContent; paym
       setResult(response.data);
       setStep("done");
       return;
+    }
+
+    if (needsAttemptReport(response.error)) {
+      reportFailedAttempt({
+        event: event.slug,
+        reason: response.error.code,
+        message: response.error.message,
+        fieldErrors: response.error.fieldErrors,
+        details,
+        utr,
+        screenshot,
+      });
     }
 
     const serverErrors = response.error.fieldErrors ?? {};

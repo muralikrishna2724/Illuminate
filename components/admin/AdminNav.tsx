@@ -9,6 +9,7 @@ const LINKS = [
   { href: "/admin/debate", label: "Mind x Machine: The AI Debate ARENA" },
   { href: "/admin/ipl-auction", label: "IPL Auction" },
   { href: "/admin/illuminate", label: "Illuminate Workshop" },
+  { href: "/admin/attempts", label: "Failed attempts" },
 ];
 
 export function AdminNav() {

@@ -17,6 +17,8 @@ export type ApiErrorCode =
 export interface ApiErrorBody {
   code: ApiErrorCode;
   message: string;
+  /** Set by the browser client when the error never came from our API (network loss, a platform error page). */
+  clientSide?: boolean;
   fieldErrors?: Record<string, string>;
 }
 
