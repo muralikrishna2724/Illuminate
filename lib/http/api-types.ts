@@ -3,6 +3,7 @@
 export type ApiErrorCode =
   | "VALIDATION_ERROR"
   | "DUPLICATE_UTR"
+  | "DUPLICATE_SCREENSHOT"
   | "INVALID_FILE"
   | "UNAUTHORIZED"
   | "FORBIDDEN"

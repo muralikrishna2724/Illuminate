@@ -10,6 +10,7 @@ export const metadata: Metadata = { title: "Failed attempts" };
 const REASONS: Record<string, string> = {
   VALIDATION_ERROR: "Form errors",
   DUPLICATE_UTR: "UTR already used",
+  DUPLICATE_SCREENSHOT: "Screenshot already used",
   INVALID_FILE: "Invalid screenshot",
   PAYLOAD_TOO_LARGE: "Screenshot too large",
   REGISTRATION_CLOSED: "Registration closed",

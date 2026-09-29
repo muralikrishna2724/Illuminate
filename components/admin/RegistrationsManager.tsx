@@ -354,7 +354,12 @@ export function RegistrationsManager({
                   </p>
                 </td>
                 <td className="px-4 py-3 text-right tabular-nums text-flare">{formatInr(row.payment.amountInr)}</td>
-                <td className="px-4 py-3 font-mono text-sand">{row.payment.utr}</td>
+                <td className="px-4 py-3">
+                  <p className="font-mono text-sand">{row.payment.utr}</p>
+                  {row.payment.screenshotMatch && (
+                    <p className="mt-1 whitespace-nowrap text-xs text-bad">Same screenshot as {row.payment.screenshotMatch}</p>
+                  )}
+                </td>
                 <td className="px-4 py-3">
                   <button
                     type="button"
@@ -416,6 +421,9 @@ export function RegistrationsManager({
                 <dd className="break-all font-mono text-sand">{row.payment.utr}</dd>
               </div>
             </dl>
+            {row.payment.screenshotMatch && (
+              <p className="mt-2 text-xs text-bad">Same screenshot as {row.payment.screenshotMatch}</p>
+            )}
             <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
               <button type="button" onClick={() => openDetail(row.registrationId)} className="text-sm text-mist underline underline-offset-4">
                 View screenshot &amp; details

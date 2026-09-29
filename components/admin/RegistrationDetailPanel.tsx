@@ -98,6 +98,17 @@ export function RegistrationDetailPanel({
                     </dd>
                   </div>
                 </dl>
+                {detail.paymentDetail.screenshotMatch && (
+                  <p role="alert" className="mt-4 rounded-lg border border-bad/40 bg-bad/10 px-3 py-2 text-sm text-bad">
+                    This screenshot looks identical to the one for <strong>{detail.paymentDetail.screenshotMatch}</strong>. Check
+                    that the UTR in the image is {detail.paymentDetail.utr} before verifying.
+                  </p>
+                )}
+                {detail.screenshotReusedBy.length > 0 && (
+                  <p role="alert" className="mt-4 rounded-lg border border-bad/40 bg-bad/10 px-3 py-2 text-sm text-bad">
+                    {detail.screenshotReusedBy.join(", ")} uploaded a screenshot that looks identical to this one.
+                  </p>
+                )}
                 <div className="mt-4">
                   <PaymentActions status={detail.paymentDetail.status} busy={busy} onVerify={onVerify} onReject={onReject} size="md" />
                 </div>

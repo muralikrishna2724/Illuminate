@@ -67,7 +67,15 @@ const summarySelect = {
   team: { select: { name: true } },
   participant: { select: { fullName: true } },
   payment: {
-    select: { id: true, amountInr: true, utr: true, status: true, verifiedAt: true, rejectionReason: true },
+    select: {
+      id: true,
+      amountInr: true,
+      utr: true,
+      status: true,
+      verifiedAt: true,
+      rejectionReason: true,
+      screenshotMatchCode: true,
+    },
   },
 } satisfies Prisma.RegistrationSelect;
 
@@ -96,6 +104,7 @@ function toSummary(row: SummaryRow): RegistrationSummary {
       status: row.payment.status,
       verifiedAt: row.payment.verifiedAt?.toISOString() ?? null,
       rejectionReason: row.payment.rejectionReason,
+      screenshotMatch: row.payment.screenshotMatchCode,
       screenshotUrl: screenshotUrl(row.payment.id),
     },
   };
@@ -142,6 +151,12 @@ export async function getRegistrationDetail(rawCode: string): Promise<Registrati
   });
   if (!row || !row.payment) throw notFound("Registration not found.");
 
+  const reusedBy = await prisma.payment.findMany({
+    where: { screenshotMatchCode: row.registrationCode },
+    select: { registration: { select: { registrationCode: true } } },
+    orderBy: { createdAt: "asc" },
+  });
+
   const summary = toSummary({
     ...row,
     team: row.team ? { name: row.team.name } : null,
@@ -179,6 +194,7 @@ export async function getRegistrationDetail(rawCode: string): Promise<Registrati
         }
       : null,
     paymentDetail: toPaymentDto(row.payment),
+    screenshotReusedBy: reusedBy.map((p) => p.registration.registrationCode),
     auditLog: row.payment.auditLogs.map((log) => ({
       action: log.action,
       previousStatus: log.previousStatus,

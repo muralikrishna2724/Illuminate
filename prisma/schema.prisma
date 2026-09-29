@@ -185,24 +185,32 @@ model TeamMember {
 }
 
 model Payment {
-  id                 String        @id @default(cuid())
-  registrationId     String        @unique
+  id                    String        @id @default(cuid())
+  registrationId        String        @unique
   // Amount computed server-side from the event fee configuration (whole INR).
-  amountInr          Int
+  amountInr             Int
   // Normalised (trimmed, upper-cased, no whitespace) UTR / transaction ID. Globally unique.
-  utr                String        @unique
+  utr                   String        @unique
   // Object-storage key of the payment screenshot (never a public URL).
-  screenshotPath     String
-  screenshotMimeType String
-  screenshotSize     Int
-  status             PaymentStatus @default(PENDING)
-  verifiedAt         DateTime?
-  verifiedById       String?
-  rejectedAt         DateTime?
-  rejectedById       String?
-  rejectionReason    String?
-  createdAt          DateTime      @default(now())
-  updatedAt          DateTime      @updatedAt
+  screenshotPath        String
+  screenshotMimeType    String
+  screenshotSize        Int
+  // SHA-256 of the uploaded bytes: the same file can't pay for two registrations.
+  screenshotSha256      String?
+  // 64×128 greyscale thumbnail used to spot re-saved or forwarded copies.
+  screenshotFingerprint Bytes?
+  // Width ÷ height after EXIF rotation; only similar shapes are compared.
+  screenshotAspect      Float?
+  // Registration ID of an earlier payment whose screenshot looks identical.
+  screenshotMatchCode   String?
+  status                PaymentStatus @default(PENDING)
+  verifiedAt            DateTime?
+  verifiedById          String?
+  rejectedAt            DateTime?
+  rejectedById          String?
+  rejectionReason       String?
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
 
   registration Registration      @relation(fields: [registrationId], references: [id], onDelete: Cascade)
   verifiedBy   AdminUser?        @relation("PaymentVerifiedBy", fields: [verifiedById], references: [id], onDelete: SetNull)
@@ -210,18 +218,20 @@ model Payment {
   auditLogs    PaymentAuditLog[]
 
   @@index([status, createdAt])
+  @@index([screenshotSha256])
+  @@index([screenshotMatchCode])
 }
 
 // Append-only history of every verify / reject decision.
 model PaymentAuditLog {
-  id             String         @id @default(cuid())
+  id             String        @id @default(cuid())
   paymentId      String
   adminId        String?
   action         PaymentAction
   previousStatus PaymentStatus
   newStatus      PaymentStatus
   reason         String?
-  createdAt      DateTime       @default(now())
+  createdAt      DateTime      @default(now())
 
   payment Payment    @relation(fields: [paymentId], references: [id], onDelete: Cascade)
   admin   AdminUser? @relation(fields: [adminId], references: [id], onDelete: SetNull)

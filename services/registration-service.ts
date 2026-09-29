@@ -4,6 +4,8 @@ import { Prisma, type Event as EventRow } from "@prisma/client";
 import { prisma } from "@/lib/db/prisma";
 import { whatsappGroupFor } from "@/lib/events/whatsapp";
 import { AppError, badRequest, conflict, notFound } from "@/lib/http/errors";
+import { fingerprintScreenshot, type ScreenshotFingerprint } from "@/lib/images/fingerprint";
+import { ASPECT_TOLERANCE, looksIdentical } from "@/lib/images/similarity";
 import { formatRegistrationCode, normalizeRegistrationCode, REGISTRATION_CODE_PATTERN } from "@/lib/registration-id";
 import { getStorage, paymentScreenshotKey } from "@/lib/storage";
 import { validateScreenshotUpload } from "@/lib/validation/file";
@@ -20,6 +22,11 @@ import { calculateRegistrationAmount, getOpenEventBySlug } from "./event-service
 import { getQuizConfig, QUIZ_EVENT_SLUG, resolveQuizAccess } from "./quiz-service";
 
 export const DUPLICATE_UTR_MESSAGE = "This transaction ID has already been submitted.";
+export const DUPLICATE_SCREENSHOT_MESSAGE =
+  "This payment screenshot has already been used for another registration. Please upload the screenshot of your own payment.";
+
+const duplicateScreenshot = () =>
+  conflict(DUPLICATE_SCREENSHOT_MESSAGE, "DUPLICATE_SCREENSHOT", { screenshot: DUPLICATE_SCREENSHOT_MESSAGE });
 
 export interface RegistrationSubmission {
   /** Parsed JSON of the registration form (untrusted). */
@@ -133,12 +140,52 @@ async function nextRegistrationNumber(tx: Prisma.TransactionClient): Promise<num
   return rows[0]?.next ?? 1;
 }
 
+/** Whether the exact same file already backs a payment that hasn't been rejected. */
+async function screenshotFileInUse(db: Prisma.TransactionClient | typeof prisma, sha256: string): Promise<boolean> {
+  const hit = await db.payment.findFirst({
+    where: { screenshotSha256: sha256, status: { not: "REJECTED" } },
+    select: { id: true },
+  });
+  return hit !== null;
+}
+
+/**
+ * The earliest registration (not rejected) whose screenshot looks identical to
+ * this one, e.g. the same receipt forwarded over WhatsApp. Flagged, not blocked.
+ */
+export async function findLookalikeScreenshot(
+  print: ScreenshotFingerprint,
+  excludePaymentId?: string,
+): Promise<string | null> {
+  if (!print.fingerprint || !print.aspect) return null;
+  const candidates = await prisma.payment.findMany({
+    where: {
+      status: { not: "REJECTED" },
+      screenshotFingerprint: { not: null },
+      screenshotAspect: { gte: print.aspect * (1 - ASPECT_TOLERANCE), lte: print.aspect * (1 + ASPECT_TOLERANCE) },
+      ...(excludePaymentId ? { id: { not: excludePaymentId } } : {}),
+    },
+    select: { screenshotFingerprint: true, screenshotAspect: true, registration: { select: { registrationCode: true } } },
+    orderBy: { createdAt: "asc" },
+  });
+  const target = { fingerprint: print.fingerprint, aspect: print.aspect };
+  const match = candidates.find(
+    (c) =>
+      c.screenshotFingerprint &&
+      c.screenshotAspect &&
+      looksIdentical(target, { fingerprint: c.screenshotFingerprint, aspect: c.screenshotAspect }),
+  );
+  return match?.registration.registrationCode ?? null;
+}
+
 /**
  * Validates and stores a registration with its payment proof.
  *
  * Order of operations:
  *   1. Validate details, UTR and screenshot (all errors reported together).
- *   2. Reject duplicate UTRs early (the unique constraint is the real guard).
+ *   2. Reject duplicate UTRs early (the unique constraint is the real guard),
+ *      and a screenshot file already used by another payment. A look-alike
+ *      screenshot (re-saved or forwarded copy) is recorded for admins instead.
  *   3. Upload the screenshot to private object storage (under a random key).
  *   4. In ONE transaction, take the next sequential registration ID under a
  *      lock and create Registration + Team/TeamMembers|Participant + Payment.
@@ -166,6 +213,10 @@ export async function createRegistration(slug: EventSlug, submission: Registrati
   const existing = await prisma.payment.findUnique({ where: { utr }, select: { id: true } });
   if (existing) throw conflict(DUPLICATE_UTR_MESSAGE, "DUPLICATE_UTR", { utr: DUPLICATE_UTR_MESSAGE });
 
+  const print = await fingerprintScreenshot(screenshot.bytes);
+  if (await screenshotFileInUse(prisma, print.sha256)) throw duplicateScreenshot();
+  const screenshotMatchCode = await findLookalikeScreenshot(print);
+
   const storage = getStorage();
 
   for (let attempt = 0; attempt < 5; attempt++) {
@@ -176,6 +227,8 @@ export async function createRegistration(slug: EventSlug, submission: Registrati
     try {
       const created = await prisma.$transaction(async (tx) => {
         const code = formatRegistrationCode(await nextRegistrationNumber(tx));
+        // Re-checked under the lock so two simultaneous uploads can't both pass.
+        if (await screenshotFileInUse(tx, print.sha256)) throw duplicateScreenshot();
         return tx.registration.create({
           data: buildRegistrationCreate(code, event, details, {
             amountInr,
@@ -183,6 +236,10 @@ export async function createRegistration(slug: EventSlug, submission: Registrati
             screenshotPath: key,
             screenshotMimeType: screenshot.mimeType,
             screenshotSize: screenshot.bytes.byteLength,
+            screenshotSha256: print.sha256,
+            screenshotFingerprint: print.fingerprint,
+            screenshotAspect: print.aspect,
+            screenshotMatchCode,
             status: "PENDING",
           }),
           select: { registrationCode: true, payment: { select: { status: true } } },

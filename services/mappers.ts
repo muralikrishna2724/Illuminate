@@ -20,6 +20,7 @@ export function toPaymentDto(
     rejectedAt: row.rejectedAt?.toISOString() ?? null,
     rejectedBy: row.rejectedBy?.name ?? null,
     rejectionReason: row.rejectionReason,
+    screenshotMatch: row.screenshotMatchCode,
     screenshot: { mimeType: row.screenshotMimeType, sizeBytes: row.screenshotSize, url: screenshotUrl(row.id) },
   };
 }

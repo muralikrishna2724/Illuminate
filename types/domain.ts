@@ -74,6 +74,8 @@ export interface Payment {
   rejectedAt: string | null;
   rejectedBy: string | null;
   rejectionReason: string | null;
+  /** Registration ID of an earlier payment whose screenshot looks identical to this one. */
+  screenshotMatch: string | null;
   screenshot: {
     mimeType: string;
     sizeBytes: number;
@@ -102,7 +104,7 @@ export interface RegistrationSummary {
   contactPhone: string;
   college: string;
   createdAt: string;
-  payment: Pick<Payment, "id" | "amountInr" | "utr" | "status" | "verifiedAt" | "rejectionReason"> & {
+  payment: Pick<Payment, "id" | "amountInr" | "utr" | "status" | "verifiedAt" | "rejectionReason" | "screenshotMatch"> & {
     screenshotUrl: string;
   };
 }
@@ -112,6 +114,8 @@ export interface RegistrationDetail extends RegistrationSummary {
   participant: Participant | null;
   team: Team | null;
   paymentDetail: Payment;
+  /** Later registrations whose screenshot looks identical to this one. */
+  screenshotReusedBy: string[];
   auditLog: PaymentAuditEntry[];
   updatedAt: string;
 }

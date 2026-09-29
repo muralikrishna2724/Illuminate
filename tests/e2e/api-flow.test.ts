@@ -10,6 +10,7 @@
 import assert from "node:assert/strict";
 import { randomBytes, randomInt } from "node:crypto";
 import { after, before, describe, test } from "node:test";
+import sharp from "sharp";
 
 const BASE = process.env.E2E_BASE_URL ?? "http://localhost:3000";
 const ADMIN_EMAIL = process.env.E2E_ADMIN_EMAIL ?? "";
@@ -25,6 +26,31 @@ const PNG: Buffer<ArrayBuffer> = Buffer.from(
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
   "base64",
 );
+
+/**
+ * A distinct receipt-shaped image: grey background with a few random dark
+ * blocks. Every registration needs its own, since a screenshot file can back
+ * only one payment.
+ */
+function receiptPixels(): Uint8Array<ArrayBuffer> {
+  const width = 200;
+  const height = 400;
+  const pixels = new Uint8Array(width * height).fill(230);
+  for (let block = 0; block < 6; block++) {
+    const x = randomInt(width - 60);
+    const y = randomInt(height - 30);
+    for (let dy = 0; dy < 30; dy++) pixels.fill(20, (y + dy) * width + x, (y + dy) * width + x + 60);
+  }
+  return pixels;
+}
+
+async function encodeReceipt(pixels: Uint8Array<ArrayBuffer>, format: "png" | "jpeg"): Promise<Buffer<ArrayBuffer>> {
+  const image = sharp(pixels, { raw: { width: 200, height: 400, channels: 1 } });
+  const out = format === "png" ? await image.png().toBuffer() : await image.jpeg({ quality: 70 }).toBuffer();
+  return Buffer.from(out) as Buffer<ArrayBuffer>;
+}
+
+const uniquePng = async () => ({ bytes: await encodeReceipt(receiptPixels(), "png"), name: "payment.png", type: "image/png" });
 
 type Json = Record<string, unknown> & { ok: boolean; data?: any; error?: any }; // eslint-disable-line @typescript-eslint/no-explicit-any
 
@@ -63,12 +89,17 @@ function individualDetails() {
   };
 }
 
+/** Bytes of the most recent screenshot sent by register(). */
+let lastUpload: Uint8Array<ArrayBuffer> = PNG;
+
 async function register(
   slug: string,
   details: unknown,
   utr: string,
-  file: { bytes: Uint8Array<ArrayBuffer>; name: string; type: string } = { bytes: PNG, name: "payment.png", type: "image/png" },
+  upload?: { bytes: Uint8Array<ArrayBuffer>; name: string; type: string },
 ) {
+  const file = upload ?? (await uniquePng());
+  lastUpload = file.bytes;
   const form = new FormData();
   form.set("details", JSON.stringify(details));
   form.set("utr", utr);
@@ -101,7 +132,7 @@ function cookieFrom(res: Response, name: string): string {
   return header.split(";")[0]!;
 }
 
-const created: Record<string, { registrationId: string; utr: string }> = {};
+const created: Record<string, { registrationId: string; utr: string; screenshot?: Uint8Array<ArrayBuffer> }> = {};
 let originalQuiz: { quizLink: string | null; enabled: boolean; accessRule: string } | null = null;
 
 before(async () => {
@@ -158,7 +189,7 @@ describe("registrations", () => {
     assert.equal(body.data.amountInr, 200);
     assert.equal(body.data.paymentStatus, "PENDING");
     assert.ok(body.data.quiz, "hackathon response includes the quiz section");
-    created.hackathon = { registrationId: body.data.registrationId, utr };
+    created.hackathon = { registrationId: body.data.registrationId, utr, screenshot: lastUpload };
   });
 
   test("Deja Vu rejects 3 and 5 members", async () => {
@@ -339,7 +370,7 @@ describe("admin workflow", () => {
     assert.equal(res.status, 200);
     assert.equal(res.headers.get("content-type"), "image/png");
     assert.match(res.headers.get("cache-control") ?? "", /no-store/);
-    assert.deepEqual(Buffer.from(await res.arrayBuffer()), PNG);
+    assert.deepEqual(Buffer.from(await res.arrayBuffer()), Buffer.from(created.hackathon!.screenshot!));
     const anon = await fetch(`${BASE}${detail.body.data.paymentDetail.screenshot.url}`);
     assert.equal(anon.status, 401);
   });
@@ -513,6 +544,48 @@ describe("admin workflow", () => {
 
     const anonymous = await fetch(`${BASE}/admin/attempts`, { redirect: "manual" });
     assert.ok([302, 303, 307, 308].includes(anonymous.status), "admin-only");
+  });
+
+  test("a screenshot file backs only one payment; a re-saved copy is flagged for admins", async () => {
+    const pixels = receiptPixels();
+    const original = { bytes: await encodeReceipt(pixels, "png"), name: "receipt.png", type: "image/png" };
+    const first = await register("ipl-auction", individualDetails(), uniqueUtr(), original);
+    assert.equal(first.status, 201);
+    const firstId: string = first.body.data.registrationId;
+
+    // The same file for a second registration is refused on the screenshot field.
+    const sameFile = await register("debate", individualDetails(), uniqueUtr(), original);
+    assert.equal(sameFile.status, 409);
+    assert.equal(sameFile.body.error.code, "DUPLICATE_SCREENSHOT");
+    assert.match(sameFile.body.error.fieldErrors.screenshot, /already been used/);
+
+    // A re-saved copy (as WhatsApp does) is accepted but flagged against the original.
+    const jpeg = { bytes: await encodeReceipt(pixels, "jpeg"), name: "receipt.jpg", type: "image/jpeg" };
+    const copy = await register("debate", individualDetails(), uniqueUtr(), jpeg);
+    assert.equal(copy.status, 201);
+    const copyId: string = copy.body.data.registrationId;
+    const copyDetail = await adminJson(`/api/admin/registrations/${copyId}`);
+    assert.equal(copyDetail.body.data.paymentDetail.screenshotMatch, firstId);
+    const listed = await adminJson(`/api/admin/registrations?q=${copyId}`);
+    assert.equal(listed.body.data.items[0].payment.screenshotMatch, firstId);
+    const firstDetail = await adminJson(`/api/admin/registrations/${firstId}`);
+    assert.equal(firstDetail.body.data.paymentDetail.screenshotMatch, null);
+    assert.deepEqual(firstDetail.body.data.screenshotReusedBy, [copyId]);
+
+    // A different receipt is not flagged.
+    const other = await register("debate", individualDetails(), uniqueUtr());
+    assert.equal(other.status, 201);
+    const otherDetail = await adminJson(`/api/admin/registrations/${other.body.data.registrationId}`);
+    assert.equal(otherDetail.body.data.paymentDetail.screenshotMatch, null);
+
+    // Once that payment is rejected (say, a mistyped UTR) the file can be submitted again.
+    const rejected = await adminJson(`/api/admin/payments/${firstDetail.body.data.paymentDetail.id}/reject`, { method: "POST", body: "{}" });
+    assert.equal(rejected.status, 200);
+    const retry = await register("ipl-auction", individualDetails(), uniqueUtr(), original);
+    assert.equal(retry.status, 201);
+
+    const page = await admin("/admin/attempts");
+    assert.match(await page.text(), /Screenshot already used/);
   });
 });
 

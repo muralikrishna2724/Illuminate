@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { describe, test } from "node:test";
 import { toCsv, csvCell } from "../../lib/csv";
 import { EVENTS, registrationAmountInr } from "../../lib/events/catalog";
+import { aspectsComparable, changedPixels, FINGERPRINT_BYTES, looksIdentical } from "../../lib/images/similarity";
 import { calculateRegistrationAmount } from "../../lib/pricing";
 import { resolveQuizAccess } from "../../lib/quiz-access";
 import { detectImageMimeType, validateScreenshotClientSide } from "../../lib/validation/file";
@@ -116,5 +117,34 @@ describe("csv", () => {
     assert.equal(csvCell("+91"), "'+91");
     assert.equal(csvCell(null), "");
     assert.ok(toCsv(["h"], [["v"]]).startsWith("﻿h\r\nv"));
+  });
+});
+
+describe("re-used screenshot detection", () => {
+  const base = () => new Uint8Array(FINGERPRINT_BYTES).fill(200);
+  const with_ = (changes: number, delta: number) => {
+    const fp = base();
+    for (let i = 0; i < changes; i++) fp[i * 97] = 200 - delta;
+    return fp;
+  };
+
+  test("small grey-level noise (re-compression) is not a change", () => {
+    assert.equal(changedPixels(base(), with_(500, 30)), 0);
+  });
+
+  test("a re-saved copy matches; a receipt with different text lines does not", () => {
+    const a = { fingerprint: base(), aspect: 0.455 };
+    assert.ok(looksIdentical(a, { fingerprint: with_(2, 120), aspect: 0.456 }));
+    assert.ok(!looksIdentical(a, { fingerprint: with_(7, 120), aspect: 0.455 }));
+  });
+
+  test("screenshots of different shapes are never compared", () => {
+    assert.ok(aspectsComparable(0.45, 0.455));
+    assert.ok(!aspectsComparable(0.45, 0.5625));
+    assert.ok(!looksIdentical({ fingerprint: base(), aspect: 0.45 }, { fingerprint: base(), aspect: 0.5625 }));
+  });
+
+  test("a fingerprint of the wrong size never matches", () => {
+    assert.equal(changedPixels(base(), new Uint8Array(10)), FINGERPRINT_BYTES);
   });
 });

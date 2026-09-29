@@ -30,7 +30,10 @@ export async function exportRegistrationsCsv(filters: Omit<RegistrationFilters, 
       event: { select: { name: true, day: true } },
       participant: true,
       team: { include: { members: { orderBy: { position: "asc" } } } },
-      payment: { include: { verifiedBy: { select: { name: true } }, rejectedBy: { select: { name: true } } } },
+      payment: {
+        omit: { screenshotFingerprint: true },
+        include: { verifiedBy: { select: { name: true } }, rejectedBy: { select: { name: true } } },
+      },
     },
   });
 
@@ -54,6 +57,7 @@ export async function exportRegistrationsCsv(filters: Omit<RegistrationFilters, 
     "Rejected (IST)",
     "Rejected By",
     "Rejection Reason",
+    "Screenshot Same As",
   ];
   for (let i = 1; i <= MEMBER_SLOTS; i++) {
     header.push(`Member ${i} Name`, `Member ${i} Email`, `Member ${i} Phone`, `Member ${i} Department`, `Member ${i} Year`);
@@ -80,6 +84,7 @@ export async function exportRegistrationsCsv(filters: Omit<RegistrationFilters, 
       formatIst(r.payment?.rejectedAt),
       r.payment?.rejectedBy?.name ?? "",
       r.payment?.rejectionReason ?? "",
+      r.payment?.screenshotMatchCode ?? "",
     ];
     for (let i = 0; i < MEMBER_SLOTS; i++) {
       const m = r.team?.members[i];
