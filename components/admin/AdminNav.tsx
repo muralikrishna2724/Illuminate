@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 const LINKS = [
   { href: "/admin/dashboard", label: "Dashboard" },
   { href: "/admin/hackathon", label: "Deja Vu Hackathon" },
-  { href: "/admin/debate", label: "Under the Hood of AI" },
+  { href: "/admin/debate", label: "Mind x Machine: The AI Debate ARENA" },
   { href: "/admin/ipl-auction", label: "IPL Auction" },
   { href: "/admin/illuminate", label: "Illuminate Workshop" },
 ];

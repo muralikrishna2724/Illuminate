@@ -177,7 +177,7 @@ export function CinematicFooter({
               Two days. <span className="text-gold">One</span> pull.
             </h2>
             <p data-footer-reveal className="mt-5 max-w-md text-mist">
-              Day 1 brings the Deja Vu Hackathon, Under the Hood of AI and IPL Auction. Day 2 is Illuminate — the Entrepreneurship Workshop.
+              Day 1 brings the Deja Vu Hackathon, Mind x Machine: The AI Debate ARENA and IPL Auction. Day 2 is Illuminate — the Entrepreneurship Workshop.
             </p>
             <p data-footer-reveal className="mt-4 font-display text-xl text-gold italic">
               {SIGN_OFF}

@@ -14,7 +14,7 @@ import { RejectDialog } from "./RejectDialog";
 
 const EVENT_OPTIONS: Array<{ value: EventSlug; label: string }> = [
   { value: "hackathon", label: "Deja Vu Hackathon" },
-  { value: "debate", label: "Under the Hood of AI" },
+  { value: "debate", label: "Mind x Machine: The AI Debate ARENA" },
   { value: "ipl-auction", label: "IPL Auction" },
   { value: "illuminate", label: "Illuminate Workshop" },
 ];

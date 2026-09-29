@@ -63,7 +63,7 @@ export function Hero() {
           </p>
           <p className="mt-7 max-w-lg text-lg leading-relaxed text-sand/90 sm:text-xl">
             At its centre is <span className="text-flare">Illuminate — the Entrepreneurship Workshop</span>, an initiative by
-            E-Cell IIT Bombay, on Day 2. Day 1 opens with the Deja Vu Hackathon, Under the Hood of AI and IPL Auction.
+            E-Cell IIT Bombay, on Day 2. Day 1 opens with the Deja Vu Hackathon, Mind x Machine: The AI Debate ARENA and IPL Auction.
           </p>
           <dl className="mt-8 grid max-w-lg grid-cols-2 gap-6 border-t border-[var(--line)] pt-5 text-sm">
             <div>

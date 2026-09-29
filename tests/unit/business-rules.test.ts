@@ -27,7 +27,7 @@ describe("pricing", () => {
   test("amounts per event", () => {
     assert.equal(calculateRegistrationAmount(EVENTS.hackathon), 200);
     assert.equal(calculateRegistrationAmount(EVENTS.debate), 50);
-    assert.equal(calculateRegistrationAmount(EVENTS["ipl-auction"]), 200);
+    assert.equal(calculateRegistrationAmount(EVENTS["ipl-auction"]), 50);
     assert.equal(calculateRegistrationAmount(EVENTS.illuminate), 799);
     assert.equal(registrationAmountInr(EVENTS.illuminate), 799);
   });

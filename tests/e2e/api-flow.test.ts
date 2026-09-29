@@ -194,7 +194,7 @@ describe("registrations", () => {
     assert.equal(num(second.body.data.registrationId), num(first.body.data.registrationId) + 1);
   });
 
-  test("TEST 3 — Under the Hood of AI: individual, ₹50, PENDING", async () => {
+  test("TEST 3 — Mind x Machine: The AI Debate ARENA: individual, ₹50, PENDING", async () => {
     const utr = uniqueUtr();
     const { status, body } = await register("debate", individualDetails(), utr);
     assert.equal(status, 201, JSON.stringify(body));
@@ -205,16 +205,16 @@ describe("registrations", () => {
     created.debate = { registrationId: body.data.registrationId, utr };
   });
 
-  test("TEST 4 — IPL Auction: exactly 4 members, ₹200, PENDING", async () => {
+  test("TEST 4 — IPL Auction: individual (teams formed at the venue), ₹50, PENDING", async () => {
     const utr = uniqueUtr();
-    const { status, body } = await register("ipl-auction", teamDetails(4), utr);
+    const { status, body } = await register("ipl-auction", individualDetails(), utr);
     assert.equal(status, 201, JSON.stringify(body));
-    assert.equal(body.data.amountInr, 200);
+    assert.equal(body.data.amountInr, 50);
     assert.equal(body.data.paymentStatus, "PENDING");
     created.ipl = { registrationId: body.data.registrationId, utr };
 
-    const tooFew = await register("ipl-auction", teamDetails(2), uniqueUtr());
-    assert.equal(tooFew.status, 400);
+    const asTeam = await register("ipl-auction", teamDetails(4), uniqueUtr());
+    assert.equal(asTeam.status, 400);
   });
 
   test("TEST 5 — Illuminate: individual, ₹799, PENDING", async () => {
@@ -478,7 +478,7 @@ describe("participant login", () => {
 
   test("a team member logs in with their email + registration ID and sees the registration", async () => {
     const details = teamDetails(4);
-    const reg = await register("ipl-auction", details, uniqueUtr());
+    const reg = await register("hackathon", details, uniqueUtr());
     assert.equal(reg.status, 201);
     const code = reg.body.data.registrationId as string;
     // Any member's email works, not only the leader's; the ID is case-insensitive.

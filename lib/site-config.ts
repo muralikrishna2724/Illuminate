@@ -65,6 +65,8 @@ export interface EventContact {
 export const EVENT_CONTACTS: EventContact[] = [
   { name: "CH Sathya Pardha Saradhi", phone: "9963031062" },
   { name: "G Tejaswini", phone: "8074324396" },
+  { name: "B Poojitha", phone: "9912060562" },
+  { name: "Ch SaiVenkat", phone: "9032751015" },
 ];
 
 /** Organisers' email and Instagram (from the event poster). */
