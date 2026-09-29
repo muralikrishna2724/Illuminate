@@ -2,7 +2,7 @@ import Image from "next/image";
 import { HeroBlackHole } from "@/components/visual/BlackHole";
 import { ArrowIcon, ButtonLink } from "@/components/ui/Button";
 import { EVENT_YEAR_LABEL } from "@/lib/events/catalog";
-import { HOST, ORGANISER_LOGOS, TAGLINE } from "@/lib/site-config";
+import { HOST, TAGLINE } from "@/lib/site-config";
 import { Countdown } from "./Countdown";
 
 export function Hero() {
@@ -16,17 +16,17 @@ export function Hero() {
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-void" />
       </div>
 
+      {/* Host college's logo, top right above the black hole */}
+      <div className="absolute inset-x-0 top-24 z-10 hidden md:block">
+        <div className="mx-auto flex max-w-6xl justify-end px-5 sm:px-8">
+          <HostLogo className="h-24 w-24 p-2" />
+        </div>
+      </div>
+
       <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-end px-5 pb-14 pt-28 sm:px-8 md:justify-center md:pb-24">
         <div className="max-w-2xl">
-          {ORGANISER_LOGOS.length > 0 && (
-            <ul aria-label="Organised by" className="mb-8 flex flex-wrap items-center gap-x-6 gap-y-4">
-              {ORGANISER_LOGOS.map((logo) => (
-                <li key={logo.src}>
-                  <Image src={logo.src} alt={logo.name} width={logo.width} height={logo.height} className="h-10 w-auto sm:h-12" />
-                </li>
-              ))}
-            </ul>
-          )}
+          {/* On narrow screens the logo joins the content so it never covers text. */}
+          <HostLogo className="mb-6 h-16 w-16 p-1.5 md:hidden" />
           <p className="text-sm font-medium text-gold sm:text-base">Hosted by {HOST.name}</p>
           <h1 id="hero-title" className="mt-4 font-display text-[17vw] leading-[0.88] text-flare sm:text-[8.5rem] lg:text-[9.5rem]">
             Illuminate
@@ -67,5 +67,20 @@ export function Hero() {
         </div>
       </div>
     </section>
+  );
+}
+
+function HostLogo({ className = "" }: { className?: string }) {
+  return (
+    <span className={`flex items-center justify-center rounded-full bg-white shadow-lg shadow-black/40 ring-1 ring-white/30 ${className}`}>
+      <Image
+        src={HOST.logo.src}
+        alt={`${HOST.name} logo`}
+        width={HOST.logo.width}
+        height={HOST.logo.height}
+        priority
+        className="h-full w-full object-contain"
+      />
+    </span>
   );
 }

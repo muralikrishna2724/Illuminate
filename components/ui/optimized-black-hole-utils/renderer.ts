@@ -107,7 +107,8 @@ function computeCamera(framing: BlackHoleFraming, aspect: number): Camera {
   let focal = 1.9;
   if (framing === "hero") {
     if (aspect >= 1.05) {
-      focus = [(0.71 - 0.5) * aspect, 0.06];
+      // Sits a little low so the host college's logo fits above it.
+      focus = [(0.71 - 0.5) * aspect, -0.05];
       focal = 2.35;
     } else {
       focus = [0, 0.16];

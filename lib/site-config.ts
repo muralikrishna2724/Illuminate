@@ -71,21 +71,47 @@ export const EVENT_CONTACTS: EventContact[] = [
 export const CONTACT_EMAIL = "ecellcvrcoe@gmail.com";
 export const INSTAGRAM = { handle: "@ecell_cvrce", url: "https://www.instagram.com/ecell_cvrce/" } as const;
 
+/** A logo under /public with its intrinsic size (for next/image). */
+export interface Logo {
+  src: string;
+  width: number;
+  height: number;
+}
+
 /** Host institution and venue (from the event poster). */
 export const HOST = {
   name: "CVR College of Engineering",
+  logo: { src: "/logos/cvr-college.png", width: 480, height: 457 } satisfies Logo,
   accreditation: "A UGC Autonomous Institution, NAAC 'A' Grade",
   town: "Ibrahimpatnam",
   shortLocation: "Ibrahimpatnam, Telangana",
   address: "Vastunagar, Mangalpalli (V), Ibrahimpatnam (M), Rangareddy (D), Telangana 501510",
 } as const;
 
+/** The college's own E-Cell, which runs ILLUMINATE. */
+export const ORGANISER = {
+  name: "E-Cell, CVR College of Engineering",
+  logo: { src: "/logos/ecell-cvr.png", width: 404, height: 480 } satisfies Logo,
+} as const;
+
+export interface Partner {
+  name: string;
+  /** Omit until the organisers provide the logo file; the name is shown alone. */
+  logo?: Logo;
+  /** Logos drawn on a dark background (e.g. NEC's) get a dark tile. */
+  darkLogo?: boolean;
+}
+
 /** Organisations ILLUMINATE is held in collaboration with (from the event poster). */
-export const COLLABORATORS: string[] = [
-  "IIT Bombay",
-  "E-Cell IIT Bombay — National Entrepreneurship Challenge 2026",
-  "IEEE ComSoc (IEEE Communications Society)",
-  "CVR-IC",
+export const COLLABORATORS: Partner[] = [
+  { name: "IIT Bombay" },
+  {
+    name: "E-Cell IIT Bombay — National Entrepreneurship Challenge 2026",
+    logo: { src: "/logos/nec-2026.png", width: 720, height: 361 },
+    darkLogo: true,
+  },
+  { name: "IEEE ComSoc (IEEE Communications Society)" },
+  { name: "CVR NewGen IEDC", logo: { src: "/logos/cvr-newgen-iedc.png", width: 478, height: 480 } },
 ];
 
 export const TAGLINE = ["Learn", "Build", "Innovate"] as const;
@@ -111,20 +137,3 @@ export function telHref(phone: string): string {
 export const MAX_SCREENSHOT_BYTES = 4 * 1024 * 1024;
 export const ACCEPTED_SCREENSHOT_TYPES = ["image/jpeg", "image/png", "image/webp"] as const;
 export const ACCEPTED_SCREENSHOT_EXTENSIONS = [".jpg", ".jpeg", ".png", ".webp"] as const;
-
-
-export interface OrganiserLogo {
-  /** Path under /public, e.g. "/logos/college.png". */
-  src: string;
-  /** The organisation's name, used as the image's alt text. */
-  name: string;
-  width: number;
-  height: number;
-}
-
-/**
- * College / organiser logos shown in the homepage hero, left to right.
- * Add an entry only once the organisers have provided the file and have
- * permission to use the logo. Nothing is shown while this list is empty.
- */
-export const ORGANISER_LOGOS: OrganiserLogo[] = [];
