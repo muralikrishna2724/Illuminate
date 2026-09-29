@@ -28,6 +28,8 @@ export interface EventContent {
   highlights: Array<{ title: string; items: string[] }>;
   /** Confirmed notes shown as plain statements. */
   notes: string[];
+  /** Ordered stages of the event (e.g. an online round, then the main event). */
+  phases?: Array<{ label: string; title: string; text: string }>;
   /** Highlighted closing block on the event's page: a motto plus summary lines. */
   spotlight?: { motto: string[]; lines: string[] };
   /** The organisation behind the event, e.g. "E-Cell IIT Bombay". */
@@ -53,18 +55,26 @@ export const EVENTS: Record<EventSlug, EventContent> = {
     feePerPersonInr: 50,
     tagline: "Real-world problems. Innovative technology solutions.",
     description:
-      "Deja Vu is a problem-solving hackathon where teams tackle real-world challenges through innovative technology solutions. The competition brings together Agentic AI, intelligent and resilient networking, and real college problem statements, with the actual problem statements revealed at the venue.",
+      "Deja Vu is a problem-solving hackathon where teams tackle real-world challenges through innovative technology solutions. It runs in two phases: an online qualification quiz, then an offline hackathon for the teams shortlisted from it. The competition brings together Agentic AI, intelligent and resilient networking, and real college problem statements, with the actual problem statements revealed at the venue.",
     highlights: [
       {
         title: "Themes",
         items: ["Agentic AI", "AI for Intelligent & Resilient Networks", "College Problem Statements"],
       },
     ],
-    notes: [
-      "Problem statements are revealed at the venue.",
-      "Teams of exactly 4 members.",
-      "A qualification quiz is part of Deja Vu. The quiz link is shared after registration once it is made available.",
+    phases: [
+      {
+        label: "Phase 1 · Online",
+        title: "Qualification quiz",
+        text: "Once your payment is verified, the quiz link appears on your dashboard. Teams are shortlisted from the quiz.",
+      },
+      {
+        label: "Phase 2 · On campus",
+        title: "Offline hackathon",
+        text: "Shortlisted teams build their solutions at the venue on October 9, where the problem statements are revealed.",
+      },
     ],
+    notes: ["Teams of exactly 4 members.", "Only teams shortlisted from the quiz take part in the offline hackathon."],
     spotlight: {
       motto: ["Think", "Pick", "Build", "Impact"],
       lines: [

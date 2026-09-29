@@ -28,7 +28,7 @@ export const FAQS: FaqItem[] = [
     id: "what-is-deja-vu",
     question: "What is the Deja Vu Hackathon?",
     answer:
-      "Deja Vu is a problem-solving hackathon where teams tackle real-world challenges through innovative technology solutions. Its themes are Agentic AI, AI for Intelligent & Resilient Networks, and College Problem Statements. The actual problem statements are revealed at the venue.",
+      "Deja Vu is a problem-solving hackathon where teams tackle real-world challenges through innovative technology solutions. It runs in two phases: Phase 1 is an online qualification quiz, and the teams shortlisted from it attend Phase 2, the offline hackathon at the venue. Its themes are Agentic AI, AI for Intelligent & Resilient Networks, and College Problem Statements. The actual problem statements are revealed at the venue.",
     featured: true,
   },
   {
@@ -46,7 +46,7 @@ export const FAQS: FaqItem[] = [
     id: "quiz",
     question: "When will the Deja Vu quiz link be available?",
     answer:
-      "Deja Vu has a qualification quiz. The quiz link will appear on your registration confirmation and on your registration status page once the organisers make it available.",
+      "The qualification quiz is Phase 1 of Deja Vu. Once the organisers verify your payment, the quiz link appears on your dashboard (log in with your email and registration ID) and on your registration status page. Teams shortlisted from the quiz attend the offline hackathon.",
   },
   {
     id: "fee-under-the-hood-of-ai",

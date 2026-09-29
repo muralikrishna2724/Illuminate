@@ -1,16 +1,18 @@
 import type { QuizAccess } from "@/types/domain";
 
-/** Deja Vu qualification quiz section, shown after payment proof is submitted. */
+/** Deja Vu Phase 1 — the online qualification quiz, unlocked by the organisers' access rule. */
 export function QuizPanel({ quiz }: { quiz: QuizAccess }) {
   return (
     <section aria-labelledby="quiz-title" className="rounded-2xl border border-[var(--line-strong)] p-6 sm:p-8">
-      <p className="text-sm text-gold/90">Deja Vu Hackathon</p>
+      <p className="text-sm text-gold/90">Deja Vu Hackathon · Phase 1</p>
       <h2 id="quiz-title" className="mt-1 font-display text-3xl text-flare">
         Qualification quiz
       </h2>
       {quiz.state === "available" && (
         <>
-          <p className="mt-3 text-mist">The qualification quiz is open. Use the link below.</p>
+          <p className="mt-3 text-mist">
+            Your payment is verified and the qualification quiz is open. Teams shortlisted from the quiz go on to the offline hackathon.
+          </p>
           <a
             href={quiz.quizLink}
             target="_blank"
@@ -27,7 +29,9 @@ export function QuizPanel({ quiz }: { quiz: QuizAccess }) {
       )}
       {quiz.state === "not_available" && <p className="mt-3 text-mist">Quiz link will appear here once it is made available.</p>}
       {quiz.state === "awaiting_verification" && (
-        <p className="mt-3 text-mist">The quiz link will appear here once your payment has been verified by the organisers.</p>
+        <p className="mt-3 text-mist">
+          The quiz link will appear here once the organisers verify your payment. Teams shortlisted from the quiz go on to the offline hackathon.
+        </p>
       )}
       {quiz.state === "payment_rejected" && (
         <p className="mt-3 text-mist">The quiz is not available because the payment for this registration was rejected.</p>

@@ -30,6 +30,21 @@ export function EventDetail({ event, index }: { event: EventContent; index: numb
             </div>
           ))}
 
+          {event.phases && (
+            <ol className="mt-8 grid gap-3 sm:grid-cols-2">
+              {event.phases.map((phase, i) => (
+                <li key={phase.title} className="relative rounded-2xl border border-[var(--line-strong)] bg-night p-5">
+                  <p className="text-xs font-medium tracking-[0.14em] text-gold uppercase">{phase.label}</p>
+                  <h3 className="mt-2 flex items-baseline gap-3 font-display text-2xl text-flare">
+                    <span className="text-base text-smoke">{String(i + 1).padStart(2, "0")}</span>
+                    {phase.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-sand/85">{phase.text}</p>
+                </li>
+              ))}
+            </ol>
+          )}
+
           {event.notes.length > 0 && (
             <ul className="mt-8 space-y-2 text-mist">
               {event.notes.map((note) => (
