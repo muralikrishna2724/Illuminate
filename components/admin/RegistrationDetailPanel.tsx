@@ -138,6 +138,7 @@ export function RegistrationDetailPanel({
                   </h3>
                   <p className="mt-1 text-xl text-flare">{detail.team.name}</p>
                   <dl className="mt-3 grid gap-3 text-sm sm:grid-cols-2">
+                    {detail.event.slug === "hackathon" && <Info label="Theme" value={detail.team.theme ?? "Not chosen yet"} />}
                     <Info label="College" value={detail.team.college} />
                     <Info label="Leader" value={detail.team.leaderName} />
                     <Info label="Leader email" value={detail.team.leaderEmail} />

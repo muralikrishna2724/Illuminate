@@ -60,6 +60,8 @@ export interface Team {
   leaderName: string;
   leaderEmail: string;
   leaderPhone: string;
+  /** Deja Vu theme label; null for other events or a team that hasn't chosen yet. */
+  theme: string | null;
   members: TeamMember[];
 }
 
@@ -99,6 +101,8 @@ export interface RegistrationSummary {
   event: Pick<Event, "slug" | "name" | "day" | "format">;
   /** Team name for team events, participant name for individual events. */
   displayName: string;
+  /** Deja Vu theme label, when chosen. */
+  theme: string | null;
   contactName: string;
   contactEmail: string;
   contactPhone: string;
@@ -196,8 +200,10 @@ export interface ParticipantRegistration {
   paymentStatus: PaymentStatus;
   rejectionReason: string | null;
   submittedAt: string;
-  /** Team events only. */
-  team: { name: string; members: string[] } | null;
+  /** Team events only. `theme` is the Deja Vu theme label, when chosen. */
+  team: { name: string; members: string[]; theme: string | null } | null;
+  /** A Deja Vu team registered before themes existed that still needs to pick one. */
+  canChooseTheme: boolean;
   quiz: QuizAccess | null;
   /** The event's WhatsApp group invite; null once the payment is rejected. */
   whatsappGroupUrl: string | null;

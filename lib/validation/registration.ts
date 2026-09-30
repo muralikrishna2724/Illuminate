@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { HACKATHON_THEME_VALUES, THEME_REQUIRED_MESSAGE } from "@/lib/events/themes";
 
 /**
  * Registration schemas — shared by the browser (instant feedback) and the
@@ -90,21 +91,33 @@ export const teamMemberSchema = z.object({
   year: yearField,
 });
 
-/** Team form for an event whose teams have exactly `size` members. */
-export function teamRegistrationSchemaFor(size: number) {
+export const themeField = z.enum(HACKATHON_THEME_VALUES, { error: THEME_REQUIRED_MESSAGE });
+
+/**
+ * Team form for an event whose teams have exactly `size` members. Themed
+ * events (Deja Vu) require a theme; for other events it is ignored.
+ */
+export function teamRegistrationSchemaFor(size: number, options: { requireTheme?: boolean } = {}) {
   return z.object({
     teamName: teamNameField,
     college: collegeField,
     leaderName: nameField,
     leaderEmail: emailField,
     leaderPhone: phoneField,
+    theme: options.requireTheme ? themeField : themeField.optional().catch(undefined),
     members: z
       .array(teamMemberSchema, { error: "Please add the team members." })
       .length(size, `Teams must have exactly ${size} members.`),
   });
 }
 
-export const teamRegistrationSchema = teamRegistrationSchemaFor(TEAM_SIZE);
+export const teamRegistrationSchema = teamRegistrationSchemaFor(TEAM_SIZE, { requireTheme: true });
+
+/** Chosen from the dashboard by a team that registered before themes existed. */
+export const themeChoiceSchema = z.object({
+  registrationId: z.string().trim().min(1).max(20),
+  theme: themeField,
+});
 
 export const individualRegistrationSchema = z.object({
   fullName: nameField,

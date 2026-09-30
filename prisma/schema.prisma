@@ -160,6 +160,9 @@ model Team {
   leaderName     String
   leaderEmail    String
   leaderPhone    String
+  // Deja Vu Hackathon only. Required at registration; teams registered before
+  // themes existed choose one from their dashboard.
+  theme          HackathonTheme?
   createdAt      DateTime @default(now())
 
   registration Registration @relation(fields: [registrationId], references: [id], onDelete: Cascade)
@@ -253,6 +256,12 @@ model QuizConfiguration {
 
   event     Event      @relation(fields: [eventId], references: [id], onDelete: Cascade)
   updatedBy AdminUser? @relation(fields: [updatedById], references: [id], onDelete: SetNull)
+}
+
+enum HackathonTheme {
+  AGENTIC_AI
+  HARDWARE_EMBEDDED
+  CAMPUS_SOLVE
 }
 
 enum AttemptSource {

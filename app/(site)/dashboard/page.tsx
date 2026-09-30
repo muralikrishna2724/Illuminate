@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { LogoutButton } from "@/components/auth/LogoutButton";
 import { QuizPanel } from "@/components/registration/QuizPanel";
+import { ThemePickerCard } from "@/components/registration/ThemePickerCard";
 import { WhatsAppGroupCard } from "@/components/registration/WhatsAppGroupCard";
 import { StatusBadge } from "@/components/registration/StatusBadge";
 import { ButtonLink } from "@/components/ui/Button";
@@ -108,12 +109,19 @@ export default async function ParticipantDashboardPage() {
                       <p className="text-mist">Team</p>
                       <p className="mt-1 text-flare">{r.team.name}</p>
                       <p className="mt-1 text-sand/80">{r.team.members.join(" · ")}</p>
+                      {r.team.theme && (
+                        <p className="mt-3">
+                          <span className="text-mist">Theme</span>{" "}
+                          <span className="ml-1 rounded-full border border-gold/60 px-3 py-1 text-flare">{r.team.theme}</span>
+                        </p>
+                      )}
                     </div>
                   )}
 
                   <p className="mt-6 text-sand">{STATUS_COPY[r.paymentStatus]}</p>
                   {r.rejectionReason && <p className="mt-1 text-mist">Reason: {r.rejectionReason}</p>}
                 </article>
+                {r.canChooseTheme && <ThemePickerCard registrationId={r.registrationId} />}
                 {r.whatsappGroupUrl && <WhatsAppGroupCard url={r.whatsappGroupUrl} eventName={EVENTS[r.event.slug].shortName} />}
                 {r.quiz && <QuizPanel quiz={r.quiz} />}
               </li>

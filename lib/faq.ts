@@ -28,7 +28,7 @@ export const FAQS: FaqItem[] = [
     id: "what-is-deja-vu",
     question: "What is the Deja Vu Hackathon?",
     answer:
-      "Deja Vu is a problem-solving hackathon where teams tackle real-world challenges through innovative technology solutions. It runs in two phases: Phase 1 is an online qualification quiz, and the teams shortlisted from it attend Phase 2, the offline hackathon at the venue. Its themes are Agentic AI, AI for Intelligent & Resilient Networks, and College Problem Statements. The actual problem statements are revealed at the venue.",
+      "Deja Vu is a problem-solving hackathon where teams tackle real-world challenges through innovative technology solutions. It runs in two phases: Phase 1 is an online qualification quiz, and the teams shortlisted from it attend Phase 2, the offline hackathon at the venue. Its themes are Agentic AI, Hardware and Embedded Systems, and CampusSolve; every team chooses one when registering. The actual problem statements are revealed at the venue.",
     featured: true,
   },
   {

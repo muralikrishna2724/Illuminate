@@ -69,6 +69,7 @@ function teamDetails(count = 4) {
     leaderName: "E2E Leader",
     leaderEmail: "e2e.leader@example.com",
     leaderPhone: phone(),
+    theme: "HARDWARE_EMBEDDED",
     members: Array.from({ length: count }, (_, i) => member(i + 1)),
     // Tampering attempts — must be ignored by the server:
     amount: 1,
@@ -190,6 +191,16 @@ describe("registrations", () => {
     assert.equal(body.data.paymentStatus, "PENDING");
     assert.ok(body.data.quiz, "hackathon response includes the quiz section");
     created.hackathon = { registrationId: body.data.registrationId, utr, screenshot: lastUpload };
+  });
+
+  test("Deja Vu requires one of its three themes", async () => {
+    const { theme: _theme, ...noTheme } = teamDetails(4);
+    const missing = await register("hackathon", noTheme, uniqueUtr());
+    assert.equal(missing.status, 400);
+    assert.equal(missing.body.error.fieldErrors.theme, "Please choose a theme for your team.");
+    const unknown = await register("hackathon", { ...teamDetails(4), theme: "BLOCKCHAIN" }, uniqueUtr());
+    assert.equal(unknown.status, 400);
+    assert.ok(unknown.body.error.fieldErrors.theme);
   });
 
   test("Deja Vu rejects 3 and 5 members", async () => {
@@ -353,6 +364,8 @@ describe("admin workflow", () => {
     const detail = await adminJson(`/api/admin/registrations/${registrationId}`);
     assert.equal(detail.status, 200);
     assert.equal(detail.body.data.team.members.length, 4);
+    assert.equal(detail.body.data.team.theme, "Hardware and Embedded Systems");
+    assert.equal(byUtr.body.data.items[0].theme, "Hardware and Embedded Systems");
     assert.equal(detail.body.data.paymentDetail.amountInr, 200);
 
     const byTeam = await adminJson(`/api/admin/registrations?q=${encodeURIComponent(detail.body.data.team.name)}`);
@@ -672,6 +685,24 @@ describe("participant login", () => {
     // A participant session never grants admin access.
     const adminRes = await fetch(`${BASE}/api/admin/registrations`, { headers: { Cookie: participantCookie } });
     assert.equal(adminRes.status, 401);
+
+    // The chosen theme shows on the dashboard; the dashboard picker is only for
+    // teams registered before themes existed, so this team can't change it.
+    assert.ok(html.includes("Hardware and Embedded Systems"), "dashboard shows the theme");
+    assert.ok(!html.includes(`For registration ${code}.`), "no theme picker for a team that already has one");
+    const chooseTheme = (cookieHeader: string, body: unknown, origin = BASE) =>
+      fetch(`${BASE}/api/participant/theme`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Origin: origin, Cookie: cookieHeader, "x-forwarded-for": fakeIp() },
+        body: JSON.stringify(body),
+      });
+    const again = await chooseTheme(participantCookie, { registrationId: code, theme: "AGENTIC_AI" });
+    assert.equal(again.status, 409);
+    assert.match(((await again.json()) as Json).error.message, /already chosen/);
+    assert.equal((await chooseTheme("", { registrationId: code, theme: "AGENTIC_AI" })).status, 401);
+    assert.equal((await chooseTheme(participantCookie, { registrationId: code, theme: "AGENTIC_AI" }, "https://evil.example")).status, 403);
+    assert.equal((await chooseTheme(participantCookie, { registrationId: code, theme: "NOPE" })).status, 400);
+    assert.equal((await chooseTheme(participantCookie, { registrationId: created.debate!.registrationId, theme: "AGENTIC_AI" })).status, 404);
   });
 
   test("forgot the ID: email + phone of the same person logs in", async () => {

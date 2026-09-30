@@ -2,6 +2,7 @@ import "server-only";
 import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db/prisma";
 import { notFound } from "@/lib/http/errors";
+import { themeLabel } from "@/lib/events/themes";
 import { normalizeRegistrationCode } from "@/lib/registration-id";
 import type { RegistrationFilters } from "@/lib/validation/admin";
 import type {
@@ -64,7 +65,7 @@ const summarySelect = {
   college: true,
   createdAt: true,
   event: { select: { slug: true, name: true, day: true, format: true } },
-  team: { select: { name: true } },
+  team: { select: { name: true, theme: true } },
   participant: { select: { fullName: true } },
   payment: {
     select: {
@@ -92,6 +93,7 @@ function toSummary(row: SummaryRow): RegistrationSummary {
       format: row.event.format,
     },
     displayName: row.team?.name ?? row.participant?.fullName ?? row.contactName,
+    theme: themeLabel(row.team?.theme),
     contactName: row.contactName,
     contactEmail: row.contactEmail,
     contactPhone: row.contactPhone,
@@ -159,7 +161,7 @@ export async function getRegistrationDetail(rawCode: string): Promise<Registrati
 
   const summary = toSummary({
     ...row,
-    team: row.team ? { name: row.team.name } : null,
+    team: row.team ? { name: row.team.name, theme: row.team.theme } : null,
     participant: row.participant ? { fullName: row.participant.fullName } : null,
   });
 
@@ -183,6 +185,7 @@ export async function getRegistrationDetail(rawCode: string): Promise<Registrati
           leaderName: row.team.leaderName,
           leaderEmail: row.team.leaderEmail,
           leaderPhone: row.team.leaderPhone,
+          theme: themeLabel(row.team.theme),
           members: row.team.members.map((m) => ({
             position: m.position,
             name: m.name,

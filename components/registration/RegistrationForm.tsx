@@ -5,6 +5,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/Button";
 import { needsAttemptReport, reportFailedAttempt, submitRegistration } from "@/lib/api/registrations";
 import { formatInr, registrationAmountInr, type EventContent } from "@/lib/events/catalog";
+import { THEMED_EVENT_SLUG } from "@/lib/events/themes";
 import type { PaymentConfig } from "@/lib/site-config";
 import { SCREENSHOT_REQUIRED_MESSAGE, validateScreenshotClientSide } from "@/lib/validation/file";
 import {
@@ -22,6 +23,7 @@ import { SelectField, TextField } from "./fields";
 import { PaymentInstructions } from "./PaymentInstructions";
 import { RegistrationSuccess } from "./RegistrationSuccess";
 import { ScreenshotUpload } from "./ScreenshotUpload";
+import { ThemeChoice } from "./ThemeChoice";
 
 type Step = "details" | "payment" | "done";
 type Errors = Record<string, string>;
@@ -34,6 +36,7 @@ const emptyTeam = (size: number): TeamRegistrationInput => ({
   leaderName: "",
   leaderEmail: "",
   leaderPhone: "",
+  theme: "" as TeamRegistrationInput["theme"],
   members: Array.from({ length: size }, emptyMember),
 });
 
@@ -50,6 +53,7 @@ const PAYMENT_FIELDS = new Set(["utr", "screenshot"]);
 
 export function RegistrationForm({ event, payment }: { event: EventContent; payment: PaymentConfig }) {
   const isTeam = event.format === "TEAM";
+  const hasTheme = event.slug === THEMED_EVENT_SLUG;
   const amount = registrationAmountInr(event);
   const breakdown = isTeam
     ? `${formatInr(event.feePerPersonInr)} × ${event.teamSize} members`
@@ -97,7 +101,7 @@ export function RegistrationForm({ event, payment }: { event: EventContent; paym
 
   const validateDetails = (): Errors => {
     const parsed = isTeam
-      ? teamRegistrationSchemaFor(event.teamSize).safeParse(team)
+      ? teamRegistrationSchemaFor(event.teamSize, { requireTheme: hasTheme }).safeParse(team)
       : individualRegistrationSchema.safeParse(individual);
     return parsed.success ? {} : toFieldErrors(parsed.error);
   };
@@ -221,6 +225,14 @@ export function RegistrationForm({ event, payment }: { event: EventContent; paym
               <TextField id="college" label="College" autoComplete="organization" value={team.college} error={errors.college}
                 onChange={(e) => { setTeam({ ...team, college: e.target.value }); clearError("college"); }} />
             </fieldset>
+
+            {hasTheme && (
+              <ThemeChoice
+                value={team.theme}
+                error={errors.theme}
+                onChange={(theme) => { setTeam({ ...team, theme }); clearError("theme"); }}
+              />
+            )}
 
             <fieldset>
               <legend className="text-lg text-flare">Team leader</legend>

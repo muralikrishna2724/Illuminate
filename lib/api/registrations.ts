@@ -3,6 +3,7 @@ import type {
   TeamRegistrationInput,
 } from "@/lib/validation/registration";
 import type { EventSlug, PaymentStatus, PublicRegistrationStatus, QuizAccess, RegistrationCreated } from "@/types/domain";
+import type { HackathonTheme } from "@/lib/events/themes";
 import type { ApiErrorBody } from "@/lib/http/api-types";
 import { apiRequest, apiUpload, apiUrl } from "./client";
 
@@ -63,6 +64,11 @@ export function reportFailedAttempt(report: {
   } catch {
     // Reporting is best-effort.
   }
+}
+
+/** POST /api/participant/theme — a Deja Vu team registered before themes picks one. */
+export function chooseTeamTheme(registrationId: string, theme: HackathonTheme) {
+  return apiRequest<{ theme: string }>("/api/participant/theme", { method: "POST", json: { registrationId, theme } });
 }
 
 export type RegistrationStatusResponse = PublicRegistrationStatus & { quiz: QuizAccess | null };

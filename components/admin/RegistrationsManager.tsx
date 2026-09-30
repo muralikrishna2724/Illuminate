@@ -349,6 +349,9 @@ export function RegistrationsManager({
                 {!fixedEvent && <td className="px-4 py-3 text-sand">{row.event.name}</td>}
                 <td className="max-w-[16rem] px-4 py-3">
                   <p className="truncate text-flare">{row.displayName}</p>
+                  {row.event.slug === "hackathon" && (
+                    <p className={`truncate text-xs ${row.theme ? "text-gold" : "text-warn"}`}>{row.theme ?? "Theme not chosen"}</p>
+                  )}
                   <p className="truncate text-xs text-mist">
                     {row.college} · {row.contactPhone}
                   </p>
@@ -408,6 +411,9 @@ export function RegistrationsManager({
                 <span className="block font-mono text-flare">{row.registrationId}</span>
                 <span className="block text-sm text-sand">{row.displayName}</span>
                 <span className="block text-xs text-mist">{row.event.name}</span>
+                {row.event.slug === "hackathon" && (
+                  <span className={`block text-xs ${row.theme ? "text-gold" : "text-warn"}`}>{row.theme ?? "Theme not chosen"}</span>
+                )}
               </button>
               <StatusBadge status={row.payment.status} />
             </div>

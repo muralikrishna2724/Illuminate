@@ -2,6 +2,7 @@ import "server-only";
 import { randomUUID } from "node:crypto";
 import { Prisma, type Event as EventRow } from "@prisma/client";
 import { prisma } from "@/lib/db/prisma";
+import { THEMED_EVENT_SLUG } from "@/lib/events/themes";
 import { whatsappGroupFor } from "@/lib/events/whatsapp";
 import { AppError, badRequest, conflict, notFound } from "@/lib/http/errors";
 import { fingerprintScreenshot, type ScreenshotFingerprint } from "@/lib/images/fingerprint";
@@ -50,7 +51,7 @@ function isUniqueViolation(error: unknown, field: string): boolean {
 function validateDetails(event: EventRow, details: unknown, fieldErrors: Record<string, string>): ValidatedDetails | null {
   if (event.format === "TEAM") {
     // The database record is authoritative for team size.
-    const parsed = teamRegistrationSchemaFor(event.teamSize).safeParse(details);
+    const parsed = teamRegistrationSchemaFor(event.teamSize, { requireTheme: event.slug === THEMED_EVENT_SLUG }).safeParse(details);
     if (!parsed.success) {
       Object.assign(fieldErrors, toFieldErrors(parsed.error));
       return null;
@@ -88,6 +89,7 @@ function buildRegistrationCreate(
           leaderName: d.leaderName,
           leaderEmail: d.leaderEmail,
           leaderPhone: d.leaderPhone,
+          theme: event.slug === THEMED_EVENT_SLUG ? (d.theme ?? null) : null,
           members: {
             create: d.members.map((m, index) => ({
               position: index + 1,

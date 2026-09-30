@@ -1,4 +1,5 @@
 import type { EventFormat, EventSlug } from "@/types/domain";
+import { HACKATHON_THEMES } from "./themes";
 
 /**
  * Single source of truth for event information.
@@ -57,11 +58,11 @@ export const EVENTS: Record<EventSlug, EventContent> = {
     feePerPersonInr: 50,
     tagline: "Real-world problems. Innovative technology solutions.",
     description:
-      "Deja Vu is a problem-solving hackathon where teams tackle real-world challenges through innovative technology solutions. It runs in two phases: an online qualification quiz, then an offline hackathon for the teams shortlisted from it. The competition brings together Agentic AI, intelligent and resilient networking, and real college problem statements, with the actual problem statements revealed at the venue.",
+      "Deja Vu is a problem-solving hackathon where teams tackle real-world challenges through innovative technology solutions. It runs in two phases: an online qualification quiz, then an offline hackathon for the teams shortlisted from it. Each team chooses one of three themes when registering: Agentic AI, Hardware and Embedded Systems, or CampusSolve. The actual problem statements are revealed at the venue.",
     highlights: [
       {
         title: "Themes",
-        items: ["Agentic AI", "AI for Intelligent & Resilient Networks", "College Problem Statements"],
+        items: HACKATHON_THEMES.map((t) => t.label),
       },
     ],
     phases: [
@@ -76,7 +77,11 @@ export const EVENTS: Record<EventSlug, EventContent> = {
         text: "Shortlisted teams build their solutions at the venue on October 9, where the problem statements are revealed.",
       },
     ],
-    notes: ["Teams of exactly 4 members.", "Only teams shortlisted from the quiz take part in the offline hackathon."],
+    notes: [
+      "Teams of exactly 4 members.",
+      "Each team chooses one theme when registering.",
+      "Only teams shortlisted from the quiz take part in the offline hackathon.",
+    ],
     spotlight: {
       motto: ["Think", "Pick", "Build", "Impact"],
       lines: [

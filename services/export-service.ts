@@ -1,6 +1,7 @@
 import "server-only";
 import { prisma } from "@/lib/db/prisma";
 import { toCsv } from "@/lib/csv";
+import { themeLabel } from "@/lib/events/themes";
 import type { RegistrationFilters } from "@/lib/validation/admin";
 import { buildRegistrationWhere } from "./admin-registration-service";
 
@@ -42,6 +43,7 @@ export async function exportRegistrationsCsv(filters: Omit<RegistrationFilters, 
     "Event",
     "Day",
     "Participant / Team Name",
+    "Theme",
     "College",
     "Contact Name",
     "Email",
@@ -69,6 +71,7 @@ export async function exportRegistrationsCsv(filters: Omit<RegistrationFilters, 
       r.event.name,
       `Day ${r.event.day}`,
       r.team?.name ?? r.participant?.fullName ?? r.contactName,
+      themeLabel(r.team?.theme) ?? "",
       r.college,
       r.contactName,
       r.contactEmail,

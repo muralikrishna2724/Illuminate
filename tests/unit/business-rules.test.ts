@@ -23,6 +23,7 @@ const team = (n: number) => ({
   leaderName: "L",
   leaderEmail: "l@example.com",
   leaderPhone: "+91 98765 43210",
+  theme: "AGENTIC_AI",
   members: Array.from({ length: n }, () => member),
 });
 
@@ -81,6 +82,20 @@ describe("team validation", () => {
   test("exactly 4 members", () => {
     assert.equal(teamRegistrationSchema.safeParse(team(4)).success, true);
     for (const n of [0, 3, 5]) assert.equal(teamRegistrationSchema.safeParse(team(n)).success, false, `n=${n}`);
+  });
+  test("Deja Vu teams must pick one of the three themes; other team events ignore it", () => {
+    const { theme: _theme, ...noTheme } = team(4);
+    const missing = teamRegistrationSchema.safeParse(noTheme);
+    assert.equal(missing.success, false);
+    assert.equal(missing.error?.issues[0]?.path[0], "theme");
+    assert.equal(teamRegistrationSchema.safeParse({ ...team(4), theme: "BLOCKCHAIN" }).success, false);
+    for (const theme of ["AGENTIC_AI", "HARDWARE_EMBEDDED", "CAMPUS_SOLVE"]) {
+      assert.equal(teamRegistrationSchema.safeParse({ ...team(4), theme }).success, true, theme);
+    }
+    const ipl = teamRegistrationSchemaFor(5);
+    assert.equal(ipl.safeParse({ ...team(5), theme: "" }).success, true);
+    assert.equal(ipl.parse({ ...team(5), theme: "BLOCKCHAIN" }).theme, undefined);
+    assert.deepEqual(EVENTS.hackathon.highlights[0]?.items, ["Agentic AI", "Hardware and Embedded Systems", "CampusSolve"]);
   });
   test("team size follows the event: IPL Auction needs exactly 5", () => {
     const ipl = teamRegistrationSchemaFor(EVENTS["ipl-auction"].teamSize);

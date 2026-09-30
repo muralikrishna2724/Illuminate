@@ -1,27 +1,33 @@
 import "server-only";
 import { prisma } from "@/lib/db/prisma";
 import type { EventSlug, ParticipantProfile, ParticipantRegistration } from "@/types/domain";
+import { THEMED_EVENT_SLUG, themeLabel, type HackathonTheme } from "@/lib/events/themes";
 import { whatsappGroupFor } from "@/lib/events/whatsapp";
+import { conflict, notFound } from "@/lib/http/errors";
+import { normalizeRegistrationCode } from "@/lib/registration-id";
 import { getQuizConfig, QUIZ_EVENT_SLUG, resolveQuizAccess } from "./quiz-service";
+
+/** Where this email appears on a registration: contact, participant, team leader or member. */
+const belongsTo = (email: string) => ({
+  OR: [
+    { contactEmail: email },
+    { participant: { email } },
+    { team: { leaderEmail: email } },
+    { team: { members: { some: { email } } } },
+  ],
+});
 
 /** Every registration that lists this email as contact, participant, team leader or member. */
 export async function getParticipantRegistrations(email: string): Promise<ParticipantRegistration[]> {
   const rows = await prisma.registration.findMany({
-    where: {
-      OR: [
-        { contactEmail: email },
-        { participant: { email } },
-        { team: { leaderEmail: email } },
-        { team: { members: { some: { email } } } },
-      ],
-    },
+    where: belongsTo(email),
     orderBy: { createdAt: "desc" },
     select: {
       registrationCode: true,
       createdAt: true,
       event: { select: { slug: true, name: true, day: true, date: true } },
       payment: { select: { amountInr: true, status: true, rejectionReason: true } },
-      team: { select: { name: true, members: { select: { name: true }, orderBy: { position: "asc" } } } },
+      team: { select: { name: true, theme: true, members: { select: { name: true }, orderBy: { position: "asc" } } } },
     },
   });
 
@@ -45,11 +51,33 @@ export async function getParticipantRegistrations(email: string): Promise<Partic
         paymentStatus: status,
         rejectionReason: status === "REJECTED" ? r.payment!.rejectionReason : null,
         submittedAt: r.createdAt.toISOString(),
-        team: r.team ? { name: r.team.name, members: r.team.members.map((m) => m.name) } : null,
+        team: r.team ? { name: r.team.name, members: r.team.members.map((m) => m.name), theme: themeLabel(r.team.theme) } : null,
+        canChooseTheme: slug === THEMED_EVENT_SLUG && r.team !== null && r.team.theme === null && status !== "REJECTED",
         quiz: quizConfig && slug === QUIZ_EVENT_SLUG ? resolveQuizAccess(quizConfig, status) : null,
         whatsappGroupUrl: whatsappGroupFor(slug, status),
       };
     });
+}
+
+/**
+ * Lets a Deja Vu team that registered before themes existed choose one, once.
+ * Only someone on that registration can choose, and a chosen theme is never
+ * overwritten (the update only matches a team whose theme is still empty).
+ */
+export async function chooseHackathonTheme(email: string, rawCode: string, theme: HackathonTheme): Promise<{ theme: string }> {
+  const registration = await prisma.registration.findFirst({
+    where: { registrationCode: normalizeRegistrationCode(rawCode), ...belongsTo(email) },
+    select: { event: { select: { slug: true } }, payment: { select: { status: true } }, team: { select: { id: true, theme: true } } },
+  });
+  if (!registration?.team || registration.event.slug !== THEMED_EVENT_SLUG) {
+    throw notFound("We couldn't find a Deja Vu team registration with that ID on your account.");
+  }
+  if (registration.payment?.status === "REJECTED") {
+    throw conflict("This registration's payment was rejected. Please contact the organisers.");
+  }
+  const { count } = await prisma.team.updateMany({ where: { id: registration.team.id, theme: null }, data: { theme } });
+  if (count === 0) throw conflict("Your team has already chosen a theme. To change it, please contact the organisers.");
+  return { theme: themeLabel(theme)! };
 }
 
 /**
