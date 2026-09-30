@@ -105,8 +105,12 @@ export const EVENTS: Record<EventSlug, EventContent> = {
     maxRegistrations: 50,
     tagline: "An individual event on Day 1.",
     description:
-      "A platform for participants to analyse, discuss, and debate the real-world impact of Artificial Intelligence.",
+      "A platform for participants to analyse, discuss, and debate the real-world impact of Artificial Intelligence. A quiz is conducted first, before the debate.",
     highlights: [],
+    phases: [
+      { label: "Round 1", title: "Quiz", text: "The event begins with a quiz, conducted before the debate." },
+      { label: "Round 2", title: "Debate", text: "Participants analyse, discuss and debate the real-world impact of AI." },
+    ],
     notes: ["Individual participation.", "Limited to 50 participants."],
     registerPath: "/register/debate",
     hasQualificationQuiz: false,
