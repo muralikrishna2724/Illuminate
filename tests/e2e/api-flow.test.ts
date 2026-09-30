@@ -370,6 +370,34 @@ describe("admin workflow", () => {
     assert.ok(byPhone.body.data.items.some((i: { registrationId: string }) => i.registrationId === registrationId));
   });
 
+  test("admin can set or change a Deja Vu team's theme, and only for Deja Vu", async () => {
+    const { registrationId } = created.hackathon!;
+    const path = `/api/admin/registrations/${registrationId}/theme`;
+    const set = await adminJson(path, { method: "PUT", body: JSON.stringify({ theme: "CAMPUS_SOLVE" }) });
+    assert.equal(set.status, 200, JSON.stringify(set.body));
+    assert.equal(set.body.data.theme, "CampusSolve");
+    const detail = await adminJson(`/api/admin/registrations/${registrationId}`);
+    assert.equal(detail.body.data.team.theme, "CampusSolve");
+
+    assert.equal((await adminJson(path, { method: "PUT", body: JSON.stringify({ theme: "NOPE" }) })).status, 400);
+    const notDejaVu = await adminJson(`/api/admin/registrations/${created.debate!.registrationId}/theme`, {
+      method: "PUT",
+      body: JSON.stringify({ theme: "AGENTIC_AI" }),
+    });
+    assert.equal(notDejaVu.status, 400);
+    const anonymous = await fetch(`${BASE}${path}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json", Origin: BASE },
+      body: JSON.stringify({ theme: "AGENTIC_AI" }),
+    });
+    assert.equal(anonymous.status, 401);
+    const crossOrigin = await admin(path, { method: "PUT", body: JSON.stringify({ theme: "AGENTIC_AI" }), headers: { Origin: "https://evil.example" } });
+    assert.equal(crossOrigin.status, 403);
+
+    // Put it back for the tests that follow.
+    await adminJson(path, { method: "PUT", body: JSON.stringify({ theme: "HARDWARE_EMBEDDED" }) });
+  });
+
   test("admin can filter by date range", async () => {
     const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kolkata" }).format(new Date());
     const inRange = await adminJson(`/api/admin/registrations?from=${today}&to=${today}&q=${created.debate!.utr}`);

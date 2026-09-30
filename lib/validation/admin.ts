@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { themeField } from "@/lib/validation/registration";
 import { EVENT_SLUGS, PAYMENT_STATUSES, QUIZ_ACCESS_RULES } from "@/types/domain";
 
 export const loginSchema = z.object({
@@ -6,6 +7,9 @@ export const loginSchema = z.object({
   /** An admin password, or a participant's registration ID (INV-07). */
   secret: z.string().min(1, "Please complete this field.").max(200),
 });
+
+/** Organisers can set or change a Deja Vu team's theme. */
+export const adminThemeSchema = z.object({ theme: themeField });
 
 export const rejectPaymentSchema = z.object({
   reason: z

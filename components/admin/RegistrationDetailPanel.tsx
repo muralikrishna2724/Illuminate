@@ -5,6 +5,7 @@ import { Spinner } from "@/components/ui/Button";
 import { StatusBadge } from "@/components/registration/StatusBadge";
 import { formatInr } from "@/lib/events/catalog";
 import type { RegistrationDetail } from "@/types/domain";
+import { AdminThemeSelect } from "./AdminThemeSelect";
 import { formatDateTime } from "./format";
 import { PaymentActions } from "./PaymentActions";
 import { ScreenshotViewer } from "./ScreenshotViewer";
@@ -19,6 +20,7 @@ export function RegistrationDetailPanel({
   onClose,
   onVerify,
   onReject,
+  onThemeSaved,
 }: {
   open: boolean;
   detail: RegistrationDetail | null;
@@ -28,6 +30,7 @@ export function RegistrationDetailPanel({
   onClose: () => void;
   onVerify: () => void;
   onReject: () => void;
+  onThemeSaved: (label: string) => void;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
 
@@ -138,7 +141,14 @@ export function RegistrationDetailPanel({
                   </h3>
                   <p className="mt-1 text-xl text-flare">{detail.team.name}</p>
                   <dl className="mt-3 grid gap-3 text-sm sm:grid-cols-2">
-                    {detail.event.slug === "hackathon" && <Info label="Theme" value={detail.team.theme ?? "Not chosen yet"} />}
+                    {detail.event.slug === "hackathon" && (
+                      <AdminThemeSelect
+                        key={detail.registrationId}
+                        registrationId={detail.registrationId}
+                        current={detail.team.theme}
+                        onSaved={onThemeSaved}
+                      />
+                    )}
                     <Info label="College" value={detail.team.college} />
                     <Info label="Leader" value={detail.team.leaderName} />
                     <Info label="Leader email" value={detail.team.leaderEmail} />

@@ -1,6 +1,7 @@
 import type { DashboardStats, EventSlug, Paginated, Payment, PaymentStatus, Quiz, QuizAccessRule, RegistrationDetail, RegistrationSummary } from "@/types/domain";
 import { apiRequest, apiUrl, NETWORK_ERROR, SERVER_ERROR } from "./client";
 import type { ApiResponse } from "@/lib/http/api-types";
+import type { HackathonTheme } from "@/lib/events/themes";
 
 export interface RegistrationQuery {
   event?: EventSlug;
@@ -33,6 +34,12 @@ export const adminApi = {
     return apiRequest<Payment>(`/api/admin/payments/${encodeURIComponent(paymentId)}/reject`, {
       method: "POST",
       json: { reason: reason.trim() || undefined },
+    });
+  },
+  setTheme(registrationId: string, theme: HackathonTheme) {
+    return apiRequest<{ theme: string }>(`/api/admin/registrations/${encodeURIComponent(registrationId)}/theme`, {
+      method: "PUT",
+      json: { theme },
     });
   },
   getQuiz() {

@@ -467,6 +467,17 @@ export function RegistrationsManager({
         }}
         onVerify={() => detail && verify(detail)}
         onReject={() => detail && setRejectTarget(detail)}
+        onThemeSaved={(label) => {
+          if (!detail) return;
+          const id = detail.registrationId;
+          setDetail((current) =>
+            current && current.registrationId === id
+              ? { ...current, theme: label, team: current.team ? { ...current.team, theme: label } : null }
+              : current,
+          );
+          setData((d) => (d ? { ...d, items: d.items.map((item) => (item.registrationId === id ? { ...item, theme: label } : item)) } : d));
+          setAnnouncement(`${id} theme set to ${label}.`);
+        }}
       />
 
       <RejectDialog

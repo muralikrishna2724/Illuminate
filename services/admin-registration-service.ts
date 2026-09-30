@@ -1,8 +1,8 @@
 import "server-only";
 import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db/prisma";
-import { notFound } from "@/lib/http/errors";
-import { themeLabel } from "@/lib/events/themes";
+import { badRequest, notFound } from "@/lib/http/errors";
+import { THEMED_EVENT_SLUG, themeLabel, type HackathonTheme } from "@/lib/events/themes";
 import { normalizeRegistrationCode } from "@/lib/registration-id";
 import type { RegistrationFilters } from "@/lib/validation/admin";
 import type {
@@ -207,6 +207,21 @@ export async function getRegistrationDetail(rawCode: string): Promise<Registrati
       createdAt: log.createdAt.toISOString(),
     })),
   };
+}
+
+/** Sets or changes a Deja Vu team's theme (organisers only). */
+export async function setTeamTheme(rawCode: string, theme: HackathonTheme): Promise<{ theme: string }> {
+  const code = normalizeRegistrationCode(rawCode);
+  const registration = await prisma.registration.findUnique({
+    where: { registrationCode: code },
+    select: { event: { select: { slug: true } }, team: { select: { id: true } } },
+  });
+  if (!registration) throw notFound("Registration not found.");
+  if (registration.event.slug !== THEMED_EVENT_SLUG || !registration.team) {
+    throw badRequest("Only Deja Vu Hackathon teams have a theme.");
+  }
+  await prisma.team.update({ where: { id: registration.team.id }, data: { theme } });
+  return { theme: themeLabel(theme)! };
 }
 
 export async function getDashboardStats(): Promise<DashboardStats> {
