@@ -22,6 +22,8 @@ export interface EventContent {
   format: EventFormat;
   teamSize: number;
   feePerPersonInr: number;
+  /** Most registrations accepted (teams, for team events). Omitted means no limit. */
+  maxRegistrations?: number;
   tagline: string;
   description: string;
   /** Labelled lists of confirmed facts (themes, topics, benefits…). */
@@ -95,11 +97,12 @@ export const EVENTS: Record<EventSlug, EventContent> = {
     format: "INDIVIDUAL",
     teamSize: 1,
     feePerPersonInr: 50,
+    maxRegistrations: 50,
     tagline: "An individual event on Day 1.",
     description:
       "A platform for participants to analyse, discuss, and debate the real-world impact of Artificial Intelligence.",
     highlights: [],
-    notes: ["Individual participation."],
+    notes: ["Individual participation.", "Limited to 50 participants."],
     registerPath: "/register/debate",
     hasQualificationQuiz: false,
   },
@@ -110,14 +113,15 @@ export const EVENTS: Record<EventSlug, EventContent> = {
     day: 1,
     date: "2026-10-09",
     dateLabel: "October 9",
-    format: "INDIVIDUAL",
-    teamSize: 1,
+    format: "TEAM",
+    teamSize: 5,
     feePerPersonInr: 50,
-    tagline: "Register individually — teams are organised at the venue.",
+    maxRegistrations: 10,
+    tagline: "A team event on Day 1 — teams of 5.",
     description:
       "A competitive IPL-inspired event that puts your cricket knowledge, strategy, and team-building skills to the test.",
     highlights: [],
-    notes: ["Individual registration — teams are organised at the venue."],
+    notes: ["Teams of exactly 5 members.", "Limited to 10 teams."],
     registerPath: "/register/ipl-auction",
     hasQualificationQuiz: false,
   },

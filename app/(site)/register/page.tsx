@@ -5,14 +5,26 @@ import { ArrowIcon } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
 import { FeeIncludes } from "@/components/ui/FeeIncludes";
-import { EVENT_LIST, feeLabel, formatInr, registrationAmountInr } from "@/lib/events/catalog";
+import { connection } from "next/server";
+import { capacityLabel, type EventCapacity } from "@/lib/events/capacity";
+import { EVENT_LIST, feeLabel, formatInr, registrationAmountInr, type EventContent } from "@/lib/events/catalog";
+import { getEventCapacities } from "@/services/event-service";
+
+function CapacityNote({ event, capacity }: { event: EventContent; capacity: EventCapacity | undefined }) {
+  const label = capacity && !capacity.full ? capacityLabel(event.format, capacity) : null;
+  return label ? <p className="mt-2 text-sm text-gold/90">{label}</p> : null;
+}
 
 export const metadata: Metadata = {
   title: "Register",
   description: "Register for the Deja Vu Hackathon, Mind x Machine: The AI Debate ARENA, IPL Auction or the Illuminate Entrepreneurship Workshop.",
 };
 
-export default function RegisterIndexPage() {
+export default async function RegisterIndexPage() {
+  // Spots left change with every registration.
+  await connection();
+  const capacities = await getEventCapacities();
+
   return (
     <>
       <PageHero eyebrow="Step 1 of 3 · Choose an event" title="Register">
@@ -32,12 +44,17 @@ export default function RegisterIndexPage() {
                   <p className="mt-3 text-mist">
                     {event.format === "TEAM" ? `Team of exactly ${event.teamSize}` : "Individual"} · {feeLabel(event)}
                   </p>
+                  <CapacityNote event={event} capacity={capacities[event.slug]} />
                   <FeeIncludes event={event} className="mt-6" />
                 </div>
-                <span className="inline-flex items-center gap-2 text-flare">
-                  Register · {formatInr(registrationAmountInr(event))}
-                  <ArrowIcon className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                </span>
+                {capacities[event.slug]?.full ? (
+                  <span className="text-bad">Registration limit reached</span>
+                ) : (
+                  <span className="inline-flex items-center gap-2 text-flare">
+                    Register · {formatInr(registrationAmountInr(event))}
+                    <ArrowIcon className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                  </span>
+                )}
               </Link>
             </li>
           ))}

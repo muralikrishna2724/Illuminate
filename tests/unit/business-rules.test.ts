@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { describe, test } from "node:test";
 import { toCsv, csvCell } from "../../lib/csv";
 import { EVENTS, registrationAmountInr } from "../../lib/events/catalog";
+import { capacityFrom, capacityLabel, registrationFullMessage } from "../../lib/events/capacity";
 import { aspectsComparable, changedPixels, FINGERPRINT_BYTES, looksIdentical } from "../../lib/images/similarity";
 import { calculateRegistrationAmount } from "../../lib/pricing";
 import { resolveQuizAccess } from "../../lib/quiz-access";
@@ -12,6 +13,7 @@ import {
   normalizeUtr,
   paymentProofSchema,
   teamRegistrationSchema,
+  teamRegistrationSchemaFor,
 } from "../../lib/validation/registration";
 
 const member = { name: "A", email: "a@example.com", phone: "9876543210", department: "CSE", year: "1st Year" };
@@ -28,7 +30,7 @@ describe("pricing", () => {
   test("amounts per event", () => {
     assert.equal(calculateRegistrationAmount(EVENTS.hackathon), 200);
     assert.equal(calculateRegistrationAmount(EVENTS.debate), 50);
-    assert.equal(calculateRegistrationAmount(EVENTS["ipl-auction"]), 50);
+    assert.equal(calculateRegistrationAmount(EVENTS["ipl-auction"]), 250);
     assert.equal(calculateRegistrationAmount(EVENTS.illuminate), 799);
     assert.equal(registrationAmountInr(EVENTS.illuminate), 799);
   });
@@ -46,10 +48,44 @@ describe("pricing", () => {
   });
 });
 
+describe("registration caps", () => {
+  test("IPL Auction: 10 teams of 5; Mind x Machine: 50 participants; others unlimited", () => {
+    assert.equal(EVENTS["ipl-auction"].maxRegistrations, 10);
+    assert.equal(EVENTS["ipl-auction"].teamSize, 5);
+    assert.equal(EVENTS.debate.maxRegistrations, 50);
+    assert.equal(EVENTS.hackathon.maxRegistrations, undefined);
+    assert.equal(EVENTS.illuminate.maxRegistrations, undefined);
+  });
+  test("full exactly at the cap", () => {
+    assert.deepEqual(capacityFrom(10, 9), { cap: 10, taken: 9, remaining: 1, full: false });
+    assert.equal(capacityFrom(10, 10).full, true);
+    assert.equal(capacityFrom(10, 12).remaining, 0);
+    assert.equal(capacityFrom(null, 500).full, false);
+  });
+  test("messages", () => {
+    assert.equal(
+      registrationFullMessage(EVENTS["ipl-auction"], 10),
+      "Registration limit reached. All 10 team spots for IPL Auction have been filled.",
+    );
+    assert.equal(
+      registrationFullMessage(EVENTS.debate, 50),
+      "Registration limit reached. All 50 spots for Mind x Machine: The AI Debate ARENA have been filled.",
+    );
+    assert.equal(capacityLabel("TEAM", capacityFrom(10, 7)), "Limited to 10 teams · 3 spots left");
+    assert.equal(capacityLabel("INDIVIDUAL", capacityFrom(50, 49)), "Limited to 50 participants · 1 spot left");
+    assert.equal(capacityLabel("INDIVIDUAL", capacityFrom(null, 3)), null);
+  });
+});
+
 describe("team validation", () => {
   test("exactly 4 members", () => {
     assert.equal(teamRegistrationSchema.safeParse(team(4)).success, true);
     for (const n of [0, 3, 5]) assert.equal(teamRegistrationSchema.safeParse(team(n)).success, false, `n=${n}`);
+  });
+  test("team size follows the event: IPL Auction needs exactly 5", () => {
+    const ipl = teamRegistrationSchemaFor(EVENTS["ipl-auction"].teamSize);
+    assert.equal(ipl.safeParse(team(5)).success, true);
+    for (const n of [4, 6]) assert.equal(ipl.safeParse(team(n)).success, false, `n=${n}`);
   });
   test("strips unknown keys such as a client-sent amount", () => {
     const parsed = teamRegistrationSchema.parse({ ...team(4), amount: 1 });

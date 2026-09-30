@@ -10,8 +10,7 @@ import { SCREENSHOT_REQUIRED_MESSAGE, validateScreenshotClientSide } from "@/lib
 import {
   individualRegistrationSchema,
   paymentProofSchema,
-  TEAM_SIZE,
-  teamRegistrationSchema,
+  teamRegistrationSchemaFor,
   toFieldErrors,
   YEAR_OPTIONS,
   type IndividualRegistrationInput,
@@ -29,13 +28,13 @@ type Errors = Record<string, string>;
 
 const emptyMember = (): TeamMemberInput => ({ name: "", email: "", phone: "", department: "", year: "" as TeamMemberInput["year"] });
 
-const emptyTeam = (): TeamRegistrationInput => ({
+const emptyTeam = (size: number): TeamRegistrationInput => ({
   teamName: "",
   college: "",
   leaderName: "",
   leaderEmail: "",
   leaderPhone: "",
-  members: Array.from({ length: TEAM_SIZE }, emptyMember),
+  members: Array.from({ length: size }, emptyMember),
 });
 
 const emptyIndividual = (): IndividualRegistrationInput => ({
@@ -57,7 +56,7 @@ export function RegistrationForm({ event, payment }: { event: EventContent; paym
     : `${formatInr(event.feePerPersonInr)} per person`;
 
   const [step, setStep] = useState<Step>("details");
-  const [team, setTeam] = useState<TeamRegistrationInput>(emptyTeam);
+  const [team, setTeam] = useState<TeamRegistrationInput>(() => emptyTeam(event.teamSize));
   const [individual, setIndividual] = useState<IndividualRegistrationInput>(emptyIndividual);
   const [utr, setUtr] = useState("");
   const [screenshot, setScreenshot] = useState<File | null>(null);
@@ -97,7 +96,9 @@ export function RegistrationForm({ event, payment }: { event: EventContent; paym
   const details = isTeam ? team : individual;
 
   const validateDetails = (): Errors => {
-    const parsed = isTeam ? teamRegistrationSchema.safeParse(team) : individualRegistrationSchema.safeParse(individual);
+    const parsed = isTeam
+      ? teamRegistrationSchemaFor(event.teamSize).safeParse(team)
+      : individualRegistrationSchema.safeParse(individual);
     return parsed.success ? {} : toFieldErrors(parsed.error);
   };
 
@@ -236,8 +237,8 @@ export function RegistrationForm({ event, payment }: { event: EventContent; paym
 
             <div>
               <div className="flex flex-wrap items-baseline justify-between gap-3">
-                <h3 className="text-lg text-flare">Members ({TEAM_SIZE} required)</h3>
-                <p className="text-sm text-mist">The team leader is one of the {TEAM_SIZE} members.</p>
+                <h3 className="text-lg text-flare">Members ({event.teamSize} required)</h3>
+                <p className="text-sm text-mist">The team leader is one of the {event.teamSize} members.</p>
               </div>
               {errors.members && <p role="alert" className="mt-2 text-sm text-bad">{errors.members}</p>}
               <div className="mt-6 space-y-8">

@@ -10,6 +10,7 @@ export type ApiErrorCode =
   | "NOT_FOUND"
   | "CONFLICT"
   | "REGISTRATION_CLOSED"
+  | "REGISTRATION_FULL"
   | "RATE_LIMITED"
   | "PAYLOAD_TOO_LARGE"
   | "NETWORK_ERROR"

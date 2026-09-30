@@ -51,12 +51,14 @@ export const FAQS: FaqItem[] = [
   {
     id: "fee-under-the-hood-of-ai",
     question: "What is the Mind x Machine: The AI Debate ARENA fee?",
-    answer: "Mind x Machine: The AI Debate ARENA is an individual event. The fee is ₹50 per person.",
+    answer:
+      "Mind x Machine: The AI Debate ARENA is an individual event. The fee is ₹50 per person. It is limited to 50 participants, and registration closes once all spots are filled.",
   },
   {
     id: "team-size-ipl",
-    question: "Do I need a team for the IPL Auction?",
-    answer: "No. You register individually and teams are organised at the venue. The fee is ₹50 per person.",
+    question: "How many members are required for the IPL Auction?",
+    answer:
+      "IPL Auction teams must have exactly 5 members. The fee is ₹50 per person, which is ₹250 per team of 5. It is limited to 10 teams, and registration closes once all spots are filled.",
   },
   {
     id: "what-is-workshop",

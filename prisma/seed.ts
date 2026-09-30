@@ -19,6 +19,7 @@ async function main() {
       format: event.format,
       teamSize: event.teamSize,
       feePerPersonInr: event.feePerPersonInr,
+      maxRegistrations: event.maxRegistrations ?? null,
     };
     await prisma.event.upsert({
       where: { slug: event.slug },

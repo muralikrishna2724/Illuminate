@@ -236,16 +236,22 @@ describe("registrations", () => {
     created.debate = { registrationId: body.data.registrationId, utr };
   });
 
-  test("TEST 4 — IPL Auction: individual (teams formed at the venue), ₹50, PENDING", async () => {
+  test("TEST 4 — IPL Auction: exactly 5 members, ₹250, PENDING", async () => {
     const utr = uniqueUtr();
-    const { status, body } = await register("ipl-auction", individualDetails(), utr);
+    const { status, body } = await register("ipl-auction", teamDetails(5), utr);
     assert.equal(status, 201, JSON.stringify(body));
-    assert.equal(body.data.amountInr, 50);
+    assert.equal(body.data.amountInr, 250);
     assert.equal(body.data.paymentStatus, "PENDING");
+    assert.equal(body.data.quiz, null, "no quiz for the IPL Auction");
     created.ipl = { registrationId: body.data.registrationId, utr };
 
-    const asTeam = await register("ipl-auction", teamDetails(4), uniqueUtr());
-    assert.equal(asTeam.status, 400);
+    for (const count of [4, 6]) {
+      const wrongSize = await register("ipl-auction", teamDetails(count), uniqueUtr());
+      assert.equal(wrongSize.status, 400);
+      assert.ok(wrongSize.body.error.fieldErrors.members, `members error for ${count}`);
+    }
+    const asIndividual = await register("ipl-auction", individualDetails(), uniqueUtr());
+    assert.equal(asIndividual.status, 400);
   });
 
   test("TEST 5 — Illuminate: individual, ₹799, PENDING", async () => {
@@ -428,6 +434,44 @@ describe("admin workflow", () => {
     assert.equal(r2.body.data.rejectionReason, null);
   });
 
+  test("IPL Auction closes at 10 teams with a clear message, and a rejection frees a spot", async () => {
+    const rejectRegistration = async (registrationId: string) => {
+      const detail = await adminJson(`/api/admin/registrations/${registrationId}`);
+      const res = await adminJson(`/api/admin/payments/${detail.body.data.paymentDetail.id}/reject`, { method: "POST", body: "{}" });
+      assert.equal(res.status, 200, JSON.stringify(res.body));
+    };
+
+    const mine: string[] = [];
+    let refused: Awaited<ReturnType<typeof register>> | null = null;
+    for (let i = 0; i <= 10 && !refused; i++) {
+      const res = await register("ipl-auction", teamDetails(5), uniqueUtr());
+      if (res.status === 409) refused = res;
+      else {
+        assert.equal(res.status, 201, JSON.stringify(res.body));
+        mine.push(res.body.data.registrationId);
+      }
+    }
+    assert.ok(mine.length > 0, "IPL Auction was already full: reset the development database");
+    assert.ok(refused, "the team after the 10th is refused");
+    assert.equal(refused.body.error.code, "REGISTRATION_FULL");
+    assert.match(refused.body.error.message, /^Registration limit reached\. All 10 team spots for IPL Auction have been filled\.$/);
+
+    const page = await fetch(`${BASE}/register/ipl-auction`);
+    assert.match(await page.text(), /Registration limit reached/);
+    const index = await fetch(`${BASE}/register`);
+    assert.match(await index.text(), /Registration limit reached/);
+
+    await rejectRegistration(mine.shift()!);
+    const again = await register("ipl-auction", teamDetails(5), uniqueUtr());
+    assert.equal(again.status, 201, "a rejected team's spot is free again");
+    mine.push(again.body.data.registrationId);
+
+    // Free the spots again so the suite can run repeatedly.
+    for (const id of mine) await rejectRegistration(id);
+    const reopened = await fetch(`${BASE}/register/ipl-auction`);
+    assert.match(await reopened.text(), /spots? left/);
+  });
+
   test("TEST 7 — quiz link follows the configured access rule", async () => {
     const link = `https://example.com/e2e-quiz-${Date.now()}`;
 
@@ -549,7 +593,7 @@ describe("admin workflow", () => {
   test("a screenshot file backs only one payment; a re-saved copy is flagged for admins", async () => {
     const pixels = receiptPixels();
     const original = { bytes: await encodeReceipt(pixels, "png"), name: "receipt.png", type: "image/png" };
-    const first = await register("ipl-auction", individualDetails(), uniqueUtr(), original);
+    const first = await register("illuminate", individualDetails(), uniqueUtr(), original);
     assert.equal(first.status, 201);
     const firstId: string = first.body.data.registrationId;
 
@@ -581,7 +625,7 @@ describe("admin workflow", () => {
     // Once that payment is rejected (say, a mistyped UTR) the file can be submitted again.
     const rejected = await adminJson(`/api/admin/payments/${firstDetail.body.data.paymentDetail.id}/reject`, { method: "POST", body: "{}" });
     assert.equal(rejected.status, 200);
-    const retry = await register("ipl-auction", individualDetails(), uniqueUtr(), original);
+    const retry = await register("illuminate", individualDetails(), uniqueUtr(), original);
     assert.equal(retry.status, 201);
 
     const page = await admin("/admin/attempts");

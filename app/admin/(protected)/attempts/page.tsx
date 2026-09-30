@@ -14,6 +14,7 @@ const REASONS: Record<string, string> = {
   INVALID_FILE: "Invalid screenshot",
   PAYLOAD_TOO_LARGE: "Screenshot too large",
   REGISTRATION_CLOSED: "Registration closed",
+  REGISTRATION_FULL: "Registration limit reached",
   RATE_LIMITED: "Too many tries",
   NETWORK_ERROR: "Connection lost",
   SERVER_ERROR: "Server error",

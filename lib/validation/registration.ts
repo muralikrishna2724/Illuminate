@@ -79,6 +79,7 @@ export const utrField = z
       .regex(/^[A-Z0-9]+$/, "The transaction ID can only contain letters and numbers."),
   );
 
+/** Deja Vu's team size; each team event's own size comes from its event record. */
 export const TEAM_SIZE = 4;
 
 export const teamMemberSchema = z.object({
@@ -89,16 +90,21 @@ export const teamMemberSchema = z.object({
   year: yearField,
 });
 
-export const teamRegistrationSchema = z.object({
-  teamName: teamNameField,
-  college: collegeField,
-  leaderName: nameField,
-  leaderEmail: emailField,
-  leaderPhone: phoneField,
-  members: z
-    .array(teamMemberSchema, { error: "Please add the team members." })
-    .length(TEAM_SIZE, `Teams must have exactly ${TEAM_SIZE} members.`),
-});
+/** Team form for an event whose teams have exactly `size` members. */
+export function teamRegistrationSchemaFor(size: number) {
+  return z.object({
+    teamName: teamNameField,
+    college: collegeField,
+    leaderName: nameField,
+    leaderEmail: emailField,
+    leaderPhone: phoneField,
+    members: z
+      .array(teamMemberSchema, { error: "Please add the team members." })
+      .length(size, `Teams must have exactly ${size} members.`),
+  });
+}
+
+export const teamRegistrationSchema = teamRegistrationSchemaFor(TEAM_SIZE);
 
 export const individualRegistrationSchema = z.object({
   fullName: nameField,

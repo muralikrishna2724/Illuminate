@@ -12,13 +12,13 @@ import { validateScreenshotUpload } from "@/lib/validation/file";
 import {
   individualRegistrationSchema,
   paymentProofSchema,
-  teamRegistrationSchema,
+  teamRegistrationSchemaFor,
   toFieldErrors,
   type IndividualRegistrationData,
   type TeamRegistrationData,
 } from "@/lib/validation/registration";
 import type { EventSlug, PublicRegistrationStatus, QuizAccess, RegistrationCreated } from "@/types/domain";
-import { calculateRegistrationAmount, getOpenEventBySlug } from "./event-service";
+import { assertEventHasSpace, calculateRegistrationAmount, getOpenEventBySlug } from "./event-service";
 import { getQuizConfig, QUIZ_EVENT_SLUG, resolveQuizAccess } from "./quiz-service";
 
 export const DUPLICATE_UTR_MESSAGE = "This transaction ID has already been submitted.";
@@ -49,14 +49,10 @@ function isUniqueViolation(error: unknown, field: string): boolean {
 
 function validateDetails(event: EventRow, details: unknown, fieldErrors: Record<string, string>): ValidatedDetails | null {
   if (event.format === "TEAM") {
-    const parsed = teamRegistrationSchema.safeParse(details);
+    // The database record is authoritative for team size.
+    const parsed = teamRegistrationSchemaFor(event.teamSize).safeParse(details);
     if (!parsed.success) {
       Object.assign(fieldErrors, toFieldErrors(parsed.error));
-      return null;
-    }
-    // The database record is authoritative for team size.
-    if (parsed.data.members.length !== event.teamSize) {
-      fieldErrors.members = `Teams must have exactly ${event.teamSize} members.`;
       return null;
     }
     return { format: "TEAM", data: parsed.data };
@@ -194,6 +190,7 @@ export async function findLookalikeScreenshot(
  */
 export async function createRegistration(slug: EventSlug, submission: RegistrationSubmission): Promise<RegistrationCreated> {
   const event = await getOpenEventBySlug(slug);
+  await assertEventHasSpace(prisma, event);
   const amountInr = calculateRegistrationAmount(event);
 
   const fieldErrors: Record<string, string> = {};
@@ -227,6 +224,8 @@ export async function createRegistration(slug: EventSlug, submission: Registrati
     try {
       const created = await prisma.$transaction(async (tx) => {
         const code = formatRegistrationCode(await nextRegistrationNumber(tx));
+        // Every registration takes the same lock, so this count can't go stale before the insert.
+        await assertEventHasSpace(tx, event);
         // Re-checked under the lock so two simultaneous uploads can't both pass.
         if (await screenshotFileInUse(tx, print.sha256)) throw duplicateScreenshot();
         return tx.registration.create({
