@@ -2,9 +2,10 @@ import assert from "node:assert/strict";
 import { describe, test } from "node:test";
 import { toCsv, csvCell } from "../../lib/csv";
 import { EVENTS, registrationAmountInr } from "../../lib/events/catalog";
-import { capacityFrom, capacityLabel, registrationFullMessage } from "../../lib/events/capacity";
+import { capacityFrom, registrationFullMessage } from "../../lib/events/capacity";
 import { aspectsComparable, changedPixels, FINGERPRINT_BYTES, looksIdentical } from "../../lib/images/similarity";
 import { calculateRegistrationAmount } from "../../lib/pricing";
+import { normalizeRegistrationCode } from "../../lib/registration-id";
 import { resolveQuizAccess } from "../../lib/quiz-access";
 import { detectImageMimeType, validateScreenshotClientSide } from "../../lib/validation/file";
 import {
@@ -31,7 +32,7 @@ describe("pricing", () => {
   test("amounts per event", () => {
     assert.equal(calculateRegistrationAmount(EVENTS.hackathon), 200);
     assert.equal(calculateRegistrationAmount(EVENTS.debate), 50);
-    assert.equal(calculateRegistrationAmount(EVENTS["ipl-auction"]), 250);
+    assert.equal(calculateRegistrationAmount(EVENTS["ipl-auction"]), 50);
     assert.equal(calculateRegistrationAmount(EVENTS.illuminate), 799);
     assert.equal(registrationAmountInr(EVENTS.illuminate), 799);
   });
@@ -50,9 +51,9 @@ describe("pricing", () => {
 });
 
 describe("registration caps", () => {
-  test("IPL Auction: 10 teams of 5; Mind x Machine: 50 participants; others unlimited", () => {
-    assert.equal(EVENTS["ipl-auction"].maxRegistrations, 10);
-    assert.equal(EVENTS["ipl-auction"].teamSize, 5);
+  test("Mind x Machine: 50 participants; IPL Auction (individual) and the others unlimited", () => {
+    assert.equal(EVENTS["ipl-auction"].format, "INDIVIDUAL");
+    assert.equal(EVENTS["ipl-auction"].maxRegistrations, undefined);
     assert.equal(EVENTS.debate.maxRegistrations, 50);
     assert.equal(EVENTS.hackathon.maxRegistrations, undefined);
     assert.equal(EVENTS.illuminate.maxRegistrations, undefined);
@@ -65,16 +66,13 @@ describe("registration caps", () => {
   });
   test("messages", () => {
     assert.equal(
-      registrationFullMessage(EVENTS["ipl-auction"], 10),
-      "Registration limit reached. All 10 team spots for IPL Auction have been filled.",
+      registrationFullMessage(EVENTS.hackathon, 10),
+      "Registration limit reached. All 10 team spots for Deja Vu Hackathon have been filled.",
     );
     assert.equal(
       registrationFullMessage(EVENTS.debate, 50),
       "Registration limit reached. All 50 spots for Mind x Machine: The AI Debate ARENA have been filled.",
     );
-    assert.equal(capacityLabel("TEAM", capacityFrom(10, 7)), "Limited to 10 teams · 3 spots left");
-    assert.equal(capacityLabel("INDIVIDUAL", capacityFrom(50, 49)), "Limited to 50 participants · 1 spot left");
-    assert.equal(capacityLabel("INDIVIDUAL", capacityFrom(null, 3)), null);
   });
 });
 
@@ -92,15 +90,15 @@ describe("team validation", () => {
     for (const theme of ["AGENTIC_AI", "HARDWARE_EMBEDDED", "CAMPUS_SOLVE"]) {
       assert.equal(teamRegistrationSchema.safeParse({ ...team(4), theme }).success, true, theme);
     }
-    const ipl = teamRegistrationSchemaFor(5);
-    assert.equal(ipl.safeParse({ ...team(5), theme: "" }).success, true);
-    assert.equal(ipl.parse({ ...team(5), theme: "BLOCKCHAIN" }).theme, undefined);
+    const unthemed = teamRegistrationSchemaFor(5);
+    assert.equal(unthemed.safeParse({ ...team(5), theme: "" }).success, true);
+    assert.equal(unthemed.parse({ ...team(5), theme: "BLOCKCHAIN" }).theme, undefined);
     assert.deepEqual(EVENTS.hackathon.highlights[0]?.items, ["Agentic AI", "Hardware and Embedded Systems", "CampusSolve"]);
   });
-  test("team size follows the event: IPL Auction needs exactly 5", () => {
-    const ipl = teamRegistrationSchemaFor(EVENTS["ipl-auction"].teamSize);
-    assert.equal(ipl.safeParse(team(5)).success, true);
-    for (const n of [4, 6]) assert.equal(ipl.safeParse(team(n)).success, false, `n=${n}`);
+  test("team size comes from the event", () => {
+    const five = teamRegistrationSchemaFor(5);
+    assert.equal(five.safeParse(team(5)).success, true);
+    for (const n of [4, 6]) assert.equal(five.safeParse(team(n)).success, false, `n=${n}`);
   });
   test("strips unknown keys such as a client-sent amount", () => {
     const parsed = teamRegistrationSchema.parse({ ...team(4), amount: 1 });
@@ -197,5 +195,19 @@ describe("re-used screenshot detection", () => {
 
   test("a fingerprint of the wrong size never matches", () => {
     assert.equal(changedPixels(base(), new Uint8Array(10)), FINGERPRINT_BYTES);
+  });
+});
+
+describe("registration IDs typed at login", () => {
+  test("common ways of typing an ID all mean the same registration", () => {
+    for (const typed of ["INV-08", "inv-08", " INV 08 ", "INV08", "INV-8", "INV–08", "INV—08", "INV-O8", "inv_08", "08", "8"]) {
+      assert.equal(normalizeRegistrationCode(typed), "INV-08", JSON.stringify(typed));
+    }
+    assert.equal(normalizeRegistrationCode("INV-100"), "INV-100");
+  });
+  test("phone numbers and passwords are not mistaken for IDs", () => {
+    assert.equal(normalizeRegistrationCode("9394813935"), "9394813935");
+    assert.equal(normalizeRegistrationCode("Secret-Pass1"), "SECRETPASS1");
+    assert.equal(normalizeRegistrationCode("OOO"), "OOO");
   });
 });

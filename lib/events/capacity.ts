@@ -31,9 +31,4 @@ export function registrationFullMessage(event: { name: string; format: EventForm
   return `Registration limit reached. ${spotsFilledMessage(event, cap)}`;
 }
 
-/** "Limited to 10 teams · 3 spots left" */
-export function capacityLabel(format: EventFormat, capacity: EventCapacity): string | null {
-  if (capacity.cap === null || capacity.remaining === null) return null;
-  const limit = format === "TEAM" ? `${capacity.cap} teams` : `${capacity.cap} participants`;
-  return `Limited to ${limit} · ${capacity.remaining} spot${capacity.remaining === 1 ? "" : "s"} left`;
-}
+// Deliberately no "N spots left" text anywhere: the site only says when an event is full.

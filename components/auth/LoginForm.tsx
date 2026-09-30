@@ -15,7 +15,9 @@ export function LoginForm() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [secret, setSecret] = useState("");
-  const [showSecret, setShowSecret] = useState(false);
+  // Visible by default: participants type an ID or phone number, not a password,
+  // and seeing it avoids typos like "INV-O8".
+  const [showSecret, setShowSecret] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
@@ -64,12 +66,14 @@ export function LoginForm() {
           id="secret"
           label="Registration ID or phone number"
           type={showSecret ? "text" : "password"}
-          autoComplete="current-password"
+          // Not "current-password": browsers would fill in a saved password
+          // (or a wrong ID saved from an earlier try) instead of the ID.
+          autoComplete="off"
           autoCapitalize="none"
           spellCheck={false}
           value={secret}
           error={fieldErrors.secret}
-          hint="Your registration ID (e.g. INV-07), or the phone number you registered with."
+          hint="Your registration ID (e.g. INV-07), or the phone number you registered with. Use the email you registered with."
           onChange={(e) => setSecret(e.target.value)}
           className="[&_input]:pr-16"
         />

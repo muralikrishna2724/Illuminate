@@ -50,7 +50,10 @@ export const RATE_LIMITS = {
   registration: { limit: 10, windowMs: 10 * 60_000 },
   attemptReport: { limit: 20, windowMs: 10 * 60_000 },
   themeChoice: { limit: 20, windowMs: 10 * 60_000 },
-  login: { limit: 10, windowMs: 15 * 60_000 },
+  // Per IP, generous because a whole campus can share one Wi-Fi address…
+  login: { limit: 60, windowMs: 15 * 60_000 },
+  // …and per email, which is what actually slows down guessing.
+  loginPerEmail: { limit: 10, windowMs: 15 * 60_000 },
   publicLookup: { limit: 60, windowMs: 60_000 },
   admin: { limit: 300, windowMs: 60_000 },
 } as const;

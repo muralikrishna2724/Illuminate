@@ -6,14 +6,8 @@ import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
 import { FeeIncludes } from "@/components/ui/FeeIncludes";
 import { connection } from "next/server";
-import { capacityLabel, type EventCapacity } from "@/lib/events/capacity";
-import { EVENT_LIST, feeLabel, formatInr, registrationAmountInr, type EventContent } from "@/lib/events/catalog";
+import { EVENT_LIST, feeLabel, formatInr, registrationAmountInr } from "@/lib/events/catalog";
 import { getEventCapacities } from "@/services/event-service";
-
-function CapacityNote({ event, capacity }: { event: EventContent; capacity: EventCapacity | undefined }) {
-  const label = capacity && !capacity.full ? capacityLabel(event.format, capacity) : null;
-  return label ? <p className="mt-2 text-sm text-gold/90">{label}</p> : null;
-}
 
 export const metadata: Metadata = {
   title: "Register",
@@ -21,7 +15,7 @@ export const metadata: Metadata = {
 };
 
 export default async function RegisterIndexPage() {
-  // Spots left change with every registration.
+  // Whether an event is full changes with every registration.
   await connection();
   const capacities = await getEventCapacities();
 
@@ -44,7 +38,6 @@ export default async function RegisterIndexPage() {
                   <p className="mt-3 text-mist">
                     {event.format === "TEAM" ? `Team of exactly ${event.teamSize}` : "Individual"} · {feeLabel(event)}
                   </p>
-                  <CapacityNote event={event} capacity={capacities[event.slug]} />
                   <FeeIncludes event={event} className="mt-6" />
                 </div>
                 {capacities[event.slug]?.full ? (

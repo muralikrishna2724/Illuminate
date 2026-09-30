@@ -6,7 +6,7 @@ import { RegistrationForm } from "@/components/registration/RegistrationForm";
 import { Container } from "@/components/ui/Container";
 import { ExclusiveBenefits } from "@/components/ui/ExclusiveBenefits";
 import { FeeIncludes } from "@/components/ui/FeeIncludes";
-import { capacityLabel, spotsFilledMessage } from "@/lib/events/capacity";
+import { spotsFilledMessage } from "@/lib/events/capacity";
 import { EVENTS, feeLabel } from "@/lib/events/catalog";
 import { getPaymentConfig } from "@/lib/site-config";
 import { getEventCapacities } from "@/services/event-service";
@@ -31,7 +31,6 @@ export default async function RegisterEventPage({ params }: PageProps<"/register
   await connection();
   const event = EVENTS[slug];
   const capacity = (await getEventCapacities())[slug];
-  const limit = capacity ? capacityLabel(event.format, capacity) : null;
 
   return (
     <section className="relative isolate pb-28 pt-32 sm:pt-40">
@@ -46,7 +45,6 @@ export default async function RegisterEventPage({ params }: PageProps<"/register
         <p className="mt-4 text-mist">
           {event.format === "TEAM" ? `Team of exactly ${event.teamSize}` : "Individual registration"} · {feeLabel(event)}
         </p>
-        {limit && !capacity?.full && <p className="mt-2 text-sm text-gold/90">{limit}</p>}
         <FeeIncludes event={event} className="mt-6" />
         {event.slug === "illuminate" && <ExclusiveBenefits className="mt-8" />}
         <div className="mt-12">
