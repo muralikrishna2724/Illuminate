@@ -61,7 +61,7 @@ export const EVENTS: Record<EventSlug, EventContent> = {
     duration: "6-hour hackathon",
     tagline: "Real-world problems. Innovative technology solutions.",
     description:
-      "Deja Vu is a problem-solving hackathon where teams tackle real-world challenges through innovative technology solutions. It runs in two phases: an online qualification quiz, then an offline hackathon for the teams shortlisted from it. Each team chooses one of three themes when registering: Agentic AI, Hardware and Embedded Systems, or CampusSolve. The actual problem statements are revealed at the venue.",
+      "Deja Vu is a problem-solving hackathon where teams tackle real-world challenges through innovative technology solutions. It runs in two phases: an online qualification quiz, then an offline hackathon for the teams shortlisted from it. Each team chooses one of three themes when registering: Agentic AI, Hardware and Embedded Systems, or CampusSolve. Hardware kits will be provided for the Hardware and Embedded Systems problem statements. The actual problem statements are revealed at the venue.",
     highlights: [
       {
         title: "Themes",
