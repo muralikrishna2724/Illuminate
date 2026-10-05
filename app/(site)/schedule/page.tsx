@@ -38,7 +38,10 @@ export default function SchedulePage() {
                     <Link href={d.day === 1 ? `${d.href}#${e.slug}` : d.href} className="group flex items-center justify-between gap-6 py-5">
                       <span>
                         <span className="block font-display text-3xl text-flare">{e.name}</span>
-                        <span className="text-sm text-mist">{e.format === "TEAM" ? `Team of ${e.teamSize}` : "Individual"}</span>
+                        <span className="text-sm text-mist">
+                          {e.format === "TEAM" ? `Team of ${e.teamSize}` : "Individual"}
+                          {e.duration && ` · ${e.duration}`}
+                        </span>
                       </span>
                       <ArrowIcon className="h-4 w-4 shrink-0 text-mist transition-transform duration-300 group-hover:translate-x-1 group-hover:text-flare" />
                     </Link>
