@@ -8,7 +8,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { useGSAP } from "@gsap/react";
 import { EVENT_YEAR_LABEL } from "@/lib/events/catalog";
-import { EVENT_NAV, LOGIN, MAIN_NAV } from "@/lib/navigation";
+import { EVENT_NAV, FLAT_NAV, LOGIN } from "@/lib/navigation";
 import { CONTACT_EMAIL, EVENT_CONTACTS, HOST, INSTAGRAM, SIGN_OFF, formatPhone, isPlaceholder, telHref } from "@/lib/site-config";
 import { ContactPopup } from "./ContactPopup";
 
@@ -202,7 +202,7 @@ export function CinematicFooter({
 
         <div className="mt-12 grid grid-cols-2 gap-10 text-sm sm:grid-cols-4">
           <FooterColumn title="Navigate">
-            {MAIN_NAV.map((l) => (
+            {FLAT_NAV.map((l) => (
               <FooterLink key={l.href} href={l.href}>
                 {l.label}
               </FooterLink>
