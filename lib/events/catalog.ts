@@ -23,6 +23,8 @@ export interface EventContent {
   format: EventFormat;
   teamSize: number;
   feePerPersonInr: number;
+  /** How long the event runs, when confirmed (e.g. "6-hour hackathon"). */
+  duration?: string;
   /** Most registrations accepted (teams, for team events). Omitted means no limit. */
   maxRegistrations?: number;
   tagline: string;
@@ -56,6 +58,7 @@ export const EVENTS: Record<EventSlug, EventContent> = {
     format: "TEAM",
     teamSize: 4,
     feePerPersonInr: 50,
+    duration: "6-hour hackathon",
     tagline: "Real-world problems. Innovative technology solutions.",
     description:
       "Deja Vu is a problem-solving hackathon where teams tackle real-world challenges through innovative technology solutions. It runs in two phases: an online qualification quiz, then an offline hackathon for the teams shortlisted from it. Each team chooses one of three themes when registering: Agentic AI, Hardware and Embedded Systems, or CampusSolve. The actual problem statements are revealed at the venue.",
