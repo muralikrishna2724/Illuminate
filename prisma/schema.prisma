@@ -121,6 +121,8 @@ model Registration {
   contactEmail     String
   contactPhone     String
   college          String
+  // Mind x Machine only: answers to the short AI survey on the registration form.
+  survey           Json?
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
@@ -153,8 +155,8 @@ model Participant {
 }
 
 model Team {
-  id             String   @id @default(cuid())
-  registrationId String   @unique
+  id             String          @id @default(cuid())
+  registrationId String          @unique
   name           String
   college        String
   leaderName     String
@@ -163,7 +165,7 @@ model Team {
   // Deja Vu Hackathon only. Required at registration; teams registered before
   // themes existed choose one from their dashboard.
   theme          HackathonTheme?
-  createdAt      DateTime @default(now())
+  createdAt      DateTime        @default(now())
 
   registration Registration @relation(fields: [registrationId], references: [id], onDelete: Cascade)
   members      TeamMember[]

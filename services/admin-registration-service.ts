@@ -12,6 +12,7 @@ import type {
   RegistrationDetail,
   RegistrationSummary,
 } from "@/types/domain";
+import { reviewSurvey } from "./debate-survey-scoring";
 import { screenshotUrl, toPaymentDto } from "./mappers";
 
 /** Admin date filters are interpreted in Indian Standard Time. */
@@ -140,6 +141,7 @@ export async function getRegistrationDetail(rawCode: string): Promise<Registrati
     select: {
       ...summarySelect,
       updatedAt: true,
+      survey: true,
       participant: true,
       team: { include: { members: { orderBy: { position: "asc" } } } },
       payment: {
@@ -198,6 +200,7 @@ export async function getRegistrationDetail(rawCode: string): Promise<Registrati
       : null,
     paymentDetail: toPaymentDto(row.payment),
     screenshotReusedBy: reusedBy.map((p) => p.registration.registrationCode),
+    survey: reviewSurvey(row.survey),
     auditLog: row.payment.auditLogs.map((log) => ({
       action: log.action,
       previousStatus: log.previousStatus,

@@ -2,6 +2,7 @@ import "server-only";
 import { randomUUID } from "node:crypto";
 import { Prisma, type Event as EventRow } from "@prisma/client";
 import { prisma } from "@/lib/db/prisma";
+import { SURVEY_EVENT_SLUG } from "@/lib/events/debate-survey";
 import { THEMED_EVENT_SLUG } from "@/lib/events/themes";
 import { whatsappGroupFor } from "@/lib/events/whatsapp";
 import { AppError, badRequest, conflict, notFound } from "@/lib/http/errors";
@@ -11,7 +12,7 @@ import { formatRegistrationCode, normalizeRegistrationCode, REGISTRATION_CODE_PA
 import { getStorage, paymentScreenshotKey } from "@/lib/storage";
 import { validateScreenshotUpload } from "@/lib/validation/file";
 import {
-  individualRegistrationSchema,
+  individualRegistrationSchemaFor,
   paymentProofSchema,
   teamRegistrationSchemaFor,
   toFieldErrors,
@@ -58,7 +59,7 @@ function validateDetails(event: EventRow, details: unknown, fieldErrors: Record<
     }
     return { format: "TEAM", data: parsed.data };
   }
-  const parsed = individualRegistrationSchema.safeParse(details);
+  const parsed = individualRegistrationSchemaFor({ requireSurvey: event.slug === SURVEY_EVENT_SLUG }).safeParse(details);
   if (!parsed.success) {
     Object.assign(fieldErrors, toFieldErrors(parsed.error));
     return null;
@@ -108,6 +109,8 @@ function buildRegistrationCreate(
   const d = details.data;
   return {
     ...base,
+    // Only Mind x Machine keeps survey answers.
+    survey: event.slug === SURVEY_EVENT_SLUG && d.survey ? d.survey : undefined,
     contactName: d.fullName,
     contactEmail: d.email,
     contactPhone: d.phone,

@@ -87,8 +87,20 @@ function individualDetails() {
     department: "ECE",
     year: "2nd Year",
     amount: 1,
+    // Required for Mind x Machine; ignored by the other individual events.
+    survey: { ...SURVEY },
   };
 }
+
+/** Two of three knowledge answers right (the deepfake one is wrong). */
+const SURVEY = {
+  llm: "large-language-model",
+  bias: "algorithmic-bias",
+  deepfake: "chatbot",
+  familiarity: "regularly",
+  jobsStance: "not-sure",
+  topic: "Should AI tools be allowed in exams?",
+};
 
 /** Bytes of the most recent screenshot sent by register(). */
 let lastUpload: Uint8Array<ArrayBuffer> = PNG;
@@ -247,6 +259,24 @@ describe("registrations", () => {
     created.debate = { registrationId: body.data.registrationId, utr };
   });
 
+  test("Mind x Machine requires the AI survey; other events ignore it", async () => {
+    const { survey: _survey, ...noSurvey } = individualDetails();
+    const missing = await register("debate", noSurvey, uniqueUtr());
+    assert.equal(missing.status, 400);
+    assert.equal(missing.body.error.fieldErrors["survey.llm"], "Please choose an answer.");
+
+    const partial = await register("debate", { ...individualDetails(), survey: { ...SURVEY, jobsStance: undefined } }, uniqueUtr());
+    assert.equal(partial.status, 400);
+    assert.ok(partial.body.error.fieldErrors["survey.jobsStance"]);
+    assert.ok(!partial.body.error.fieldErrors["survey.topic"], "the topic line is optional");
+
+    const unknown = await register("debate", { ...individualDetails(), survey: { ...SURVEY, llm: "made-up" } }, uniqueUtr());
+    assert.equal(unknown.status, 400);
+
+    const ipl = await register("ipl-auction", noSurvey, uniqueUtr());
+    assert.equal(ipl.status, 201, "no survey needed outside Mind x Machine");
+  });
+
   test("TEST 4 — IPL Auction: individual, ₹50, PENDING", async () => {
     const utr = uniqueUtr();
     const { status, body } = await register("ipl-auction", individualDetails(), utr);
@@ -396,6 +426,30 @@ describe("admin workflow", () => {
 
     // Put it back for the tests that follow.
     await adminJson(path, { method: "PUT", body: JSON.stringify({ theme: "HARDWARE_EMBEDDED" }) });
+  });
+
+  test("admin sees the Mind x Machine survey answers and the knowledge score", async () => {
+    const detail = await adminJson(`/api/admin/registrations/${created.debate!.registrationId}`);
+    const survey = detail.body.data.survey;
+    assert.ok(survey, "survey stored");
+    assert.equal(survey.score, 2);
+    assert.equal(survey.outOf, 3);
+    assert.equal(survey.answers[0].answer, "Large Language Model");
+    assert.equal(survey.answers[2].correct, false);
+    assert.equal(survey.answers[3].correct, null, "opinion questions aren't marked");
+    assert.equal(survey.topic, "Should AI tools be allowed in exams?");
+
+    const ipl = await adminJson(`/api/admin/registrations/${created.ipl!.registrationId}`);
+    assert.equal(ipl.body.data.survey, null, "other events never keep survey answers");
+
+    const csv = await (await admin(`/api/admin/export?event=debate`)).text();
+    assert.ok(csv.includes("AI Survey Score"));
+    assert.ok(csv.includes("2/3"));
+
+    // The right answers never reach the browser.
+    const form = await (await fetch(`${BASE}/register/debate`)).text();
+    assert.ok(form.includes("A quick AI survey"));
+    assert.ok(!/CORRECT|correct:\s*\{/.test(form));
   });
 
   test("admin can filter by date range", async () => {

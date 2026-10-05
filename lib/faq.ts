@@ -55,11 +55,6 @@ export const FAQS: FaqItem[] = [
       "Mind x Machine: The AI Debate ARENA is an individual event. The fee is ₹50 per person. It is limited to 50 participants, and registration closes once all spots are filled.",
   },
   {
-    id: "debate-format",
-    question: "How does Mind x Machine: The AI Debate ARENA work?",
-    answer: "A quiz is conducted first, before the debate. The debate follows, where participants analyse, discuss and debate the real-world impact of Artificial Intelligence.",
-  },
-  {
     id: "day-1-combinations",
     question: "Can I take part in more than one Day 1 event?",
     answer:

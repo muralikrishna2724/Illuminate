@@ -6,6 +6,7 @@ import { capacityFrom, registrationFullMessage } from "../../lib/events/capacity
 import { aspectsComparable, changedPixels, FINGERPRINT_BYTES, looksIdentical } from "../../lib/images/similarity";
 import { calculateRegistrationAmount } from "../../lib/pricing";
 import { normalizeRegistrationCode } from "../../lib/registration-id";
+import { debateSurveySchema, DEBATE_SURVEY_QUESTIONS } from "../../lib/events/debate-survey";
 import { resolveQuizAccess } from "../../lib/quiz-access";
 import { detectImageMimeType, validateScreenshotClientSide } from "../../lib/validation/file";
 import {
@@ -209,5 +210,23 @@ describe("registration IDs typed at login", () => {
     assert.equal(normalizeRegistrationCode("9394813935"), "9394813935");
     assert.equal(normalizeRegistrationCode("Secret-Pass1"), "SECRETPASS1");
     assert.equal(normalizeRegistrationCode("OOO"), "OOO");
+  });
+});
+
+describe("Mind x Machine survey", () => {
+  const full = { llm: "large-language-model", bias: "algorithmic-bias", deepfake: "deepfake", familiarity: "never", jobsStance: "agree" };
+  test("all five multiple-choice answers are required; the topic is optional", () => {
+    assert.equal(debateSurveySchema.safeParse(full).success, true);
+    assert.equal(debateSurveySchema.parse({ ...full, topic: "  " }).topic, undefined);
+    for (const key of Object.keys(full)) {
+      const { [key as keyof typeof full]: _removed, ...rest } = full;
+      assert.equal(debateSurveySchema.safeParse(rest).success, false, key);
+    }
+    assert.equal(debateSurveySchema.safeParse({ ...full, topic: "x".repeat(301) }).success, false);
+  });
+  test("three knowledge and two opinion questions, each with real options", () => {
+    assert.equal(DEBATE_SURVEY_QUESTIONS.filter((q) => q.kind === "knowledge").length, 3);
+    assert.equal(DEBATE_SURVEY_QUESTIONS.filter((q) => q.kind === "opinion").length, 2);
+    for (const q of DEBATE_SURVEY_QUESTIONS) assert.ok(q.options.length >= 3, q.id);
   });
 });

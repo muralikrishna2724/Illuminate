@@ -120,6 +120,13 @@ export interface RegistrationDetail extends RegistrationSummary {
   paymentDetail: Payment;
   /** Later registrations whose screenshot looks identical to this one. */
   screenshotReusedBy: string[];
+  /** Mind x Machine AI survey answers, with the knowledge score; null when there are none. */
+  survey: {
+    score: number;
+    outOf: number;
+    answers: Array<{ prompt: string; answer: string; kind: "knowledge" | "opinion"; correct: boolean | null }>;
+    topic: string | null;
+  } | null;
   auditLog: PaymentAuditEntry[];
   updatedAt: string;
 }

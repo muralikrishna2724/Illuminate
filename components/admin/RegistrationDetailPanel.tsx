@@ -200,6 +200,41 @@ export function RegistrationDetailPanel({
                 </section>
               )}
 
+              {detail.event.slug === "debate" && (
+                <section aria-labelledby="survey-heading">
+                  <div className="flex flex-wrap items-baseline justify-between gap-2">
+                    <h3 id="survey-heading" className="text-sm text-mist">
+                      AI survey
+                    </h3>
+                    {detail.survey && (
+                      <p className="text-sm text-flare">
+                        Knowledge: <strong>{detail.survey.score}</strong> / {detail.survey.outOf} right
+                      </p>
+                    )}
+                  </div>
+                  {detail.survey ? (
+                    <ol className="mt-3 space-y-3 text-sm">
+                      {detail.survey.answers.map((a) => (
+                        <li key={a.prompt} className="rounded-xl border border-[var(--line)] px-4 py-3">
+                          <p className="text-mist">{a.prompt}</p>
+                          <p className="mt-1 flex items-center gap-2 text-flare">
+                            {a.answer}
+                            {a.correct === true && <span className="text-xs text-ok">✓ correct</span>}
+                            {a.correct === false && <span className="text-xs text-bad">✗ incorrect</span>}
+                          </p>
+                        </li>
+                      ))}
+                      <li className="rounded-xl border border-[var(--line)] px-4 py-3">
+                        <p className="text-mist">A real-world impact of AI they&apos;d like to debate</p>
+                        <p className="mt-1 text-flare">{detail.survey.topic ?? "—"}</p>
+                      </li>
+                    </ol>
+                  ) : (
+                    <p className="mt-2 text-sm text-mist">No survey answers: registered before the survey was added.</p>
+                  )}
+                </section>
+              )}
+
               <section aria-labelledby="meta-heading">
                 <h3 id="meta-heading" className="text-sm text-mist">
                   Record

@@ -5,11 +5,12 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/Button";
 import { needsAttemptReport, reportFailedAttempt, submitRegistration } from "@/lib/api/registrations";
 import { formatInr, registrationAmountInr, type EventContent } from "@/lib/events/catalog";
+import { SURVEY_EVENT_SLUG } from "@/lib/events/debate-survey";
 import { THEMED_EVENT_SLUG } from "@/lib/events/themes";
 import type { PaymentConfig } from "@/lib/site-config";
 import { SCREENSHOT_REQUIRED_MESSAGE, validateScreenshotClientSide } from "@/lib/validation/file";
 import {
-  individualRegistrationSchema,
+  individualRegistrationSchemaFor,
   paymentProofSchema,
   teamRegistrationSchemaFor,
   toFieldErrors,
@@ -23,6 +24,7 @@ import { SelectField, TextField } from "./fields";
 import { PaymentInstructions } from "./PaymentInstructions";
 import { RegistrationSuccess } from "./RegistrationSuccess";
 import { ScreenshotUpload } from "./ScreenshotUpload";
+import { DebateSurveyFields, type SurveyState } from "./DebateSurveyFields";
 import { ThemeChoice } from "./ThemeChoice";
 
 type Step = "details" | "payment" | "done";
@@ -47,6 +49,7 @@ const emptyIndividual = (): IndividualRegistrationInput => ({
   college: "",
   department: "",
   year: "" as IndividualRegistrationInput["year"],
+  survey: undefined,
 });
 
 const PAYMENT_FIELDS = new Set(["utr", "screenshot"]);
@@ -54,6 +57,7 @@ const PAYMENT_FIELDS = new Set(["utr", "screenshot"]);
 export function RegistrationForm({ event, payment }: { event: EventContent; payment: PaymentConfig }) {
   const isTeam = event.format === "TEAM";
   const hasTheme = event.slug === THEMED_EVENT_SLUG;
+  const hasSurvey = event.slug === SURVEY_EVENT_SLUG;
   const amount = registrationAmountInr(event);
   const breakdown = isTeam
     ? `${formatInr(event.feePerPersonInr)} × ${event.teamSize} members`
@@ -62,6 +66,7 @@ export function RegistrationForm({ event, payment }: { event: EventContent; paym
   const [step, setStep] = useState<Step>("details");
   const [team, setTeam] = useState<TeamRegistrationInput>(() => emptyTeam(event.teamSize));
   const [individual, setIndividual] = useState<IndividualRegistrationInput>(emptyIndividual);
+  const [survey, setSurvey] = useState<SurveyState>({});
   const [utr, setUtr] = useState("");
   const [screenshot, setScreenshot] = useState<File | null>(null);
   const [errors, setErrors] = useState<Errors>({});
@@ -97,12 +102,16 @@ export function RegistrationForm({ event, payment }: { event: EventContent; paym
     }
   };
 
-  const details = isTeam ? team : individual;
+  const details = isTeam
+    ? team
+    : hasSurvey
+      ? { ...individual, survey: survey as unknown as IndividualRegistrationInput["survey"] }
+      : individual;
 
   const validateDetails = (): Errors => {
     const parsed = isTeam
       ? teamRegistrationSchemaFor(event.teamSize, { requireTheme: hasTheme }).safeParse(team)
-      : individualRegistrationSchema.safeParse(individual);
+      : individualRegistrationSchemaFor({ requireSurvey: hasSurvey }).safeParse(details);
     return parsed.success ? {} : toFieldErrors(parsed.error);
   };
 
@@ -298,6 +307,18 @@ export function RegistrationForm({ event, payment }: { event: EventContent; paym
             <SelectField id="year" label="Year" options={YEAR_OPTIONS} value={individual.year} error={errors.year}
               onChange={(e) => { setIndividual({ ...individual, year: e.target.value as IndividualRegistrationInput["year"] }); clearError("year"); }} />
           </fieldset>
+        )}
+
+        {step === "details" && hasSurvey && (
+          <DebateSurveyFields
+            value={survey}
+            errors={errors}
+            onChange={(id, answer) => {
+              setSurvey((s) => ({ ...s, [id]: answer }));
+              clearError(`survey.${id}`);
+              clearError("survey");
+            }}
+          />
         )}
 
         {step === "payment" && (

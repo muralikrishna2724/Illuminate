@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { debateSurveySchema } from "@/lib/events/debate-survey";
 import { HACKATHON_THEME_VALUES, THEME_REQUIRED_MESSAGE } from "@/lib/events/themes";
 
 /**
@@ -119,14 +120,26 @@ export const themeChoiceSchema = z.object({
   theme: themeField,
 });
 
-export const individualRegistrationSchema = z.object({
-  fullName: nameField,
-  email: emailField,
-  phone: phoneField,
-  college: collegeField,
-  department: departmentField,
-  year: yearField,
-});
+/**
+ * Individual form. Mind x Machine also requires the short AI survey; for
+ * other events a survey is ignored.
+ */
+export function individualRegistrationSchemaFor(options: { requireSurvey?: boolean } = {}) {
+  return z.object({
+    fullName: nameField,
+    email: emailField,
+    phone: phoneField,
+    college: collegeField,
+    department: departmentField,
+    year: yearField,
+    // A missing survey counts as empty, so each unanswered question gets its own error.
+    survey: options.requireSurvey
+      ? z.preprocess((v) => v ?? {}, debateSurveySchema)
+      : debateSurveySchema.optional().catch(undefined),
+  });
+}
+
+export const individualRegistrationSchema = individualRegistrationSchemaFor();
 
 export const paymentProofSchema = z.object({
   utr: utrField,

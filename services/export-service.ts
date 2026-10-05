@@ -1,9 +1,11 @@
 import "server-only";
 import { prisma } from "@/lib/db/prisma";
 import { toCsv } from "@/lib/csv";
+import { DEBATE_SURVEY_QUESTIONS } from "@/lib/events/debate-survey";
 import { themeLabel } from "@/lib/events/themes";
 import type { RegistrationFilters } from "@/lib/validation/admin";
 import { buildRegistrationWhere } from "./admin-registration-service";
+import { reviewSurvey } from "./debate-survey-scoring";
 
 const MAX_EXPORT_ROWS = 50_000;
 const MEMBER_SLOTS = 4;
@@ -60,12 +62,16 @@ export async function exportRegistrationsCsv(filters: Omit<RegistrationFilters, 
     "Rejected By",
     "Rejection Reason",
     "Screenshot Same As",
+    "AI Survey Score",
+    ...DEBATE_SURVEY_QUESTIONS.map((q) => `Survey: ${q.prompt}`),
+    "Survey: Topic to debate",
   ];
   for (let i = 1; i <= MEMBER_SLOTS; i++) {
     header.push(`Member ${i} Name`, `Member ${i} Email`, `Member ${i} Phone`, `Member ${i} Department`, `Member ${i} Year`);
   }
 
   const data = rows.map((r) => {
+    const survey = reviewSurvey(r.survey);
     const row: Array<string | number | null> = [
       r.registrationCode,
       r.event.name,
@@ -88,6 +94,9 @@ export async function exportRegistrationsCsv(filters: Omit<RegistrationFilters, 
       r.payment?.rejectedBy?.name ?? "",
       r.payment?.rejectionReason ?? "",
       r.payment?.screenshotMatchCode ?? "",
+      survey ? `${survey.score}/${survey.outOf}` : "",
+      ...DEBATE_SURVEY_QUESTIONS.map((_, i) => survey?.answers[i]?.answer ?? ""),
+      survey?.topic ?? "",
     ];
     for (let i = 0; i < MEMBER_SLOTS; i++) {
       const m = r.team?.members[i];
