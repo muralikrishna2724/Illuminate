@@ -52,40 +52,6 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* Day 1 events */}
-      <section aria-labelledby="day1-title" className="pb-24 sm:pb-32">
-        <Container>
-          <Reveal className="flex flex-wrap items-end justify-between gap-6">
-            <div>
-              <Eyebrow>Day 1 · October 9</Eyebrow>
-              <h2 id="day1-title" className="mt-3 font-display text-5xl text-flare sm:text-6xl">
-                Day 1 events
-              </h2>
-            </div>
-            <ButtonLink href="/day-1" variant="secondary">
-              Explore Day 1
-            </ButtonLink>
-          </Reveal>
-        </Container>
-      </section>
-
-      {/* Day 2 event — mirrors the Day 1 heading */}
-      <section aria-labelledby="day2-title" className="pb-24 sm:pb-32">
-        <Container>
-          <Reveal className="flex flex-wrap items-end justify-between gap-6">
-            <div>
-              <Eyebrow>Day 2 · October 10</Eyebrow>
-              <h2 id="day2-title" className="mt-3 font-display text-5xl text-flare sm:text-6xl">
-                Day 2 event
-              </h2>
-            </div>
-            <ButtonLink href="/day-2" variant="secondary">
-              Explore Day 2
-            </ButtonLink>
-          </Reveal>
-        </Container>
-      </section>
-
       {/* Illuminate workshop feature */}
       <section aria-labelledby="workshop-title" className="theme-dark relative isolate overflow-hidden bg-void py-28 sm:py-40">
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
