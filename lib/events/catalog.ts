@@ -179,11 +179,6 @@ export const EVENT_LIST: EventContent[] = [EVENTS.hackathon, EVENTS.debate, EVEN
 export const DAY_1_EVENTS = EVENT_LIST.filter((e) => e.day === 1);
 
 /** Rewards for the Day 1 competitions, shown as a callout on the Day 1 page. */
-export const DAY_1_REWARDS = {
-  note: "Rewards for Day 1",
-  headline: "Win cash. Earn your pass to IIT Bombay's E-Summit.",
-  items: ["Exciting cash prizes", "Top performers get entry passes to IIT Bombay's E-Summit"],
-} as const;
 export const DAY_2_EVENTS = EVENT_LIST.filter((e) => e.day === 2);
 
 export function registrationAmountInr(event: Pick<EventContent, "feePerPersonInr" | "teamSize">): number {

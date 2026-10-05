@@ -1,4 +1,3 @@
-import { DAY_1_REWARDS } from "@/lib/events/catalog";
 import { EXCLUSIVE_BENEFITS } from "@/lib/events/workshop";
 
 interface Rewards {
@@ -36,9 +35,4 @@ export function RewardsCard({ id, rewards, className = "" }: { id: string; rewar
 /** The Illuminate workshop's limited-time benefits (Day 2). */
 export function ExclusiveBenefits({ className = "" }: { className?: string }) {
   return <RewardsCard id="exclusive-benefits-title" rewards={EXCLUSIVE_BENEFITS} className={className} />;
-}
-
-/** Prizes for the Day 1 competitions. */
-export function Day1Rewards({ className = "" }: { className?: string }) {
-  return <RewardsCard id="day-1-rewards-title" rewards={DAY_1_REWARDS} className={className} />;
 }

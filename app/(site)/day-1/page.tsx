@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { EventDetail } from "@/components/home/EventDetail";
 import { PageHero } from "@/components/layout/PageHero";
 import { Container } from "@/components/ui/Container";
-import { Day1Rewards } from "@/components/ui/ExclusiveBenefits";
-import { Reveal } from "@/components/ui/Reveal";
 import { DAY_1_EVENTS } from "@/lib/events/catalog";
 
 export const metadata: Metadata = {
@@ -28,10 +26,7 @@ export default function DayOnePage() {
           ))}
         </nav>
       </PageHero>
-      <Container className="pb-24">
-        <Reveal className="mb-14 mt-14 sm:mt-16">
-          <Day1Rewards />
-        </Reveal>
+      <Container className="pb-24 pt-14 sm:pt-16">
         {DAY_1_EVENTS.map((event, i) => (
           <EventDetail key={event.slug} event={event} index={i + 1} />
         ))}
