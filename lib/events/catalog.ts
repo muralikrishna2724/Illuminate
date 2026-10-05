@@ -94,6 +94,7 @@ export const EVENTS: Record<EventSlug, EventContent> = {
       lines: [
         "A two-stage hackathon where participants begin with a quiz, choose a problem statement, and develop a solution.",
         "A two-stage hackathon solving real-world challenges.",
+        "Evaluation details will be revealed during the hackathon.",
       ],
     },
     registerPath: "/register/hackathon",
