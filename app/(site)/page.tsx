@@ -143,25 +143,43 @@ export default function HomePage() {
             <h2 id="nav-title" className="sr-only">
               Find your way
             </h2>
-            <nav aria-label="Event sections" className="grid gap-px overflow-hidden rounded-3xl bg-[var(--line)] sm:grid-cols-2 lg:grid-cols-4">
-              {[
-                { href: "/day-1", label: "Day 1", sub: "October 9 · three events" },
-                { href: "/day-2", label: "Day 2", sub: "October 10 · Illuminate Workshop" },
-                { href: "/schedule", label: "Schedule", sub: "Both days at a glance" },
-                { href: "/faq", label: "FAQ", sub: "Fees, teams, payments" },
-              ].map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="group flex flex-col justify-between gap-10 bg-night p-7 transition-colors hover:bg-dusk"
-                >
-                  <span className="font-display text-4xl text-flare">{item.label}</span>
-                  <span className="flex items-center justify-between text-sm text-mist">
-                    {item.sub}
-                    <ArrowIcon className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+            <nav aria-label="Event sections" className="grid gap-px overflow-hidden rounded-3xl bg-[var(--line)] md:grid-cols-[1.4fr_1fr]">
+              {/* Schedule, with Day 1 and Day 2 as its sub-pages */}
+              <div className="flex flex-col justify-between gap-8 bg-night p-7">
+                <Link href="/schedule" className="group flex items-start justify-between gap-6">
+                  <span>
+                    <span className="block font-display text-4xl text-flare">Schedule</span>
+                    <span className="mt-2 block text-sm text-mist">Both days at a glance</span>
                   </span>
+                  <ArrowIcon className="mt-3 h-4 w-4 shrink-0 text-mist transition-transform duration-300 group-hover:translate-x-1 group-hover:text-flare" />
                 </Link>
-              ))}
+                <ul className="grid gap-3 sm:grid-cols-2">
+                  {[
+                    { href: "/day-1", label: "Day 1", sub: "October 9 · three events" },
+                    { href: "/day-2", label: "Day 2", sub: "October 10 · Illuminate Workshop" },
+                  ].map((item) => (
+                    <li key={item.href}>
+                      <Link
+                        href={item.href}
+                        className="group flex h-full items-center justify-between gap-4 rounded-2xl border border-[var(--line-strong)] px-5 py-4 transition-colors hover:border-gold/60 hover:bg-dusk"
+                      >
+                        <span>
+                          <span className="block font-display text-2xl text-flare">{item.label}</span>
+                          <span className="mt-1 block text-sm text-mist">{item.sub}</span>
+                        </span>
+                        <ArrowIcon className="h-4 w-4 shrink-0 text-mist transition-transform duration-300 group-hover:translate-x-1 group-hover:text-flare" />
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <Link href="/faq" className="group flex flex-col justify-between gap-10 bg-night p-7 transition-colors hover:bg-dusk">
+                <span className="font-display text-4xl text-flare">FAQ</span>
+                <span className="flex items-center justify-between text-sm text-mist">
+                  Fees, teams, payments
+                  <ArrowIcon className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                </span>
+              </Link>
             </nav>
           </Reveal>
         </Container>
