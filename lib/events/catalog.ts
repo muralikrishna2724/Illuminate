@@ -23,6 +23,8 @@ export interface EventContent {
   format: EventFormat;
   teamSize: number;
   feePerPersonInr: number;
+  /** Confirmed prize pool, e.g. "₹3,500 worth". */
+  prizePool?: string;
   /** Shown instead of "Team of N" / "Individual" when the format needs explaining. */
   formatLabel?: string;
   /** How long or when the event runs, when confirmed (e.g. "6-hour hackathon", "9:00 AM – 12:00 PM"). */
@@ -111,6 +113,7 @@ export const EVENTS: Record<EventSlug, EventContent> = {
     teamSize: 1,
     feePerPersonInr: 50,
     duration: "9:00 AM – 12:00 PM",
+    prizePool: "₹3,500 worth of prizes",
     maxRegistrations: 50,
     tagline: "An individual event on Day 1.",
     description:
@@ -135,6 +138,7 @@ export const EVENTS: Record<EventSlug, EventContent> = {
     teamSize: 1,
     feePerPersonInr: 50,
     duration: "1:00 PM – 4:00 PM",
+    prizePool: "₹3,500 worth of prizes",
     // Registration is individual; teams are formed at the venue.
     formatLabel: "Team (formed at the venue)",
     tagline: "An individual event on Day 1.",

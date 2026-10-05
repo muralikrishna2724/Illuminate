@@ -81,6 +81,12 @@ export function EventDetail({ event, index }: { event: EventContent; index: numb
                 <dd className="mt-1 text-flare">{event.duration}</dd>
               </div>
             )}
+            {event.prizePool && (
+              <div>
+                <dt className="text-mist">Prize pool</dt>
+                <dd className="mt-1 text-flare">{event.prizePool}</dd>
+              </div>
+            )}
             <FeeIncludes event={event} />
           </dl>
           <ButtonLink href={event.registerPath} className="mt-8 w-full">
