@@ -67,13 +67,6 @@ export default function HomePage() {
               Explore Day 1
             </ButtonLink>
           </Reveal>
-          <Reveal delay={100}>
-            <ol className="mt-12">
-              {DAY_1_EVENTS.map((event, i) => (
-                <EventRow key={event.slug} event={event} index={i + 1} href={`/day-1#${event.slug}`} />
-              ))}
-            </ol>
-          </Reveal>
         </Container>
       </section>
 
