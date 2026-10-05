@@ -139,6 +139,7 @@ export const EVENTS: Record<EventSlug, EventContent> = {
     notes: [
       "Individual participation.",
       "You can take part in both this and Mind x Machine: The AI Debate ARENA, but not in the Deja Vu Hackathon.",
+      "An online quiz will be held on October 7 or 8. Quiz details will be shared with registered participants.",
     ],
     registerPath: "/register/ipl-auction",
     hasQualificationQuiz: false,
