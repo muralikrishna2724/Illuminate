@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { EventRow } from "@/components/home/EventRow";
 import { Hero } from "@/components/home/Hero";
 import { HostStrip } from "@/components/home/HostStrip";
 import { ArrowIcon, ButtonLink } from "@/components/ui/Button";
@@ -8,7 +7,7 @@ import { FaqList } from "@/components/ui/FaqList";
 import { ExclusiveBenefits } from "@/components/ui/ExclusiveBenefits";
 import { Reveal } from "@/components/ui/Reveal";
 import { BlackHole } from "@/components/visual/BlackHole";
-import { DAY_1_EVENTS, DAY_2_EVENTS, EVENTS, EVENT_LIST, formatInr, registrationAmountInr } from "@/lib/events/catalog";
+import { DAY_1_EVENTS, EVENTS, EVENT_LIST, formatInr, registrationAmountInr } from "@/lib/events/catalog";
 import { FAQS } from "@/lib/faq";
 
 const workshop = EVENTS.illuminate;
@@ -70,8 +69,8 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* Day 2 event — mirrors the Day 1 list */}
-      <section aria-labelledby="day2-title" className="pb-8 sm:pb-12">
+      {/* Day 2 event — mirrors the Day 1 heading */}
+      <section aria-labelledby="day2-title" className="pb-24 sm:pb-32">
         <Container>
           <Reveal className="flex flex-wrap items-end justify-between gap-6">
             <div>
@@ -83,13 +82,6 @@ export default function HomePage() {
             <ButtonLink href="/day-2" variant="secondary">
               Explore Day 2
             </ButtonLink>
-          </Reveal>
-          <Reveal delay={100}>
-            <ol className="mt-12">
-              {DAY_2_EVENTS.map((event, i) => (
-                <EventRow key={event.slug} event={event} index={i + 1} href="/day-2" />
-              ))}
-            </ol>
           </Reveal>
         </Container>
       </section>
