@@ -137,7 +137,7 @@ export const EVENTS: Record<EventSlug, EventContent> = {
       "A competitive IPL-inspired event that puts your cricket knowledge, strategy, and team-building skills to the test.",
     highlights: [],
     notes: [
-      "Individual participation.",
+      "Register individually. Registered participants will be formed into teams at the venue.",
       "You can take part in both this and Mind x Machine: The AI Debate ARENA, but not in the Deja Vu Hackathon.",
       "An online quiz will be held on October 7 or 8. Quiz details will be shared with registered participants.",
     ],

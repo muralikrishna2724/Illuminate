@@ -63,7 +63,7 @@ export const FAQS: FaqItem[] = [
   {
     id: "team-size-ipl",
     question: "Do I need a team for the IPL Auction?",
-    answer: "No. The IPL Auction is individual participation. The fee is ₹50 per person.",
+    answer: "No. Register individually; registered participants will be formed into teams at the venue. The fee is ₹50 per person.",
   },
   {
     id: "what-is-workshop",
