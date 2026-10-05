@@ -16,7 +16,7 @@ export function EventRow({ event, index, href }: { event: EventContent; index: n
         <span>
           <span className="block font-display text-4xl leading-tight text-flare sm:text-5xl">{event.name}</span>
           <span className="mt-2 block text-mist">
-            {event.format === "TEAM" ? `Team of ${event.teamSize}` : "Individual"} · {feeLabel(event)}
+            {event.formatLabel ?? (event.format === "TEAM" ? `Team of ${event.teamSize}` : "Individual")} · {feeLabel(event)}
           </span>
         </span>
         <span className="inline-flex items-center gap-2 text-sm text-sand/80 transition-colors group-hover:text-flare">

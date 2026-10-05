@@ -69,7 +69,7 @@ export function EventDetail({ event, index }: { event: EventContent; index: numb
             </div>
             <div>
               <dt className="text-mist">Format</dt>
-              <dd className="mt-1 text-flare">{event.format === "TEAM" ? `Team of exactly ${event.teamSize}` : "Individual"}</dd>
+              <dd className="mt-1 text-flare">{event.formatLabel ?? (event.format === "TEAM" ? `Team of exactly ${event.teamSize}` : "Individual")}</dd>
             </div>
             <div>
               <dt className="text-mist">Fee</dt>

@@ -203,7 +203,7 @@ export default function HomePage() {
                     <span>
                       <span className="block text-lg font-medium text-flare">{event.name}</span>
                       <span className="text-sm text-sand">
-                        Day {event.day} · {event.format === "TEAM" ? `team of ${event.teamSize}` : "individual"}
+                        Day {event.day} · {event.formatLabel?.toLowerCase() ?? (event.format === "TEAM" ? `team of ${event.teamSize}` : "individual")}
                       </span>
                     </span>
                     <span className="flex items-center gap-3 whitespace-nowrap font-medium text-flare">

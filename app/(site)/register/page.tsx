@@ -36,7 +36,7 @@ export default async function RegisterIndexPage() {
                   </p>
                   <h2 className="mt-3 font-display text-4xl text-flare">{event.name}</h2>
                   <p className="mt-3 text-mist">
-                    {event.format === "TEAM" ? `Team of exactly ${event.teamSize}` : "Individual"} · {feeLabel(event)}
+                    {event.formatLabel ?? (event.format === "TEAM" ? `Team of exactly ${event.teamSize}` : "Individual")} · {feeLabel(event)}
                   </p>
                   <FeeIncludes event={event} className="mt-6" />
                 </div>

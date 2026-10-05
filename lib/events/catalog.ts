@@ -23,6 +23,8 @@ export interface EventContent {
   format: EventFormat;
   teamSize: number;
   feePerPersonInr: number;
+  /** Shown instead of "Team of N" / "Individual" when the format needs explaining. */
+  formatLabel?: string;
   /** How long or when the event runs, when confirmed (e.g. "6-hour hackathon", "9:00 AM – 12:00 PM"). */
   duration?: string;
   /** Most registrations accepted (teams, for team events). Omitted means no limit. */
@@ -132,6 +134,8 @@ export const EVENTS: Record<EventSlug, EventContent> = {
     teamSize: 1,
     feePerPersonInr: 50,
     duration: "1:00 PM – 4:00 PM",
+    // Registration is individual; teams are formed at the venue.
+    formatLabel: "Team (formed at the venue)",
     tagline: "An individual event on Day 1.",
     description:
       "A competitive IPL-inspired event that puts your cricket knowledge, strategy, and team-building skills to the test.",

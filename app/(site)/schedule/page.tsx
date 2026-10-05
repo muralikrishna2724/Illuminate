@@ -39,7 +39,7 @@ export default function SchedulePage() {
                       <span>
                         <span className="block font-display text-3xl text-flare">{e.name}</span>
                         <span className="text-sm text-mist">
-                          {e.format === "TEAM" ? `Team of ${e.teamSize}` : "Individual"}
+                          {e.formatLabel ?? (e.format === "TEAM" ? `Team of ${e.teamSize}` : "Individual")}
                           {e.duration && ` · ${e.duration}`}
                         </span>
                       </span>
