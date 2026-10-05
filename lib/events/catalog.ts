@@ -84,6 +84,7 @@ export const EVENTS: Record<EventSlug, EventContent> = {
       "Teams of exactly 4 members.",
       "Each team chooses one theme when registering.",
       "Only teams shortlisted from the quiz take part in the offline hackathon.",
+      "Participants of Mind x Machine: The AI Debate ARENA or the IPL Auction can't take part in the hackathon. Choose either the hackathon on its own, or the debate and the auction (you can do both).",
     ],
     spotlight: {
       motto: ["Think", "Pick", "Build", "Impact"],
@@ -115,7 +116,11 @@ export const EVENTS: Record<EventSlug, EventContent> = {
       { label: "Round 1", title: "Quiz", text: "The event begins with a quiz, conducted before the debate." },
       { label: "Round 2", title: "Debate", text: "Participants analyse, discuss and debate the real-world impact of AI." },
     ],
-    notes: ["Individual participation.", "Limited to 50 participants."],
+    notes: [
+      "Individual participation.",
+      "Limited to 50 participants.",
+      "You can take part in both this and the IPL Auction, but not in the Deja Vu Hackathon.",
+    ],
     registerPath: "/register/debate",
     hasQualificationQuiz: false,
   },
@@ -134,7 +139,10 @@ export const EVENTS: Record<EventSlug, EventContent> = {
     description:
       "A competitive IPL-inspired event that puts your cricket knowledge, strategy, and team-building skills to the test.",
     highlights: [],
-    notes: ["Individual participation."],
+    notes: [
+      "Individual participation.",
+      "You can take part in both this and Mind x Machine: The AI Debate ARENA, but not in the Deja Vu Hackathon.",
+    ],
     registerPath: "/register/ipl-auction",
     hasQualificationQuiz: false,
   },

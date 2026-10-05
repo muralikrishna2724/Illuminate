@@ -60,6 +60,12 @@ export const FAQS: FaqItem[] = [
     answer: "A quiz is conducted first, before the debate. The debate follows, where participants analyse, discuss and debate the real-world impact of Artificial Intelligence.",
   },
   {
+    id: "day-1-combinations",
+    question: "Can I take part in more than one Day 1 event?",
+    answer:
+      "Yes, with one rule: you can take part in both Mind x Machine: The AI Debate ARENA and the IPL Auction, or in the Deja Vu Hackathon on its own. Participants of the debate or the auction can't take part in the hackathon.",
+  },
+  {
     id: "team-size-ipl",
     question: "Do I need a team for the IPL Auction?",
     answer: "No. The IPL Auction is individual participation. The fee is ₹50 per person.",
