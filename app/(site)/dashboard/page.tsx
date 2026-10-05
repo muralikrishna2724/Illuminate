@@ -123,7 +123,7 @@ export default async function ParticipantDashboardPage() {
                 </article>
                 {r.canChooseTheme && <ThemePickerCard registrationId={r.registrationId} />}
                 {r.whatsappGroupUrl && <WhatsAppGroupCard url={r.whatsappGroupUrl} eventName={EVENTS[r.event.slug].shortName} />}
-                {r.quiz && <QuizPanel quiz={r.quiz} />}
+                {r.quiz && <QuizPanel quiz={r.quiz} quizId={r.quizId} />}
               </li>
             ))}
           </ul>

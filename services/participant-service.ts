@@ -27,7 +27,7 @@ export async function getParticipantRegistrations(email: string): Promise<Partic
       createdAt: true,
       event: { select: { slug: true, name: true, day: true, date: true } },
       payment: { select: { amountInr: true, status: true, rejectionReason: true } },
-      team: { select: { name: true, theme: true, members: { select: { name: true }, orderBy: { position: "asc" } } } },
+      team: { select: { id: true, name: true, theme: true, members: { select: { name: true }, orderBy: { position: "asc" } } } },
     },
   });
 
@@ -39,6 +39,7 @@ export async function getParticipantRegistrations(email: string): Promise<Partic
     .map((r) => {
       const status = r.payment!.status;
       const slug = r.event.slug as EventSlug;
+      const quiz = quizConfig && slug === QUIZ_EVENT_SLUG ? resolveQuizAccess(quizConfig, status) : null;
       return {
         registrationId: r.registrationCode,
         event: {
@@ -53,7 +54,8 @@ export async function getParticipantRegistrations(email: string): Promise<Partic
         submittedAt: r.createdAt.toISOString(),
         team: r.team ? { name: r.team.name, members: r.team.members.map((m) => m.name), theme: themeLabel(r.team.theme) } : null,
         canChooseTheme: slug === THEMED_EVENT_SLUG && r.team !== null && r.team.theme === null && status !== "REJECTED",
-        quiz: quizConfig && slug === QUIZ_EVENT_SLUG ? resolveQuizAccess(quizConfig, status) : null,
+        quiz,
+        quizId: quiz?.state === "available" && r.team ? r.team.id : null,
         whatsappGroupUrl: whatsappGroupFor(slug, status),
       };
     });

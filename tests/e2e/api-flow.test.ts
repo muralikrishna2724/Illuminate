@@ -549,6 +549,22 @@ describe("admin workflow", () => {
     assert.equal(verified.data.quiz.state, "available");
     assert.equal(verified.data.quiz.quizLink, link);
 
+    // The team's quiz ID: on the signed-in dashboard only, never on public pages or APIs.
+    const memberLogin = await fetch(`${BASE}/api/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Origin: BASE, "x-forwarded-for": fakeIp() },
+      body: JSON.stringify({ email: "e2e.member1@example.com", secret: created.hackathon!.registrationId }),
+    });
+    assert.equal(memberLogin.status, 200);
+    const dashboard = await (await fetch(`${BASE}/dashboard`, { headers: { Cookie: cookieFrom(memberLogin, "ilm_participant_session") } })).text();
+    const shownId = /Your team(?:&#x27;|')s quiz ID<\/p>.*?<code[^>]*>([a-z0-9]{20,})<\/code>/s.exec(dashboard)?.[1];
+    assert.ok(shownId, "dashboard shows the team's quiz ID");
+    assert.ok(dashboard.includes("Copy ID"), "with a copy button");
+    assert.ok(!JSON.stringify(verified).includes(shownId), "the public quiz API never returns it");
+    const publicPage = await (await fetch(`${BASE}/registration/${created.hackathon!.registrationId}`)).text();
+    assert.ok(!publicPage.includes(shownId), "the public status page never shows it");
+    assert.ok(publicPage.includes("Log in to your dashboard"), "the public page points to the dashboard instead");
+
     // Rule: after submission.
     res = await adminJson("/api/admin/quiz", {
       method: "POST",

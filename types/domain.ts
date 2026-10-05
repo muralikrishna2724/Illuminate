@@ -204,6 +204,12 @@ export interface ParticipantRegistration {
   team: { name: string; members: string[]; theme: string | null } | null;
   /** A Deja Vu team registered before themes existed that still needs to pick one. */
   canChooseTheme: boolean;
+  /**
+   * The team's ID for signing in to the quiz app (the quiz app checks it against
+   * this team's record). Only on the signed-in dashboard, and only once the quiz
+   * is available to the team; never on the public status page.
+   */
+  quizId: string | null;
   quiz: QuizAccess | null;
   /** The event's WhatsApp group invite; null once the payment is rejected. */
   whatsappGroupUrl: string | null;
