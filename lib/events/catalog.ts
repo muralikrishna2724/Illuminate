@@ -84,6 +84,7 @@ export const EVENTS: Record<EventSlug, EventContent> = {
       "Teams of exactly 4 members.",
       "Each team chooses one theme when registering.",
       "Only teams shortlisted from the quiz take part in the offline hackathon.",
+      "The online qualification quiz will be held on October 7 or 8. Quiz details will be shared with registered teams.",
       "Participants of Mind x Machine: The AI Debate ARENA or the IPL Auction can't take part in the hackathon. Choose either the hackathon on its own, or the debate and the auction (you can do both).",
     ],
     spotlight: {
