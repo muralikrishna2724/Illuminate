@@ -30,7 +30,7 @@ export default function HomePage() {
 
           <Reveal delay={100} className="mt-16 grid gap-px overflow-hidden rounded-3xl bg-[var(--line)] md:grid-cols-2">
             <div className="bg-night p-8 sm:p-10">
-              <p className="text-sm text-mist">Day 1 · October 9</p>
+              <p className="text-sm text-mist">Day 1 · October 14</p>
               <ul className="mt-6 space-y-3 font-display text-3xl text-flare">
                 {DAY_1_EVENTS.map((e) => (
                   <li key={e.slug}>{e.name}</li>
@@ -41,7 +41,7 @@ export default function HomePage() {
               </Link>
             </div>
             <div className="theme-dark relative overflow-hidden bg-gradient-to-br from-baltic to-baltic-deep p-8 sm:p-10">
-              <p className="relative text-sm text-gold/90">Day 2 · October 10 · Flagship</p>
+              <p className="relative text-sm text-gold/90">Day 2 · October 15 · Flagship</p>
               <p className="relative mt-6 font-display text-3xl text-flare">{workshop.name}</p>
               <p className="relative mt-3 max-w-sm text-mist">An initiative by {workshop.initiativeBy}.</p>
               <Link href="/day-2" className="relative mt-10 inline-flex items-center gap-2 text-sm text-sand hover:text-flare">
@@ -121,8 +121,8 @@ export default function HomePage() {
                 </Link>
                 <ul className="grid gap-3 sm:grid-cols-2">
                   {[
-                    { href: "/day-1", label: "Day 1", sub: "October 9 · three events" },
-                    { href: "/day-2", label: "Day 2", sub: "October 10 · Illuminate Workshop" },
+                    { href: "/day-1", label: "Day 1", sub: "October 14 · three events" },
+                    { href: "/day-2", label: "Day 2", sub: "October 15 · Illuminate Workshop" },
                   ].map((item) => (
                     <li key={item.href}>
                       <Link

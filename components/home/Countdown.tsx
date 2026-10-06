@@ -2,9 +2,9 @@
 
 import { useSyncExternalStore } from "react";
 
-// Day 1 starts on October 9 (IST). No start time is confirmed, so the clock
+// Day 1 starts on October 14 (IST). No start time is confirmed, so the clock
 // counts down to the start of the day and the event runs to the end of Day 2.
-const START = Date.parse("2026-10-09T00:00:00+05:30");
+const START = Date.parse("2026-10-14T00:00:00+05:30");
 const END = Date.parse("2026-10-11T00:00:00+05:30");
 
 function subscribe(onTick: () => void) {
@@ -39,10 +39,10 @@ export function Countdown({ className = "" }: { className?: string }) {
 
   return (
     <div className={className}>
-      <p className="text-xs font-medium tracking-[0.18em] text-mist uppercase">Countdown to Day 1 · October 9</p>
+      <p className="text-xs font-medium tracking-[0.18em] text-mist uppercase">Countdown to Day 1 · October 14</p>
       <dl
         className="mt-3 inline-grid grid-cols-4 overflow-hidden rounded-2xl border border-[var(--line-strong)] bg-night/60 backdrop-blur-sm"
-        aria-label={remaining === null ? "Countdown to October 9" : undefined}
+        aria-label={remaining === null ? "Countdown to October 14" : undefined}
       >
         {units.map(([label, value]) => (
           <div key={label} className="flex min-w-[4.5rem] flex-col-reverse items-center border-l border-[var(--line)] px-3 py-3 first:border-l-0 sm:min-w-[5.5rem] sm:px-5">

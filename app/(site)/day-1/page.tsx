@@ -5,14 +5,14 @@ import { Container } from "@/components/ui/Container";
 import { DAY_1_EVENTS } from "@/lib/events/catalog";
 
 export const metadata: Metadata = {
-  title: "Day 1 — October 9",
+  title: "Day 1 — October 14",
   description: "Day 1 of INNOVENTRA: Deja Vu Hackathon, Mind x Machine: The AI Debate ARENA and IPL Auction.",
 };
 
 export default function DayOnePage() {
   return (
     <>
-      <PageHero eyebrow="October 9" title="Day 1">
+      <PageHero eyebrow="October 14" title="Day 1">
         <p>Three events: the Deja Vu Hackathon, Mind x Machine: The AI Debate ARENA and IPL Auction.</p>
         <nav aria-label="Day 1 events" className="mt-6 flex flex-wrap gap-2 text-base">
           {DAY_1_EVENTS.map((e) => (

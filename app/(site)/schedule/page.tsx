@@ -9,18 +9,18 @@ import { HOST } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "Schedule",
-  description: "INNOVENTRA schedule: October 9 (Day 1) and October 10 (Day 2).",
+  description: "INNOVENTRA schedule: October 14 (Day 1) and October 15 (Day 2).",
 };
 
 const DAYS: Array<{ day: number; date: string; href: string; events: EventContent[] }> = [
-  { day: 1, date: "October 9", href: "/day-1", events: DAY_1_EVENTS },
-  { day: 2, date: "October 10", href: "/day-2", events: DAY_2_EVENTS },
+  { day: 1, date: "October 14", href: "/day-1", events: DAY_1_EVENTS },
+  { day: 2, date: "October 15", href: "/day-2", events: DAY_2_EVENTS },
 ];
 
 export default function SchedulePage() {
   return (
     <>
-      <PageHero eyebrow="October 9–10" title="Schedule">
+      <PageHero eyebrow="October 14–15" title="Schedule">
         <p>
           {HOST.name}, {HOST.shortLocation}. Session timings will be announced by the organisers.
         </p>

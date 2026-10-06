@@ -82,7 +82,7 @@ export default async function ParticipantDashboardPage() {
                   <div className="flex flex-wrap items-start justify-between gap-4">
                     <div>
                       <p className="text-sm text-gold">
-                        Day {r.event.day} · {r.event.day === 1 ? "October 9" : "October 10"}
+                        Day {r.event.day} · {r.event.day === 1 ? "October 14" : "October 15"}
                       </p>
                       <h2 className="mt-1 font-display text-3xl text-flare">{r.event.name}</h2>
                     </div>

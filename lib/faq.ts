@@ -14,7 +14,7 @@ export const FAQS: FaqItem[] = [
     id: "what-is-innoventra",
     question: "What is INNOVENTRA?",
     answer:
-      "INNOVENTRA is a 2-day college innovation, technology, entrepreneurship and creative event on October 9–10. Day 1 (October 9) has the Deja Vu Hackathon, Mind x Machine: The AI Debate ARENA and IPL Auction. Day 2 (October 10) is Illuminate — the Entrepreneurship Workshop.",
+      "INNOVENTRA is a 2-day college innovation, technology, entrepreneurship and creative event on October 14–15. Day 1 (October 14) has the Deja Vu Hackathon, Mind x Machine: The AI Debate ARENA and IPL Auction. Day 2 (October 15) is Illuminate — the Entrepreneurship Workshop.",
     featured: true,
   },
   {
@@ -69,7 +69,7 @@ export const FAQS: FaqItem[] = [
     id: "what-is-workshop",
     question: "What is the Illuminate Workshop?",
     answer:
-      "Illuminate — Entrepreneurship Workshop is a one-day workshop on Day 2 (October 10), an initiative by E-Cell IIT Bombay. It covers the Business Model Canvas, Financial Planning, Pitching, and Startup Development. The fee is ₹799 per person.",
+      "Illuminate — Entrepreneurship Workshop is a one-day workshop on Day 2 (October 15), an initiative by E-Cell IIT Bombay. It covers the Business Model Canvas, Financial Planning, Pitching, and Startup Development. The fee is ₹799 per person.",
     featured: true,
   },
   {

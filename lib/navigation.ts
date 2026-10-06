@@ -13,9 +13,9 @@ export const MAIN_NAV: ReadonlyArray<NavItem> = [
     href: "/schedule",
     label: "Schedule",
     children: [
-      { href: "/schedule", label: "Full schedule", hint: "October 9–10" },
-      { href: "/day-1", label: "Day 1", hint: "October 9 · Deja Vu, Mind x Machine, IPL Auction" },
-      { href: "/day-2", label: "Day 2", hint: "October 10 · Illuminate Workshop" },
+      { href: "/schedule", label: "Full schedule", hint: "October 14–15" },
+      { href: "/day-1", label: "Day 1", hint: "October 14 · Deja Vu, Mind x Machine, IPL Auction" },
+      { href: "/day-2", label: "Day 2", hint: "October 15 · Illuminate Workshop" },
     ],
   },
   { href: "/faq", label: "FAQ" },

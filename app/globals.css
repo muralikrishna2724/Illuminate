@@ -27,6 +27,7 @@
   --animate-spin-slow: spin 90s linear infinite;
   --animate-breathe: breathe 9s ease-in-out infinite;
   --animate-drift: drift 40s ease-in-out infinite alternate;
+  --animate-ticker: ticker 45s linear infinite;
 
   @keyframes breathe {
     0%,
@@ -37,6 +38,14 @@
     50% {
       opacity: 1;
       transform: scale(1.025);
+    }
+  }
+  @keyframes ticker {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-50%, 0, 0);
     }
   }
   @keyframes drift {
@@ -150,6 +159,9 @@ body {
   .reveal {
     opacity: 1;
     transform: none;
+  }
+  .animate-ticker {
+    animation: none;
   }
 }
 

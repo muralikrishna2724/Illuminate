@@ -4,6 +4,7 @@ import { ArrowIcon, ButtonLink } from "@/components/ui/Button";
 import { EVENT_YEAR_LABEL } from "@/lib/events/catalog";
 import { HERO_PARTNERS, HOST, TAGLINE } from "@/lib/site-config";
 import { Countdown } from "./Countdown";
+import { PostponedTicker } from "./PostponedTicker";
 
 export function Hero() {
   return (
@@ -19,6 +20,7 @@ export function Hero() {
 
       {/* E-Cell IIT Bombay × E-Cell CVR College × NEC */}
       <div className="mx-auto w-full max-w-6xl px-5 pt-24 sm:px-8 sm:pt-28">
+        <PostponedTicker />
         <ul aria-label="Presented by" className="flex items-start gap-2.5 sm:gap-5">
           {HERO_PARTNERS.map((partner, i) => (
             <li key={partner.name} className="flex items-start gap-2.5 sm:gap-5">
