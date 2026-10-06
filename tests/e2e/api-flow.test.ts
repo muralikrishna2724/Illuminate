@@ -273,26 +273,21 @@ describe("registrations", () => {
     const unknown = await register("debate", { ...individualDetails(), survey: { ...SURVEY, llm: "made-up" } }, uniqueUtr());
     assert.equal(unknown.status, 400);
 
-    const other = await register("illuminate", noSurvey, uniqueUtr());
-    assert.equal(other.status, 201, "no survey needed outside Mind x Machine");
+    const ipl = await register("ipl-auction", noSurvey, uniqueUtr());
+    assert.equal(ipl.status, 201, "no survey needed outside Mind x Machine");
   });
 
-  test("TEST 4 — IPL Auction: exactly 6 members, ₹300, PENDING", async () => {
+  test("TEST 4 — IPL Auction: individual, ₹50, PENDING", async () => {
     const utr = uniqueUtr();
-    const { status, body } = await register("ipl-auction", teamDetails(6), utr);
+    const { status, body } = await register("ipl-auction", individualDetails(), utr);
     assert.equal(status, 201, JSON.stringify(body));
-    assert.equal(body.data.amountInr, 300);
+    assert.equal(body.data.amountInr, 50);
     assert.equal(body.data.paymentStatus, "PENDING");
     assert.equal(body.data.quiz, null, "no quiz for the IPL Auction");
     created.ipl = { registrationId: body.data.registrationId, utr };
 
-    for (const count of [5, 7]) {
-      const wrongSize = await register("ipl-auction", teamDetails(count), uniqueUtr());
-      assert.equal(wrongSize.status, 400);
-      assert.ok(wrongSize.body.error.fieldErrors.members, `members error for ${count}`);
-    }
-    const asIndividual = await register("ipl-auction", individualDetails(), uniqueUtr());
-    assert.equal(asIndividual.status, 400);
+    const asTeam = await register("ipl-auction", teamDetails(5), uniqueUtr());
+    assert.equal(asTeam.status, 400);
   });
 
   test("TEST 5 — Illuminate: individual, ₹799, PENDING", async () => {
@@ -565,7 +560,7 @@ describe("admin workflow", () => {
     assert.match(await noSpotsLeftText("/register"), /Registration limit reached/);
 
     // The IPL Auction has no limit any more.
-    const ipl = await register("ipl-auction", teamDetails(6), uniqueUtr());
+    const ipl = await register("ipl-auction", individualDetails(), uniqueUtr());
     assert.equal(ipl.status, 201);
     mine.push(ipl.body.data.registrationId);
 

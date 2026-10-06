@@ -62,8 +62,8 @@ export const FAQS: FaqItem[] = [
   },
   {
     id: "team-size-ipl",
-    question: "How many members are required for the IPL Auction?",
-    answer: "IPL Auction teams must have exactly 6 members. The fee is ₹50 per person, which is ₹300 per team of 6.",
+    question: "Do I need a team for the IPL Auction?",
+    answer: "No. Register individually; registered participants will be formed into teams at the venue. The fee is ₹50 per person.",
   },
   {
     id: "what-is-workshop",
