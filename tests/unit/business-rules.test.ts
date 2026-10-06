@@ -33,7 +33,7 @@ describe("pricing", () => {
   test("amounts per event", () => {
     assert.equal(calculateRegistrationAmount(EVENTS.hackathon), 200);
     assert.equal(calculateRegistrationAmount(EVENTS.debate), 50);
-    assert.equal(calculateRegistrationAmount(EVENTS["ipl-auction"]), 50);
+    assert.equal(calculateRegistrationAmount(EVENTS["ipl-auction"]), 300);
     assert.equal(calculateRegistrationAmount(EVENTS.illuminate), 799);
     assert.equal(registrationAmountInr(EVENTS.illuminate), 799);
   });
@@ -52,8 +52,9 @@ describe("pricing", () => {
 });
 
 describe("registration caps", () => {
-  test("Mind x Machine: 50 participants; IPL Auction (individual) and the others unlimited", () => {
-    assert.equal(EVENTS["ipl-auction"].format, "INDIVIDUAL");
+  test("Mind x Machine: 50 participants; IPL Auction (teams of 6) and the others unlimited", () => {
+    assert.equal(EVENTS["ipl-auction"].format, "TEAM");
+    assert.equal(EVENTS["ipl-auction"].teamSize, 6);
     assert.equal(EVENTS["ipl-auction"].maxRegistrations, undefined);
     assert.equal(EVENTS.debate.maxRegistrations, 50);
     assert.equal(EVENTS.hackathon.maxRegistrations, undefined);

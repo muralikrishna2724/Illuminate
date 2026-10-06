@@ -135,19 +135,17 @@ export const EVENTS: Record<EventSlug, EventContent> = {
     day: 1,
     date: "2026-10-09",
     dateLabel: "October 9",
-    format: "INDIVIDUAL",
-    teamSize: 1,
+    format: "TEAM",
+    teamSize: 6,
     feePerPersonInr: 50,
     duration: "1:00 PM – 4:00 PM",
     prizePool: "₹3,500 worth of prizes",
-    // Registration is individual; teams are formed at the venue.
-    formatLabel: "Team (formed at the venue)",
-    tagline: "An individual event on Day 1.",
+    tagline: "A team event on Day 1 — teams of 6.",
     description:
       "A competitive IPL-inspired event that puts your cricket knowledge, strategy, and team-building skills to the test.",
     highlights: [],
     notes: [
-      "Register individually. Registered participants will be formed into teams at the venue.",
+      "Teams of exactly 6 members.",
       "You can take part in both this and Mind x Machine: The AI Debate ARENA, but not in the Deja Vu Hackathon.",
       "An online quiz will be held on October 7 or 8. Quiz details will be shared with registered participants.",
     ],
