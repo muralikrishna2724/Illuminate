@@ -371,7 +371,7 @@ export function RegistrationsManager({
                     aria-label={`View payment screenshot for ${row.registrationId}`}
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element -- private, cookie-authenticated thumbnail */}
-                    <img src={row.payment.screenshotUrl} alt="" loading="lazy" className="h-full w-full object-cover" />
+                    <img src={`${row.payment.screenshotUrl}?size=thumb`} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover object-top" />
                   </button>
                 </td>
                 <td className="px-4 py-3">

@@ -471,6 +471,19 @@ describe("admin workflow", () => {
     assert.equal(anon.status, 401);
   });
 
+  test("the registrations table gets small, privately cached thumbnails", async () => {
+    const detail = await adminJson(`/api/admin/registrations/${created.hackathon!.registrationId}`);
+    const url = `${detail.body.data.paymentDetail.screenshot.url}?size=thumb`;
+    const res = await admin(url);
+    assert.equal(res.status, 200);
+    assert.equal(res.headers.get("content-type"), "image/webp");
+    assert.match(res.headers.get("cache-control") ?? "", /^private\b/);
+    const bytes = Buffer.from(await res.arrayBuffer());
+    assert.equal(bytes.subarray(8, 12).toString("ascii"), "WEBP");
+    const anon = await fetch(`${BASE}${url}`);
+    assert.equal(anon.status, 401);
+  });
+
   test("cross-origin state changes are blocked", async () => {
     const detail = await adminJson(`/api/admin/registrations/${created.debate!.registrationId}`);
     const res = await admin(`/api/admin/payments/${detail.body.data.paymentDetail.id}/verify`, {

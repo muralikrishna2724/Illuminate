@@ -41,7 +41,7 @@ export default async function RegisterEventPage({ params }: PageProps<"/register
         <p className={`mt-8 text-sm ${event.day === 2 ? "text-gold/90" : "text-mist"}`}>
           Day {event.day} · {event.dateLabel}
         </p>
-        <h1 className="mt-2 font-display text-5xl leading-[0.95] text-flare sm:text-7xl">{event.name}</h1>
+        <h1 className="mt-2 font-display text-[2.6rem] leading-[0.95] text-flare [overflow-wrap:anywhere] min-[400px]:text-5xl sm:text-7xl">{event.name}</h1>
         <p className="mt-4 text-mist">
           {event.format === "TEAM" ? `Team of exactly ${event.teamSize}` : "Individual registration"} · {feeLabel(event)}
         </p>

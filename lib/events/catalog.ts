@@ -89,7 +89,7 @@ export const EVENTS: Record<EventSlug, EventContent> = {
       "Teams of exactly 4 members.",
       "Each team chooses one theme when registering.",
       "Only teams shortlisted from the quiz take part in the offline hackathon.",
-      "The online qualification quiz will be held on October 7 or 8. Quiz details will be shared with registered teams.",
+      "The online qualification quiz will be held on Saturday, October 10. Quiz details will be shared with registered teams.",
       "Participants of Mind x Machine: The AI Debate ARENA or the IPL Auction can't take part in the hackathon. Choose either the hackathon on its own, or the debate and the auction (you can do both).",
     ],
     spotlight: {
@@ -149,7 +149,7 @@ export const EVENTS: Record<EventSlug, EventContent> = {
     notes: [
       "Register individually. Registered participants will be formed into teams at the venue.",
       "You can take part in both this and Mind x Machine: The AI Debate ARENA, but not in the Deja Vu Hackathon.",
-      "An online quiz will be held on October 7 or 8. Quiz details will be shared with registered participants.",
+      "An online quiz will be held on Saturday, October 10. Quiz details will be shared with registered participants.",
     ],
     registerPath: "/register/ipl-auction",
     hasQualificationQuiz: false,
