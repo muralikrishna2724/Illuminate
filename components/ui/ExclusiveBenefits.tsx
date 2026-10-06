@@ -3,6 +3,7 @@ import { EXCLUSIVE_BENEFITS } from "@/lib/events/workshop";
 interface Rewards {
   note: string;
   headline: string;
+  description?: string;
   items: readonly string[];
 }
 
@@ -18,6 +19,7 @@ export function RewardsCard({ id, rewards, className = "" }: { id: string; rewar
       <h3 id={id} className="mt-2 font-display text-3xl text-flare sm:text-4xl">
         {rewards.headline}
       </h3>
+      {rewards.description && <p className="mt-2 text-powder">{rewards.description}</p>}
       <ul className="mt-5 space-y-2.5 text-sand">
         {rewards.items.map((item) => (
           <li key={item} className="flex gap-3">

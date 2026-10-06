@@ -92,6 +92,7 @@ export function formatMinutes(minutes: number): string {
  */
 export const EXCLUSIVE_BENEFITS = {
   headline: "Exclusive benefits worth ₹50,000",
+  description: "Including the prize pools of all events — ₹50,000 worth of prizes in total.",
   note: "Available for a limited time only.",
   items: [
     "Free entry passes to IIT Bombay for the first 50 registrations of the Illuminate workshop",
