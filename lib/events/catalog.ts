@@ -53,6 +53,9 @@ export interface EventContent {
 
 export const EVENT_YEAR_LABEL = "October 14–15";
 
+const CVR_FIRST_YEAR_NOTE =
+  "1st-year students of CVR College of Engineering: please check your eligibility before registering. Participants who are not eligible will not be allowed to take part.";
+
 export const EVENTS: Record<EventSlug, EventContent> = {
   hackathon: {
     slug: "hackathon",
@@ -104,8 +107,7 @@ export const EVENTS: Record<EventSlug, EventContent> = {
     },
     registerPath: "/register/hackathon",
     hasQualificationQuiz: true,
-    registrationNote:
-      "1st-year students of CVR College of Engineering: please check your eligibility before registering. Participants who are not eligible will not be allowed to take part.",
+    registrationNote: CVR_FIRST_YEAR_NOTE,
   },
   debate: {
     slug: "debate",
@@ -131,6 +133,7 @@ export const EVENTS: Record<EventSlug, EventContent> = {
     ],
     registerPath: "/register/debate",
     hasQualificationQuiz: false,
+    registrationNote: CVR_FIRST_YEAR_NOTE,
   },
   "ipl-auction": {
     slug: "ipl-auction",
@@ -157,6 +160,7 @@ export const EVENTS: Record<EventSlug, EventContent> = {
     ],
     registerPath: "/register/ipl-auction",
     hasQualificationQuiz: false,
+    registrationNote: CVR_FIRST_YEAR_NOTE,
   },
   illuminate: {
     slug: "illuminate",
@@ -196,6 +200,7 @@ export const EVENTS: Record<EventSlug, EventContent> = {
     motto: "Empowering the next generation of Changemakers",
     registerPath: "/register/illuminate",
     hasQualificationQuiz: false,
+    registrationNote: CVR_FIRST_YEAR_NOTE,
   },
 };
 
