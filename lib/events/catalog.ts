@@ -47,6 +47,8 @@ export interface EventContent {
   motto?: string;
   registerPath: string;
   hasQualificationQuiz: boolean;
+  /** Short notice shown under the fee on the event's registration page. */
+  registrationNote?: string;
 }
 
 export const EVENT_YEAR_LABEL = "October 14–15";
@@ -102,6 +104,8 @@ export const EVENTS: Record<EventSlug, EventContent> = {
     },
     registerPath: "/register/hackathon",
     hasQualificationQuiz: true,
+    registrationNote:
+      "1st-year students of CVR College of Engineering: please check your eligibility before registering. Participants who are not eligible will not be allowed to take part.",
   },
   debate: {
     slug: "debate",

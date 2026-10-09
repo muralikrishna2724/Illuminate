@@ -45,6 +45,11 @@ export default async function RegisterEventPage({ params }: PageProps<"/register
         <p className="mt-4 text-mist">
           {event.format === "TEAM" ? `Team of exactly ${event.teamSize}` : "Individual registration"} · {feeLabel(event)}
         </p>
+        {event.registrationNote && (
+          <p className="mt-4 max-w-2xl border-l-2 border-gold/60 pl-3 text-sm leading-relaxed text-mist">
+            <span className="font-medium text-flare">Note:</span> {event.registrationNote}
+          </p>
+        )}
         <FeeIncludes event={event} className="mt-6" />
         {event.slug === "illuminate" && <ExclusiveBenefits className="mt-8" />}
         <div className="mt-12">
