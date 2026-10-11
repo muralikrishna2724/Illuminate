@@ -57,7 +57,7 @@ export function RegistrationsManager({
   const [announcement, setAnnouncement] = useState("");
   const [actionError, setActionError] = useState<string | null>(null);
   const [rejectTarget, setRejectTarget] = useState<RegistrationSummary | null>(null);
-  const [exporting, setExporting] = useState(false);
+  const [exporting, setExporting] = useState<"all" | "team-contacts" | null>(null);
 
   const [openId, setOpenId] = useState<string | null>(null);
   const [detail, setDetail] = useState<RegistrationDetail | null>(null);
@@ -195,12 +195,12 @@ export function RegistrationsManager({
     return res.error.message;
   };
 
-  const exportCsv = async () => {
-    setExporting(true);
+  const exportCsv = async (format?: "team-contacts") => {
+    setExporting(format ?? "all");
     setActionError(null);
     const { page: _p, ...filters } = { ...query, page };
-    const res = await adminApi.exportCsv(filters);
-    setExporting(false);
+    const res = await adminApi.exportCsv(filters, format);
+    setExporting(null);
     if (!res.ok) setActionError(res.error.message);
     else setAnnouncement(`Exported ${res.data.filename}.`);
   };
@@ -219,12 +219,24 @@ export function RegistrationsManager({
             {data ? `${data.total} registration${data.total === 1 ? "" : "s"}` : "Loading…"}
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Button type="button" variant="ghost" size="sm" onClick={() => setReloadKey((k) => k + 1)} disabled={loading}>
             Refresh
           </Button>
-          <Button type="button" variant="secondary" size="sm" onClick={exportCsv} loading={exporting}>
-            {exporting ? "Exporting…" : "Export CSV"}
+          {(fixedEvent ?? event) === "hackathon" && (
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              onClick={() => exportCsv("team-contacts")}
+              loading={exporting === "team-contacts"}
+              disabled={exporting !== null}
+            >
+              {exporting === "team-contacts" ? "Exporting…" : "Export team name & leader phone"}
+            </Button>
+          )}
+          <Button type="button" variant="secondary" size="sm" onClick={() => exportCsv()} loading={exporting === "all"} disabled={exporting !== null}>
+            {exporting === "all" ? "Exporting…" : "Export CSV"}
           </Button>
         </div>
       </div>

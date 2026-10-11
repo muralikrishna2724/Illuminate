@@ -1,19 +1,23 @@
 import { requireAdminApi } from "@/lib/auth/guards";
 import { route } from "@/lib/http/respond";
 import { registrationFiltersSchema } from "@/lib/validation/admin";
-import { exportRegistrationsCsv } from "@/services/export-service";
+import { exportRegistrationsCsv, exportTeamContactsCsv } from "@/services/export-service";
 
-/** GET /api/admin/export?event=&status=&q=&from=&to= → text/csv */
+/**
+ * GET /api/admin/export?event=&status=&q=&from=&to= → text/csv
+ * `format=team-contacts` exports only team name and team leader phone (team events).
+ */
 export const GET = route(async (request) => {
   await requireAdminApi(request);
-  const params = Object.fromEntries(
+  const { format, ...params } = Object.fromEntries(
     [...new URL(request.url).searchParams.entries()].filter(([, value]) => value !== ""),
   );
   const { page: _page, pageSize: _pageSize, ...filters } = registrationFiltersSchema.parse(params);
-  const csv = await exportRegistrationsCsv(filters);
+  const teamContacts = format === "team-contacts";
+  const csv = teamContacts ? await exportTeamContactsCsv(filters) : await exportRegistrationsCsv(filters);
 
   const stamp = new Date().toISOString().slice(0, 10);
-  const scope = filters.event ?? "all-events";
+  const scope = `${filters.event ?? "all-events"}${teamContacts ? "-team-contacts" : ""}`;
   return new Response(csv, {
     status: 200,
     headers: {

@@ -662,6 +662,18 @@ describe("admin workflow", () => {
     assert.ok(!csv.includes(created.debate!.registrationId), "event filter applied");
   });
 
+  test("Deja Vu team contacts export has only team name and leader phone", async () => {
+    const detail = await adminJson(`/api/admin/registrations/${created.hackathon!.registrationId}`);
+    const team = detail.body.data.team;
+    const res = await admin(`/api/admin/export?event=hackathon&format=team-contacts`);
+    assert.equal(res.status, 200);
+    assert.match(res.headers.get("content-disposition") ?? "", /hackathon-team-contacts/);
+    const lines = (await res.text()).replace(/^﻿/, "").trim().split(/\r?\n/);
+    assert.equal(lines[0], "Team Name,Team Leader Phone");
+    assert.ok(lines.includes(`${team.name},${team.leaderPhone}`), "row for the team");
+    assert.ok(!lines.some((line) => line.includes(created.hackathon!.registrationId)));
+  });
+
   test("dashboard stats are real counts", async () => {
     const res = await adminJson("/api/admin/stats");
     assert.equal(res.status, 200);

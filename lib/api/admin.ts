@@ -49,10 +49,13 @@ export const adminApi = {
     return apiRequest<Quiz>("/api/admin/quiz", { method: "PUT", json: input });
   },
   /** Downloads the filtered CSV export and triggers a browser download. */
-  async exportCsv(query: Omit<RegistrationQuery, "page" | "pageSize">): Promise<ApiResponse<{ filename: string }>> {
+  async exportCsv(
+    query: Omit<RegistrationQuery, "page" | "pageSize">,
+    format?: "team-contacts",
+  ): Promise<ApiResponse<{ filename: string }>> {
     let response: Response;
     try {
-      response = await fetch(apiUrl("/api/admin/export", { ...query }), { credentials: "same-origin", cache: "no-store" });
+      response = await fetch(apiUrl("/api/admin/export", { ...query, format }), { credentials: "same-origin", cache: "no-store" });
     } catch {
       return { ok: false, error: NETWORK_ERROR };
     }

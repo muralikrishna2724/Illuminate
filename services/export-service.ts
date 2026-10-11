@@ -107,3 +107,17 @@ export async function exportRegistrationsCsv(filters: Omit<RegistrationFilters, 
 
   return toCsv(header, data);
 }
+
+/** Deja Vu team list for organisers: team name and the team leader's phone. One row per team. */
+export async function exportTeamContactsCsv(filters: Omit<RegistrationFilters, "page" | "pageSize">): Promise<string> {
+  const rows = await prisma.registration.findMany({
+    where: { AND: [buildRegistrationWhere(filters), { team: { isNot: null } }] },
+    orderBy: { createdAt: "asc" },
+    take: MAX_EXPORT_ROWS,
+    select: { contactPhone: true, team: { select: { name: true, leaderPhone: true } } },
+  });
+  return toCsv(
+    ["Team Name", "Team Leader Phone"],
+    rows.map((r) => [r.team?.name ?? "", r.team?.leaderPhone ?? r.contactPhone]),
+  );
+}
