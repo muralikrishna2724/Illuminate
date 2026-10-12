@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { themeField } from "@/lib/validation/registration";
+import { teamNameField, themeField } from "@/lib/validation/registration";
 import { EVENT_SLUGS, PAYMENT_STATUSES, QUIZ_ACCESS_RULES } from "@/types/domain";
 
 export const loginSchema = z.object({
@@ -10,6 +10,9 @@ export const loginSchema = z.object({
 
 /** Organisers can set or change a Deja Vu team's theme. */
 export const adminThemeSchema = z.object({ theme: themeField });
+
+/** Organisers can rename a Deja Vu team. */
+export const adminTeamNameSchema = z.object({ name: teamNameField });
 
 export const rejectPaymentSchema = z.object({
   reason: z

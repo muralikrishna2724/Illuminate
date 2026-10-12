@@ -227,6 +227,21 @@ export async function setTeamTheme(rawCode: string, theme: HackathonTheme): Prom
   return { theme: themeLabel(theme)! };
 }
 
+/** Renames a Deja Vu team (organisers only). */
+export async function setTeamName(rawCode: string, name: string): Promise<{ name: string }> {
+  const code = normalizeRegistrationCode(rawCode);
+  const registration = await prisma.registration.findUnique({
+    where: { registrationCode: code },
+    select: { event: { select: { slug: true } }, team: { select: { id: true } } },
+  });
+  if (!registration) throw notFound("Registration not found.");
+  if (registration.event.slug !== THEMED_EVENT_SLUG || !registration.team) {
+    throw badRequest("Only Deja Vu Hackathon teams can be renamed here.");
+  }
+  const team = await prisma.team.update({ where: { id: registration.team.id }, data: { name }, select: { name: true } });
+  return { name: team.name };
+}
+
 export async function getDashboardStats(): Promise<DashboardStats> {
   const [events, grouped] = await Promise.all([
     prisma.event.findMany({ select: { id: true, slug: true, name: true, day: true }, orderBy: [{ day: "asc" }, { name: "asc" }] }),

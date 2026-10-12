@@ -490,6 +490,17 @@ export function RegistrationsManager({
           setData((d) => (d ? { ...d, items: d.items.map((item) => (item.registrationId === id ? { ...item, theme: label } : item)) } : d));
           setAnnouncement(`${id} theme set to ${label}.`);
         }}
+        onTeamNameSaved={(name) => {
+          if (!detail) return;
+          const id = detail.registrationId;
+          setDetail((current) =>
+            current && current.registrationId === id && current.team
+              ? { ...current, displayName: name, team: { ...current.team, name } }
+              : current,
+          );
+          setData((d) => (d ? { ...d, items: d.items.map((item) => (item.registrationId === id ? { ...item, displayName: name } : item)) } : d));
+          setAnnouncement(`${id} team renamed to ${name}.`);
+        }}
       />
 
       <RejectDialog

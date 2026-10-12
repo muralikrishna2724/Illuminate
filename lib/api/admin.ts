@@ -42,6 +42,12 @@ export const adminApi = {
       json: { theme },
     });
   },
+  setTeamName(registrationId: string, name: string) {
+    return apiRequest<{ name: string }>(`/api/admin/registrations/${encodeURIComponent(registrationId)}/team-name`, {
+      method: "PUT",
+      json: { name },
+    });
+  },
   getQuiz() {
     return apiRequest<Quiz>("/api/admin/quiz", { cache: "no-store" });
   },

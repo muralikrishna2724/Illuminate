@@ -428,6 +428,38 @@ describe("admin workflow", () => {
     await adminJson(path, { method: "PUT", body: JSON.stringify({ theme: "HARDWARE_EMBEDDED" }) });
   });
 
+  test("admin can rename a Deja Vu team, and only a Deja Vu team", async () => {
+    const { registrationId } = created.hackathon!;
+    const path = `/api/admin/registrations/${registrationId}/team-name`;
+    const original = (await adminJson(`/api/admin/registrations/${registrationId}`)).body.data.team.name;
+
+    const renamed = await adminJson(path, { method: "PUT", body: JSON.stringify({ name: "  Renamed   Team  " }) });
+    assert.equal(renamed.status, 200, JSON.stringify(renamed.body));
+    assert.equal(renamed.body.data.name, "Renamed Team");
+    const detail = await adminJson(`/api/admin/registrations/${registrationId}`);
+    assert.equal(detail.body.data.team.name, "Renamed Team");
+    assert.equal(detail.body.data.displayName, "Renamed Team");
+
+    assert.equal((await adminJson(path, { method: "PUT", body: JSON.stringify({ name: "" }) })).status, 400);
+    assert.equal((await adminJson(path, { method: "PUT", body: JSON.stringify({ name: "x".repeat(61) }) })).status, 400);
+    assert.equal((await adminJson(path, { method: "PUT", body: JSON.stringify({ name: "<b>Team</b>" }) })).status, 400);
+    const notDejaVu = await adminJson(`/api/admin/registrations/${created.debate!.registrationId}/team-name`, {
+      method: "PUT",
+      body: JSON.stringify({ name: "Nope" }),
+    });
+    assert.equal(notDejaVu.status, 400);
+    const anonymous = await fetch(`${BASE}${path}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json", Origin: BASE },
+      body: JSON.stringify({ name: "Hijacked" }),
+    });
+    assert.equal(anonymous.status, 401);
+    const crossOrigin = await admin(path, { method: "PUT", body: JSON.stringify({ name: "Hijacked" }), headers: { Origin: "https://evil.example" } });
+    assert.equal(crossOrigin.status, 403);
+
+    await adminJson(path, { method: "PUT", body: JSON.stringify({ name: original }) });
+  });
+
   test("admin sees the Mind x Machine survey answers and the knowledge score", async () => {
     const detail = await adminJson(`/api/admin/registrations/${created.debate!.registrationId}`);
     const survey = detail.body.data.survey;
