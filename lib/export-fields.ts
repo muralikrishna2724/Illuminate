@@ -15,7 +15,12 @@ export interface ExportField {
   group: ExportGroup;
   /** Events the field means something for; omitted = every event. */
   events?: readonly EventSlug[];
+  /** Only offered in one row layout; omitted = both. */
+  rows?: ExportRowMode;
 }
+
+/** One row per registration (teams on one row), or one row per student (each team member on their own row). */
+export type ExportRowMode = "registrations" | "students";
 
 const TEAM_EVENTS: readonly EventSlug[] = ["hackathon"];
 const INDIVIDUAL_EVENTS: readonly EventSlug[] = ["debate", "ipl-auction", "illuminate"];
@@ -26,6 +31,7 @@ export const EXPORT_FIELDS = [
   { key: "event", label: "Event", group: "Registration" },
   { key: "day", label: "Day", group: "Registration" },
   { key: "name", label: "Participant / team name", group: "Registration" },
+  { key: "teamName", label: "Team name", group: "Team", events: TEAM_EVENTS, rows: "students" },
   { key: "theme", label: "Theme", group: "Team", events: TEAM_EVENTS },
   { key: "college", label: "College", group: "Contact" },
   { key: "contactName", label: "Contact name (team leader for teams)", group: "Contact" },
@@ -46,11 +52,11 @@ export const EXPORT_FIELDS = [
   { key: "surveyScore", label: "AI survey score", group: "AI survey", events: SURVEY_EVENTS },
   { key: "surveyAnswers", label: "AI survey answers", group: "AI survey", events: SURVEY_EVENTS },
   { key: "surveyTopic", label: "Topic to debate", group: "AI survey", events: SURVEY_EVENTS },
-  { key: "memberName", label: "Member names", group: "Team members", events: TEAM_EVENTS },
-  { key: "memberEmail", label: "Member emails", group: "Team members", events: TEAM_EVENTS },
-  { key: "memberPhone", label: "Member phones", group: "Team members", events: TEAM_EVENTS },
-  { key: "memberDepartment", label: "Member departments", group: "Team members", events: TEAM_EVENTS },
-  { key: "memberYear", label: "Member years", group: "Team members", events: TEAM_EVENTS },
+  { key: "memberName", label: "Member names", group: "Team members", events: TEAM_EVENTS, rows: "registrations" },
+  { key: "memberEmail", label: "Member emails", group: "Team members", events: TEAM_EVENTS, rows: "registrations" },
+  { key: "memberPhone", label: "Member phones", group: "Team members", events: TEAM_EVENTS, rows: "registrations" },
+  { key: "memberDepartment", label: "Member departments", group: "Team members", events: TEAM_EVENTS, rows: "registrations" },
+  { key: "memberYear", label: "Member years", group: "Team members", events: TEAM_EVENTS, rows: "registrations" },
 ] as const satisfies readonly ExportField[];
 
 export type ExportFieldKey = (typeof EXPORT_FIELDS)[number]["key"];
@@ -61,7 +67,23 @@ export function isExportFieldKey(value: string): value is ExportFieldKey {
   return (EXPORT_FIELD_KEYS as readonly string[]).includes(value);
 }
 
-/** The fields worth offering for one event (all of them when no event is chosen). */
-export function exportFieldsFor(event: EventSlug | null | undefined): readonly ExportField[] {
-  return EXPORT_FIELDS.filter((f) => !event || !("events" in f) || (f.events as readonly EventSlug[]).includes(event));
+/** The fields worth offering for one event (every event when none is chosen) in one row layout. */
+export function exportFieldsFor(event: EventSlug | null | undefined, rows: ExportRowMode = "registrations"): readonly ExportField[] {
+  return (EXPORT_FIELDS as readonly ExportField[]).filter((f) => {
+    if (f.rows && f.rows !== rows) return false;
+    // Department and year belong to individuals; in the per-student layout every row is one.
+    if (rows === "students" && (f.key === "department" || f.key === "year")) return true;
+    return !event || !f.events || f.events.includes(event);
+  });
+}
+
+/** How a field is labelled in the per-student layout, where a row is one person. */
+export function exportFieldLabel(field: ExportField, rows: ExportRowMode): string {
+  if (rows === "students") {
+    if (field.key === "name") return "Student name";
+    if (field.key === "email") return "Student email";
+    if (field.key === "phone") return "Student phone";
+    if (field.key === "department") return "Department / branch";
+  }
+  return field.label;
 }

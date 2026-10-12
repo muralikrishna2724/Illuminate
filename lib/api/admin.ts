@@ -55,13 +55,22 @@ export const adminApi = {
     return apiRequest<Quiz>("/api/admin/quiz", { method: "PUT", json: input });
   },
   /** Downloads the filtered CSV export and triggers a browser download. */
-  async exportCsv(
+  async exportFile(
     query: Omit<RegistrationQuery, "page" | "pageSize">,
-    options: { format?: "team-contacts"; fields?: readonly string[] } = {},
+    options: { format?: "csv" | "pdf" | "team-contacts"; fields?: readonly string[]; rows?: "registrations" | "students"; cvrOnly?: boolean } = {},
   ): Promise<ApiResponse<{ filename: string }>> {
     let response: Response;
     try {
-      response = await fetch(apiUrl("/api/admin/export", { ...query, format: options.format, fields: options.fields?.join(",") }), { credentials: "same-origin", cache: "no-store" });
+      response = await fetch(
+        apiUrl("/api/admin/export", {
+          ...query,
+          format: options.format,
+          fields: options.fields?.join(","),
+          rows: options.rows === "students" ? "students" : undefined,
+          college: options.cvrOnly ? "cvr" : undefined,
+        }),
+        { credentials: "same-origin", cache: "no-store" },
+      );
     } catch {
       return { ok: false, error: NETWORK_ERROR };
     }
@@ -76,7 +85,7 @@ export const adminApi = {
     }
     const blob = await response.blob();
     const disposition = response.headers.get("content-disposition") ?? "";
-    const filename = /filename="([^"]+)"/.exec(disposition)?.[1] ?? "innoventra-registrations.csv";
+    const filename = /filename="([^"]+)"/.exec(disposition)?.[1] ?? `innoventra-registrations.${options.format === "pdf" ? "pdf" : "csv"}`;
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;

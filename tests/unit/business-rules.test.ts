@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, test } from "node:test";
+import { isCvrCollege } from "../../lib/college";
 import { toCsv, csvCell } from "../../lib/csv";
 import { EVENTS, registrationAmountInr } from "../../lib/events/catalog";
 import { capacityFrom, registrationClosedMessage } from "../../lib/events/capacity";
@@ -222,5 +223,30 @@ describe("Mind x Machine survey", () => {
     assert.equal(DEBATE_SURVEY_QUESTIONS.filter((q) => q.kind === "knowledge").length, 3);
     assert.equal(DEBATE_SURVEY_QUESTIONS.filter((q) => q.kind === "opinion").length, 2);
     for (const q of DEBATE_SURVEY_QUESTIONS) assert.ok(q.options.length >= 3, q.id);
+  });
+});
+
+describe("CVR College of Engineering, however it was typed", () => {
+  test("every spelling seen in registrations counts", () => {
+    for (const college of [
+      "CVR",
+      "cvr",
+      "Cvr college",
+      "CVR COLLEGE OF ENGINEERING",
+      "CVR COLLEGE OF ENGGINEERING",
+      "cvr collage of engineering",
+      "Cvr clg of eng",
+      "Cvr engineering of college",
+      "CVR College of Engineering (CVRCE), Rangareddi",
+      "CVR College of Engineering, Ibrahimpatnam",
+      "  c.v.r college ",
+    ]) {
+      assert.ok(isCvrCollege(college), college);
+    }
+  });
+  test("other colleges and blanks don't", () => {
+    for (const college of ["CMR Technical Campus", "VNR Vignana Jyoti", "Vardhaman College of Engineering", "ACE Engineering College", "", null, undefined]) {
+      assert.ok(!isCvrCollege(college), String(college));
+    }
   });
 });

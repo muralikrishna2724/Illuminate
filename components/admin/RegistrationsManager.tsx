@@ -6,12 +6,11 @@ import { Button, Spinner } from "@/components/ui/Button";
 import { StatusBadge } from "@/components/registration/StatusBadge";
 import { adminApi, type RegistrationQuery } from "@/lib/api/admin";
 import { formatInr } from "@/lib/events/catalog";
-import type { ExportFieldKey } from "@/lib/export-fields";
 import type { EventSlug, Paginated, Payment, PaymentStatus, RegistrationDetail, RegistrationSummary } from "@/types/domain";
 import { formatDateTime } from "./format";
 import { PaymentActions } from "./PaymentActions";
 import { RegistrationDetailPanel } from "./RegistrationDetailPanel";
-import { ExportDialog } from "./ExportDialog";
+import { ExportDialog, type ExportChoice } from "./ExportDialog";
 import { RejectDialog } from "./RejectDialog";
 
 const EVENT_OPTIONS: Array<{ value: EventSlug; label: string }> = [
@@ -201,15 +200,15 @@ export function RegistrationsManager({
   const exportTeamContacts = async () => {
     setExporting("team-contacts");
     setActionError(null);
-    const res = await adminApi.exportCsv(query, { format: "team-contacts" });
+    const res = await adminApi.exportFile(query, { format: "team-contacts" });
     setExporting(null);
     if (!res.ok) setActionError(res.error.message);
     else setAnnouncement(`Exported ${res.data.filename}.`);
   };
 
   /** Returns an error message for the dialog, or null once the file is downloading. */
-  const exportFields = async (fields: ExportFieldKey[]): Promise<string | null> => {
-    const res = await adminApi.exportCsv(query, { fields });
+  const exportChosen = async (choice: ExportChoice): Promise<string | null> => {
+    const res = await adminApi.exportFile(query, choice);
     if (!res.ok) return res.error.message;
     setAnnouncement(`Exported ${res.data.filename}.`);
     return null;
@@ -246,7 +245,7 @@ export function RegistrationsManager({
             </Button>
           )}
           <Button type="button" variant="secondary" size="sm" onClick={() => setExportOpen(true)} disabled={exporting !== null}>
-            Export CSV…
+            Export…
           </Button>
         </div>
       </div>
@@ -518,7 +517,7 @@ export function RegistrationsManager({
         event={(fixedEvent ?? event) || null}
         total={data?.total ?? null}
         onClose={() => setExportOpen(false)}
-        onExport={exportFields}
+        onExport={exportChosen}
       />
 
       <RejectDialog

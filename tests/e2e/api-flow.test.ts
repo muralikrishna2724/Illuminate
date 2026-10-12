@@ -717,6 +717,31 @@ describe("admin workflow", () => {
     assert.equal(unknown.status, 400);
   });
 
+  test("exports can list each student, keep only CVR College, and come as a PDF", async () => {
+    const lines = async (path: string) => (await (await admin(path)).text()).replace(/^\uFEFF/, "").trim().split(/\r?\n/);
+    const id = created.hackathon!.registrationId;
+
+    const students = await lines(`/api/admin/export?event=hackathon&rows=students&fields=registrationId,teamName,name,department`);
+    assert.equal(students[0], "Registration ID,Name,Team Name,Department");
+    assert.equal(students.filter((l) => l.startsWith(`${id},`)).length, 4, "one row per team member");
+    assert.ok(students.some((l) => l.startsWith(`${id},`) && l.includes("E2E Member 1")));
+
+    const cvr = await lines(`/api/admin/export?college=cvr&fields=registrationId,college`);
+    assert.equal(cvr[0], "Registration ID,College");
+    assert.ok(cvr.slice(1).every((l) => /^cvr/i.test(l.split(",").slice(1).join(",").replace(/[^a-z0-9]/gi, ""))), "only CVR rows");
+    assert.ok(!cvr.some((l) => l.startsWith(`${id},`)), "the E2E Test College team is left out");
+
+    const pdf = await admin(`/api/admin/export?event=hackathon&rows=students&fields=name,department&format=pdf`);
+    assert.equal(pdf.status, 200);
+    assert.equal(pdf.headers.get("content-type"), "application/pdf");
+    assert.match(pdf.headers.get("content-disposition") ?? "", /\.pdf"/);
+    assert.equal(Buffer.from(await pdf.arrayBuffer()).subarray(0, 5).toString("latin1"), "%PDF-");
+
+    assert.equal((await admin(`/api/admin/export?format=docx`)).status, 400);
+    assert.equal((await admin(`/api/admin/export?college=vnr`)).status, 400);
+    assert.equal((await fetch(`${BASE}/api/admin/export?format=pdf`)).status, 401);
+  });
+
   test("Deja Vu team contacts export has only team name and leader phone", async () => {
     const detail = await adminJson(`/api/admin/registrations/${created.hackathon!.registrationId}`);
     const team = detail.body.data.team;
