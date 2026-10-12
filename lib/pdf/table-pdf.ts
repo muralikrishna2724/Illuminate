@@ -14,7 +14,8 @@ export interface PdfTableSection {
 }
 
 export interface PdfTableDocument {
-  title: string;
+  /** Printed at the top and in the footer; omit for a bare table. */
+  title?: string;
   subtitle?: string;
   sections: PdfTableSection[];
 }
@@ -92,7 +93,7 @@ function columnWidths(font: PDFFont, size: number, header: string[], rows: strin
 
 export async function renderTablePdf(doc: PdfTableDocument): Promise<Uint8Array> {
   const pdf = await PDFDocument.create();
-  pdf.setTitle(doc.title);
+  pdf.setTitle(doc.title ?? doc.sections[0]?.heading ?? "Export");
   pdf.setProducer("INNOVENTRA admin");
   const font = await pdf.embedFont(StandardFonts.Helvetica);
   const bold = await pdf.embedFont(StandardFonts.HelveticaBold);
@@ -114,13 +115,15 @@ export async function renderTablePdf(doc: PdfTableDocument): Promise<Uint8Array>
   };
   newPage();
 
-  page.drawText(safeText(bold, doc.title), { x: MARGIN, y: y - 16, size: 16, font: bold, color: INK });
-  y -= 24;
+  if (doc.title) {
+    page.drawText(safeText(bold, doc.title), { x: MARGIN, y: y - 16, size: 16, font: bold, color: INK });
+    y -= 24;
+  }
   if (doc.subtitle) {
     page.drawText(safeText(font, doc.subtitle), { x: MARGIN, y: y - 10, size: 9.5, font, color: MUTED });
     y -= 18;
   }
-  y -= 6;
+  if (doc.title || doc.subtitle) y -= 6;
 
   for (const section of doc.sections) {
     const header = section.header.map((h) => safeText(bold, h));
@@ -170,7 +173,7 @@ export async function renderTablePdf(doc: PdfTableDocument): Promise<Uint8Array>
   pages.forEach((p, i) => {
     const label = `${i + 1} / ${pages.length}`;
     p.drawText(label, { x: pageW - MARGIN - font.widthOfTextAtSize(label, 8), y: MARGIN / 2, size: 8, font, color: MUTED });
-    p.drawText(safeText(font, doc.title), { x: MARGIN, y: MARGIN / 2, size: 8, font, color: MUTED });
+    if (doc.title) p.drawText(safeText(font, doc.title), { x: MARGIN, y: MARGIN / 2, size: 8, font, color: MUTED });
   });
 
   return pdf.save();
