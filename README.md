@@ -128,7 +128,7 @@ All variables are documented in [`.env.example`](.env.example). The important on
 | `SUPABASE_STORAGE_BUCKET` | no | Defaults to `payment-screenshots` |
 | `SUPABASE_ANON_KEY` | no | Not used by the server code. Listed for completeness |
 | `NEXT_PUBLIC_API_BASE_URL` | no | Leave empty; set only if the API runs on another origin |
-| `PAYMENT_UPI_ID`, `PAYMENT_PAYEE_NAME`, `PAYMENT_QR_IMAGE_URL` | no | Optional overrides for the payment details. By default the organisers' QR (`public/payment/upi-qr.png`) and payee name from `lib/site-config.ts` are used. The UPI ID isn't shown unless you set it |
+| `PAYMENT_UPI_ID`, `PAYMENT_PAYEE_NAME`, `PAYMENT_QR_IMAGE_URL` | no | Optional overrides for the payment details. By default the organisers' QR (`public/payment/upi-qr-tejaswini.png`) and payee name from `lib/site-config.ts` are used. The UPI ID isn't shown unless you set it |
 | `TRUST_PROXY_HEADERS` | no | `true` behind Vercel/Nginx/Cloudflare; `false` if Node is exposed directly |
 
 Secrets are only read by server modules marked `import "server-only"` (`lib/env.ts`, `lib/storage/*`, `lib/auth/*`). If a client component imports one of them, the build fails.

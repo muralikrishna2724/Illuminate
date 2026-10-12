@@ -23,7 +23,7 @@ export const PLACEHOLDERS = {
 } as const;
 
 /**
- * Confirmed payment details. The QR (public/payment/upi-qr.png) was cropped
+ * Confirmed payment details. The QR (public/payment/upi-qr-tejaswini.png) was cropped
  * from the organisers' PhonePe QR and pays the payee below. The UPI ID is
  * deliberately not printed on the site (it is a personal phone number);
  * payers scan or save the QR instead.
@@ -32,8 +32,8 @@ export const PLACEHOLDERS = {
  */
 const PAYMENT_DEFAULTS: PaymentConfig = {
   upiId: null,
-  payeeName: "CHEKURI SATHYA PARDHA SARADHI",
-  qrImageUrl: "/payment/upi-qr.png",
+  payeeName: "GODUGU TEJASWINI",
+  qrImageUrl: "/payment/upi-qr-tejaswini.png",
 };
 
 function clean(value: string | undefined): string | null {
