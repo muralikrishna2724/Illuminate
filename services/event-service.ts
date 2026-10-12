@@ -30,7 +30,7 @@ export async function getEventBySlug(slug: EventSlug): Promise<EventRow> {
 export async function getOpenEventBySlug(slug: EventSlug): Promise<EventRow> {
   const event = await getEventBySlug(slug);
   if (!event.registrationOpen) {
-    throw new AppError(403, "REGISTRATION_CLOSED", "Registrations for this event are currently closed.");
+    throw new AppError(403, "REGISTRATION_CLOSED", registrationClosedMessage(event));
   }
   return event;
 }
@@ -54,13 +54,17 @@ export async function assertEventHasSpace(db: Db, event: EventRow): Promise<void
   }
 }
 
-/** Current capacity per event, for the register pages. Events missing from the database have no limit. */
+/**
+ * Current capacity per event, for the register pages. Events missing from the database have no limit.
+ * An event the organisers closed (registrationOpen = false) counts as full, so its pages say it's closed.
+ */
 export async function getEventCapacities(): Promise<Partial<Record<EventSlug, EventCapacity>>> {
-  const events = await prisma.event.findMany({ select: { id: true, slug: true, maxRegistrations: true } });
+  const events = await prisma.event.findMany({ select: { id: true, slug: true, maxRegistrations: true, registrationOpen: true } });
   const entries = await Promise.all(
     events.map(async (e) => {
       const taken = e.maxRegistrations === null ? 0 : await countTakenSpots(prisma, e.id);
-      return [e.slug, capacityFrom(e.maxRegistrations, taken)] as const;
+      const capacity = capacityFrom(e.maxRegistrations, taken);
+      return [e.slug, e.registrationOpen ? capacity : { ...capacity, full: true }] as const;
     }),
   );
   return Object.fromEntries(entries);

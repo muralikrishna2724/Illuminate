@@ -8,6 +8,7 @@ export interface EventCapacity {
   cap: number | null;
   taken: number;
   remaining: number | null;
+  /** No new registrations: the cap is reached, or the organisers closed registration. */
   full: boolean;
 }
 
