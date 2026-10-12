@@ -6,10 +6,12 @@ import { Button, Spinner } from "@/components/ui/Button";
 import { StatusBadge } from "@/components/registration/StatusBadge";
 import { adminApi, type RegistrationQuery } from "@/lib/api/admin";
 import { formatInr } from "@/lib/events/catalog";
+import type { ExportFieldKey } from "@/lib/export-fields";
 import type { EventSlug, Paginated, Payment, PaymentStatus, RegistrationDetail, RegistrationSummary } from "@/types/domain";
 import { formatDateTime } from "./format";
 import { PaymentActions } from "./PaymentActions";
 import { RegistrationDetailPanel } from "./RegistrationDetailPanel";
+import { ExportDialog } from "./ExportDialog";
 import { RejectDialog } from "./RejectDialog";
 
 const EVENT_OPTIONS: Array<{ value: EventSlug; label: string }> = [
@@ -57,7 +59,8 @@ export function RegistrationsManager({
   const [announcement, setAnnouncement] = useState("");
   const [actionError, setActionError] = useState<string | null>(null);
   const [rejectTarget, setRejectTarget] = useState<RegistrationSummary | null>(null);
-  const [exporting, setExporting] = useState<"all" | "team-contacts" | null>(null);
+  const [exporting, setExporting] = useState<"team-contacts" | null>(null);
+  const [exportOpen, setExportOpen] = useState(false);
 
   const [openId, setOpenId] = useState<string | null>(null);
   const [detail, setDetail] = useState<RegistrationDetail | null>(null);
@@ -195,14 +198,21 @@ export function RegistrationsManager({
     return res.error.message;
   };
 
-  const exportCsv = async (format?: "team-contacts") => {
-    setExporting(format ?? "all");
+  const exportTeamContacts = async () => {
+    setExporting("team-contacts");
     setActionError(null);
-    const { page: _p, ...filters } = { ...query, page };
-    const res = await adminApi.exportCsv(filters, format);
+    const res = await adminApi.exportCsv(query, { format: "team-contacts" });
     setExporting(null);
     if (!res.ok) setActionError(res.error.message);
     else setAnnouncement(`Exported ${res.data.filename}.`);
+  };
+
+  /** Returns an error message for the dialog, or null once the file is downloading. */
+  const exportFields = async (fields: ExportFieldKey[]): Promise<string | null> => {
+    const res = await adminApi.exportCsv(query, { fields });
+    if (!res.ok) return res.error.message;
+    setAnnouncement(`Exported ${res.data.filename}.`);
+    return null;
   };
 
   const busyFor = (paymentId: string) => (busy?.paymentId === paymentId ? busy.action : null);
@@ -228,15 +238,15 @@ export function RegistrationsManager({
               type="button"
               variant="secondary"
               size="sm"
-              onClick={() => exportCsv("team-contacts")}
+              onClick={exportTeamContacts}
               loading={exporting === "team-contacts"}
               disabled={exporting !== null}
             >
               {exporting === "team-contacts" ? "Exporting…" : "Export team name & leader phone"}
             </Button>
           )}
-          <Button type="button" variant="secondary" size="sm" onClick={() => exportCsv()} loading={exporting === "all"} disabled={exporting !== null}>
-            {exporting === "all" ? "Exporting…" : "Export CSV"}
+          <Button type="button" variant="secondary" size="sm" onClick={() => setExportOpen(true)} disabled={exporting !== null}>
+            Export CSV…
           </Button>
         </div>
       </div>
@@ -501,6 +511,14 @@ export function RegistrationsManager({
           setData((d) => (d ? { ...d, items: d.items.map((item) => (item.registrationId === id ? { ...item, displayName: name } : item)) } : d));
           setAnnouncement(`${id} team renamed to ${name}.`);
         }}
+      />
+
+      <ExportDialog
+        open={exportOpen}
+        event={(fixedEvent ?? event) || null}
+        total={data?.total ?? null}
+        onClose={() => setExportOpen(false)}
+        onExport={exportFields}
       />
 
       <RejectDialog

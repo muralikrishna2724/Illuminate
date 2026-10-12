@@ -57,11 +57,11 @@ export const adminApi = {
   /** Downloads the filtered CSV export and triggers a browser download. */
   async exportCsv(
     query: Omit<RegistrationQuery, "page" | "pageSize">,
-    format?: "team-contacts",
+    options: { format?: "team-contacts"; fields?: readonly string[] } = {},
   ): Promise<ApiResponse<{ filename: string }>> {
     let response: Response;
     try {
-      response = await fetch(apiUrl("/api/admin/export", { ...query, format }), { credentials: "same-origin", cache: "no-store" });
+      response = await fetch(apiUrl("/api/admin/export", { ...query, format: options.format, fields: options.fields?.join(",") }), { credentials: "same-origin", cache: "no-store" });
     } catch {
       return { ok: false, error: NETWORK_ERROR };
     }

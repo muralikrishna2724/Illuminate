@@ -1,4 +1,6 @@
 import { requireAdminApi } from "@/lib/auth/guards";
+import { isExportFieldKey } from "@/lib/export-fields";
+import { badRequest } from "@/lib/http/errors";
 import { route } from "@/lib/http/respond";
 import { registrationFiltersSchema } from "@/lib/validation/admin";
 import { exportRegistrationsCsv, exportTeamContactsCsv } from "@/services/export-service";
@@ -6,15 +8,19 @@ import { exportRegistrationsCsv, exportTeamContactsCsv } from "@/services/export
 /**
  * GET /api/admin/export?event=&status=&q=&from=&to= → text/csv
  * `format=team-contacts` exports only team name and team leader phone (team events).
+ * `fields=registrationId,name,phone` limits the columns (see lib/export-fields.ts); omitted = all.
  */
 export const GET = route(async (request) => {
   await requireAdminApi(request);
-  const { format, ...params } = Object.fromEntries(
+  const { format, fields: fieldsParam, ...params } = Object.fromEntries(
     [...new URL(request.url).searchParams.entries()].filter(([, value]) => value !== ""),
   );
   const { page: _page, pageSize: _pageSize, ...filters } = registrationFiltersSchema.parse(params);
   const teamContacts = format === "team-contacts";
-  const csv = teamContacts ? await exportTeamContactsCsv(filters) : await exportRegistrationsCsv(filters);
+  const fields = fieldsParam ? fieldsParam.split(",").map((f) => f.trim()).filter(Boolean) : [];
+  const unknown = fields.filter((f) => !isExportFieldKey(f));
+  if (unknown.length) throw badRequest(`Unknown export field: ${unknown.join(", ")}`);
+  const csv = teamContacts ? await exportTeamContactsCsv(filters) : await exportRegistrationsCsv(filters, fields.filter(isExportFieldKey));
 
   const stamp = new Date().toISOString().slice(0, 10);
   const scope = `${filters.event ?? "all-events"}${teamContacts ? "-team-contacts" : ""}`;

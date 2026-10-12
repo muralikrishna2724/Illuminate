@@ -693,6 +693,30 @@ describe("admin workflow", () => {
     assert.ok(!csv.includes(created.debate!.registrationId), "event filter applied");
   });
 
+  test("CSV export can be limited to chosen fields", async () => {
+    const lines = async (path: string) => (await (await admin(path)).text()).replace(/^﻿/, "").trim().split(/\r?\n/);
+
+    const picked = await lines(`/api/admin/export?event=hackathon&fields=registrationId,name,phone`);
+    assert.equal(picked[0], "Registration ID,Participant / Team Name,Phone");
+    assert.ok(picked.some((l) => l.startsWith(`${created.hackathon!.registrationId},`)));
+
+    // Chosen order doesn't matter: columns keep the standard order.
+    const reordered = await lines(`/api/admin/export?event=hackathon&fields=phone,registrationId`);
+    assert.equal(reordered[0], "Registration ID,Phone");
+
+    const members = await lines(`/api/admin/export?event=hackathon&fields=registrationId,memberName,memberPhone`);
+    assert.equal(
+      members[0],
+      "Registration ID,Member 1 Name,Member 1 Phone,Member 2 Name,Member 2 Phone,Member 3 Name,Member 3 Phone,Member 4 Name,Member 4 Phone",
+    );
+
+    const survey = await lines(`/api/admin/export?event=debate&fields=registrationId,surveyScore`);
+    assert.equal(survey[0], "Registration ID,AI Survey Score");
+
+    const unknown = await admin(`/api/admin/export?event=hackathon&fields=registrationId,password`);
+    assert.equal(unknown.status, 400);
+  });
+
   test("Deja Vu team contacts export has only team name and leader phone", async () => {
     const detail = await adminJson(`/api/admin/registrations/${created.hackathon!.registrationId}`);
     const team = detail.body.data.team;
