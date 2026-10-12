@@ -41,7 +41,7 @@ export default async function RegisterIndexPage() {
                   <FeeIncludes event={event} className="mt-6" />
                 </div>
                 {capacities[event.slug]?.full ? (
-                  <span className="text-bad">Registration limit reached</span>
+                  <span className="text-bad">Registrations closed</span>
                 ) : (
                   <span className="inline-flex items-center gap-2 text-flare">
                     Register · {formatInr(registrationAmountInr(event))}

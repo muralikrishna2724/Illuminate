@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { describe, test } from "node:test";
 import { toCsv, csvCell } from "../../lib/csv";
 import { EVENTS, registrationAmountInr } from "../../lib/events/catalog";
-import { capacityFrom, registrationFullMessage } from "../../lib/events/capacity";
+import { capacityFrom, registrationClosedMessage } from "../../lib/events/capacity";
 import { aspectsComparable, changedPixels, FINGERPRINT_BYTES, looksIdentical } from "../../lib/images/similarity";
 import { calculateRegistrationAmount } from "../../lib/pricing";
 import { normalizeRegistrationCode } from "../../lib/registration-id";
@@ -52,9 +52,9 @@ describe("pricing", () => {
 });
 
 describe("registration caps", () => {
-  test("Mind x Machine: 50 participants; IPL Auction (individual) and the others unlimited", () => {
+  test("Mind x Machine: 50 participants; IPL Auction (individual): 90; the others unlimited", () => {
     assert.equal(EVENTS["ipl-auction"].format, "INDIVIDUAL");
-    assert.equal(EVENTS["ipl-auction"].maxRegistrations, undefined);
+    assert.equal(EVENTS["ipl-auction"].maxRegistrations, 90);
     assert.equal(EVENTS.debate.maxRegistrations, 50);
     assert.equal(EVENTS.hackathon.maxRegistrations, undefined);
     assert.equal(EVENTS.illuminate.maxRegistrations, undefined);
@@ -66,14 +66,8 @@ describe("registration caps", () => {
     assert.equal(capacityFrom(null, 500).full, false);
   });
   test("messages", () => {
-    assert.equal(
-      registrationFullMessage(EVENTS.hackathon, 10),
-      "Registration limit reached. All 10 team spots for Deja Vu Hackathon have been filled.",
-    );
-    assert.equal(
-      registrationFullMessage(EVENTS.debate, 50),
-      "Registration limit reached. All 50 spots for Mind x Machine: The AI Debate ARENA have been filled.",
-    );
+    assert.equal(registrationClosedMessage(EVENTS.debate), "Registrations for Mind x Machine: The AI Debate ARENA are closed.");
+    assert.equal(registrationClosedMessage(EVENTS["ipl-auction"]), "Registrations for IPL Auction are closed.");
   });
 });
 

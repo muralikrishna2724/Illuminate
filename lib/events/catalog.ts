@@ -147,6 +147,8 @@ export const EVENTS: Record<EventSlug, EventContent> = {
     feePerPersonInr: 50,
     duration: "1:00 PM – 4:00 PM",
     prizePool: "₹3,500 worth of prizes",
+    // Closes after the 90th registration (pending or verified; a rejection frees a spot).
+    maxRegistrations: 90,
     // Registration is individual; teams are formed at the venue.
     formatLabel: "Team (formed at the venue)",
     tagline: "An individual event on Day 1.",

@@ -597,17 +597,16 @@ describe("admin workflow", () => {
     assert.ok(mine.length > 0, "Mind x Machine was already full: reset the development database");
     assert.ok(refused, "the registration after the 50th is refused");
     assert.equal(refused.body.error.code, "REGISTRATION_FULL");
-    assert.equal(
-      refused.body.error.message,
-      "Registration limit reached. All 50 spots for Mind x Machine: The AI Debate ARENA have been filled.",
-    );
-    assert.match(await noSpotsLeftText("/register/debate"), /Registration limit reached/);
-    assert.match(await noSpotsLeftText("/register"), /Registration limit reached/);
+    assert.equal(refused.body.error.message, "Registrations for Mind x Machine: The AI Debate ARENA are closed.");
+    const closedPage = await noSpotsLeftText("/register/debate");
+    assert.match(closedPage, /Registrations are closed/);
+    assert.doesNotMatch(closedPage, /Continue to payment|Individual registration ·|check your eligibility/, "nothing but the closed notice");
+    assert.match(await noSpotsLeftText("/register"), /Registrations closed/);
 
-    // The IPL Auction has no limit any more.
-    const ipl = await register("ipl-auction", individualDetails(), uniqueUtr());
-    assert.equal(ipl.status, 201);
-    mine.push(ipl.body.data.registrationId);
+    // The workshop has no limit.
+    const workshop = await register("illuminate", individualDetails(), uniqueUtr());
+    assert.equal(workshop.status, 201);
+    mine.push(workshop.body.data.registrationId);
 
     // A rejection frees a spot; then free them all so the suite can run again.
     await rejectRegistration(mine.shift()!);
@@ -615,7 +614,7 @@ describe("admin workflow", () => {
     assert.equal(again.status, 201, "a rejected registration's spot is free again");
     mine.push(again.body.data.registrationId);
     for (const id of mine) await rejectRegistration(id);
-    assert.doesNotMatch(await noSpotsLeftText("/register/debate"), /Registration limit reached/);
+    assert.doesNotMatch(await noSpotsLeftText("/register/debate"), /Registrations are closed/);
   });
 
   test("TEST 7 — quiz link follows the configured access rule", async () => {

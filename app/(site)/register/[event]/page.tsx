@@ -6,7 +6,7 @@ import { RegistrationForm } from "@/components/registration/RegistrationForm";
 import { Container } from "@/components/ui/Container";
 import { ExclusiveBenefits } from "@/components/ui/ExclusiveBenefits";
 import { FeeIncludes } from "@/components/ui/FeeIncludes";
-import { spotsFilledMessage } from "@/lib/events/capacity";
+import { registrationClosedMessage } from "@/lib/events/capacity";
 import { EVENTS, feeLabel } from "@/lib/events/catalog";
 import { getPaymentConfig } from "@/lib/site-config";
 import { getEventCapacities } from "@/services/event-service";
@@ -42,27 +42,28 @@ export default async function RegisterEventPage({ params }: PageProps<"/register
           Day {event.day} · {event.dateLabel}
         </p>
         <h1 className="mt-2 font-display text-[2.6rem] leading-[0.95] text-flare [overflow-wrap:anywhere] min-[400px]:text-5xl sm:text-7xl">{event.name}</h1>
-        <p className="mt-4 text-mist">
-          {event.format === "TEAM" ? `Team of exactly ${event.teamSize}` : "Individual registration"} · {feeLabel(event)}
-        </p>
-        {event.registrationNote && (
-          <p className="mt-4 max-w-2xl border-l-2 border-gold/60 pl-3 text-sm leading-relaxed text-mist">
-            <span className="font-medium text-flare">Note:</span> {event.registrationNote}
-          </p>
-        )}
-        <FeeIncludes event={event} className="mt-6" />
-        {event.slug === "illuminate" && <ExclusiveBenefits className="mt-8" />}
-        <div className="mt-12">
-          {capacity?.full && capacity.cap !== null ? (
-            <div role="status" className="rounded-2xl border border-bad/50 bg-bad/10 p-6 sm:p-8">
-              <h2 className="font-display text-4xl text-flare">Registration limit reached</h2>
-              <p className="mt-3 text-sand/85">{spotsFilledMessage(event, capacity.cap)}</p>
-              <p className="mt-3 text-sm text-mist">Please don&apos;t make a payment for this event.</p>
+        {capacity?.full ? (
+          <div role="status" className="mt-10 rounded-2xl border border-[var(--line-strong)] bg-night p-6 sm:p-8">
+            <h2 className="font-display text-4xl text-flare">Registrations are closed</h2>
+            <p className="sr-only">{registrationClosedMessage(event)}</p>
+          </div>
+        ) : (
+          <>
+            <p className="mt-4 text-mist">
+              {event.format === "TEAM" ? `Team of exactly ${event.teamSize}` : "Individual registration"} · {feeLabel(event)}
+            </p>
+            {event.registrationNote && (
+              <p className="mt-4 max-w-2xl border-l-2 border-gold/60 pl-3 text-sm leading-relaxed text-mist">
+                <span className="font-medium text-flare">Note:</span> {event.registrationNote}
+              </p>
+            )}
+            <FeeIncludes event={event} className="mt-6" />
+            {event.slug === "illuminate" && <ExclusiveBenefits className="mt-8" />}
+            <div className="mt-12">
+              <RegistrationForm event={event} payment={getPaymentConfig()} />
             </div>
-          ) : (
-            <RegistrationForm event={event} payment={getPaymentConfig()} />
-          )}
-        </div>
+          </>
+        )}
       </Container>
     </section>
   );

@@ -1,7 +1,7 @@
 import "server-only";
 import type { Event as EventRow, Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db/prisma";
-import { capacityFrom, registrationFullMessage, type EventCapacity } from "@/lib/events/capacity";
+import { capacityFrom, registrationClosedMessage, type EventCapacity } from "@/lib/events/capacity";
 import { AppError, notFound } from "@/lib/http/errors";
 import { calculateRegistrationAmount } from "@/lib/pricing";
 import type { Event, EventSlug } from "@/types/domain";
@@ -50,7 +50,7 @@ function countTakenSpots(db: Db, eventId: string): Promise<number> {
 export async function assertEventHasSpace(db: Db, event: EventRow): Promise<void> {
   if (event.maxRegistrations === null) return;
   if ((await countTakenSpots(db, event.id)) >= event.maxRegistrations) {
-    throw new AppError(409, "REGISTRATION_FULL", registrationFullMessage(event, event.maxRegistrations));
+    throw new AppError(409, "REGISTRATION_FULL", registrationClosedMessage(event));
   }
 }
 

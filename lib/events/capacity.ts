@@ -1,5 +1,3 @@
-import type { EventFormat } from "@/types/domain";
-
 /**
  * Registration caps. A registration holds a spot unless its payment was
  * rejected, so a rejection frees the spot again.
@@ -19,16 +17,9 @@ export function capacityFrom(cap: number | null, taken: number): EventCapacity {
   return { cap, taken, remaining, full: remaining === 0 };
 }
 
-const spotsLabel = (format: EventFormat, count: number) =>
-  format === "TEAM" ? `${count} team spot${count === 1 ? "" : "s"}` : `${count} spot${count === 1 ? "" : "s"}`;
-
-/** "All 10 team spots for IPL Auction have been filled." */
-export function spotsFilledMessage(event: { name: string; format: EventFormat }, cap: number): string {
-  return `All ${spotsLabel(event.format, cap)} for ${event.name} have been filled.`;
+/** Shown (and returned by the API) once an event is full: no counts, just that it's closed. */
+export function registrationClosedMessage(event: { name: string }): string {
+  return `Registrations for ${event.name} are closed.`;
 }
 
-export function registrationFullMessage(event: { name: string; format: EventFormat }, cap: number): string {
-  return `Registration limit reached. ${spotsFilledMessage(event, cap)}`;
-}
-
-// Deliberately no "N spots left" text anywhere: the site only says when an event is full.
+// Deliberately no "N spots left" text anywhere: the site only says when an event is closed.
